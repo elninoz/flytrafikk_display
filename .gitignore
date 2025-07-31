@@ -1,0 +1,14 @@
+# Hemmelege API-nøklar
+credentials.json
+
+# Lokale konfigurasjonsfiler
+*.env
+.env.local
+
+# Backup-filer
+*.bak
+*.backup
+
+# OS-spesifikke filer
+.DS_Store
+Thumbs.db

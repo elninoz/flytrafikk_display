@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Flytrafikk Display</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #1a1a1a;
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .controls {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .controls input,
+        .controls button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+        }
+
+        .controls input {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            width: 120px;
+        }
+
+        .controls button {
+            background: #00ff88;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .controls button:hover {
+            background: #00cc6a;
+        }
+
+        .led-display {
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border: 8px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow:
+                inset 0 0 20px rgba(0, 0, 0, 0.8),
+                0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            min-height: 300px;
+        }
+
+        .led-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 2px 2px, rgba(0, 255, 136, 0.15) 1px, transparent 1px);
+            background-size: 6px 6px;
+            pointer-events: none;
+            border-radius: 8px;
+        }
+
+        .airline-logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+
+        .airline-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .sas-logo {
+            background: linear-gradient(135deg, #003f7f, #0056b3);
+        }
+
+        .norwegian-logo {
+            background: linear-gradient(135deg, #d81939, #ff1744);
+        }
+
+        .wideroe-logo {
+            background: linear-gradient(135deg, #c41e3a, #e53935);
+        }
+
+        .klm-logo {
+            background: linear-gradient(135deg, #006db7, #1976d2);
+        }
+
+        .lufthansa-logo {
+            background: linear-gradient(135deg, #f9ba00, #ffc107);
+            color: #333;
+        }
+
+        .british-logo {
+            background: linear-gradient(135deg, #dc143c, #f44336);
+        }
+
+        .flight-info {
+            position: relative;
+            z-index: 1;
+        }
+
+        .airline-name {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow:
+                0 0 10px #00ffff,
+                0 0 20px #00ffff,
+                0 0 30px #00ffff;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            filter: blur(0.5px);
+        }
+
+        .flight-number {
+            font-size: 2.8rem;
+            color: #00ffff;
+            text-shadow:
+                0 0 8px #00ffff,
+                0 0 16px #00ffff;
+            margin-bottom: 20px;
+            letter-spacing: 0.08em;
+            filter: blur(0.3px);
+        }
+
+        .route-section {
+            margin: 25px 0;
+        }
+
+        .route-label {
+            font-size: 1.2rem;
+            color: #00ffff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px #00ffff;
+            filter: blur(0.3px);
+        }
+
+        .route-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow:
+                0 0 8px #00ffff,
+                0 0 16px #00ffff;
+            letter-spacing: 0.05em;
+            filter: blur(0.3px);
+        }
+
+        .time-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            margin-top: 30px;
+            align-items: end;
+        }
+
+        .time-info {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow:
+                0 0 10px #00ffff,
+                0 0 20px #00ffff;
+            filter: blur(0.4px);
+        }
+
+        .status-indicator {
+            font-size: 1.8rem;
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            filter: blur(0.2px);
+        }
+
+        .no-flight {
+            text-align: center;
+            font-size: 2rem;
+            color: #666;
+            margin: 60px 0;
+        }
+
+        .flight-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+
+        .detail-box {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #00ffff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-shadow: 0 0 5px #00ffff;
+            filter: blur(0.2px);
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                text-shadow:
+                    0 0 5px #00ffff,
+                    0 0 10px #00ffff,
+                    0 0 15px #00ffff;
+            }
+
+            50% {
+                text-shadow:
+                    0 0 10px #00ffff,
+                    0 0 20px #00ffff,
+                    0 0 30px #00ffff;
+            }
+        }
+
+        .glow-animation {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .airline-name {
+                font-size: 2.5rem;
+            }
+
+            .flight-number {
+                font-size: 2rem;
+            }
+
+            .route-display {
+                font-size: 1.8rem;
+            }
+
+            .time-info {
+                font-size: 2.2rem;
+            }
+
+            .time-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="controls">
+        <input type="number" id="latitude" value="61.0873" step="0.0001" placeholder="Breddegrad">
+        <input type="number" id="longitude" value="6.9741" step="0.0001" placeholder="Lengdegrad">
+        <input type="number" id="radius" value="10" min="1" max="100" placeholder="Radius (km)">
+        <button onclick="getFlights()">🔍 Søk etter fly</button>
+        <button onclick="getLocationAndSearch()">📍 Min posisjon</button>
+        <button onclick="toggleAutoRefresh()">🔄 Auto-oppdater</button>
+    </div>
+
+    <div class="led-display">
+
+        <div id="flightDisplay">
+            <div class="no-flight">
+                Ingen fly registrert<br>
+                <small style="font-size: 1rem; color: #888;">Trykk søk for å finne fly i området</small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let autoRefreshInterval;
+        let currentFlightIndex = 0;
+        let flights = [];
+
+        function getLocationAndSearch() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        document.getElementById('latitude').value = position.coords.latitude.toFixed(6);
+                        document.getElementById('longitude').value = position.coords.longitude.toFixed(6);
+                        getFlights();
+                    },
+                    function (error) {
+                        alert('Kunne ikke hente posisjon. Vennligst skriv inn koordinater manuelt.');
+                    }
+                );
+            } else {
+                alert('Geolokalisering støttes ikke av denne nettleseren.');
+            }
+        }
+
+        async function getFlights() {
+            const lat = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+            const lon = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
+            const radius = parseFloat(document.getElementById('radius').value.replace(',', '.'));
+
+            if (!lat || !lon || !radius) {
+                alert('Vennligst fyll inn alle felt');
+                return;
+            }
+
+            console.log(`Søker etter fly ved koordinatar: ${lat}, ${lon} med radius ${radius}km`);
+
+            try {
+                // Prøv å hente ekte flydata fra OpenSky Network API
+                const realData = await fetchRealFlights(lat, lon, radius);
+
+                if (realData && realData.states && realData.states.length > 0) {
+                    // Bruk ekte data hvis tilgjengelig
+                    flights = realData.states;
+                    console.log('✅ Hentet ekte flydata:', flights.length, 'fly funnet');
+
+                    currentFlightIndex = 0;
+                    displayCurrentFlight();
+                    // Bytt fly hvert 8. sekund
+                    if (flights.length > 1) {
+                        setInterval(switchFlight, 8000);
+                    }
+                    return;
+                }
+            } catch (error) {
+                console.error('API-feil:', error);
+            }
+
+            // Hvis ingen ekte fly er funne, vis melding
+            console.log('⚠️ Ingen fly funnet i området');
+            flights = [];
+            displayNoFlights();
+        }
+
+        async function fetchRealFlights(lat, lon, radius) {
+            try {
+                // Beregn bounding box rundt posisjonen
+                const kmPerDegree = 111.32;
+                const deltaLat = radius / kmPerDegree;
+                const deltaLon = radius / (kmPerDegree * Math.cos(lat * Math.PI / 180));
+
+                const lamin = lat - deltaLat;
+                const lamax = lat + deltaLat;
+                const lomin = lon - deltaLon;
+                const lomax = lon + deltaLon;
+
+                console.log(`Søker etter fly i området: ${lamin.toFixed(4)}, ${lamax.toFixed(4)}, ${lomin.toFixed(4)}, ${lomax.toFixed(4)}`);
+
+                // API utan autentisering - fungerer fint for allmenn bruk
+                const apiUrl = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
+                console.log('API URL:', apiUrl);
+
+                // Prøv direkte API-kall først (kan feile på grunn av CORS)
+                try {
+                    console.log('Prøver direkte API-kall...');
+                    const response = await fetch(apiUrl, {
+                        method: 'GET',
+                        mode: 'cors',
+                        headers: {
+                            'Accept': 'application/json',
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Direkte API-kall fungerte!', data);
+                        return processFlightData(data);
+                    }
+                } catch (directError) {
+                    console.log('Direkte API-kall feilet (CORS), prøver proxy...', directError.message);
+                }
+
+                // Prøv CORS proxy som backup
+                console.log('Prøver CORS proxy...');
+                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(apiUrl);
+
+                const proxyResponse = await fetch(proxyUrl);
+
+                if (!proxyResponse.ok) {
+                    throw new Error(`Proxy feil: ${proxyResponse.status}`);
+                }
+
+                const proxyData = await proxyResponse.json();
+
+                if (proxyData.contents) {
+                    const flightData = JSON.parse(proxyData.contents);
+                    console.log('Hentet data via proxy:', flightData);
+                    return processFlightData(flightData);
+                } else {
+                    console.log('Proxy ga ingen data');
+                    return null;
+                }
+
+            } catch (error) {
+                console.error('Alle API-forsøk feilet:', error);
+                return null;
+            }
+        }
+
+        function processFlightData(data) {
+            if (data.states) {
+                console.log(`Totalt ${data.states.length} fly funnet før filtrering`);
+
+                // Vis alle fly før filtrering
+                data.states.forEach((flight, index) => {
+                    const callsign = flight[1] ? flight[1].trim() : 'Ukjent';
+                    const altitude = flight[7];
+                    const onGround = flight[8];
+                    console.log(`Fly ${index + 1}: ${callsign}, høyde: ${altitude}m, på bakken: ${onGround}`);
+                });
+
+                // Filtrer bort fly som er på bakken eller har lav høyde
+                const originalCount = data.states.length;
+                data.states = data.states.filter(flight => {
+                    const altitude = flight[7];
+                    const onGround = flight[8];
+                    return !onGround && altitude && altitude > 100;
+                });
+
+                console.log(`Etter filtrering: ${data.states.length} av ${originalCount} fly i lufta`);
+            } else {
+                console.log('Ingen "states" array i API responsen');
+            }
+
+            return data;
+        }
+
+        function switchFlight() {
+            if (flights.length > 1) {
+                currentFlightIndex = (currentFlightIndex + 1) % flights.length;
+                displayCurrentFlight();
+            }
+        }
+
+        function displayCurrentFlight() {
+            if (flights.length === 0) return;
+
+            const flight = flights[currentFlightIndex];
+            const lat = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+            const lon = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
+
+            // OpenSky Network API data struktur:
+            // [0] icao24, [1] callsign, [2] origin_country, [3] time_position, [4] last_contact,
+            // [5] longitude, [6] latitude, [7] baro_altitude, [8] on_ground, [9] velocity,
+            // [10] true_track, [11] vertical_rate, [12] sensors, [13] geo_altitude, [14] squawk, [15] spi, [16] position_source
+
+            const icao24 = flight[0] || 'Ukjent';
+            const callsign = flight[1] ? flight[1].trim() : 'Ukjent';
+            const originCountry = flight[2] || 'Ukjent';
+            const timePosition = flight[3];
+            const lastContact = flight[4];
+            const longitude = flight[5];
+            const latitude = flight[6];
+            const baroAltitude = flight[7] ? Math.round(flight[7]) : 'Ukjent';
+            const onGround = flight[8];
+            const velocity = flight[9] ? Math.round(flight[9] * 3.6) : 'Ukjent'; // m/s til km/h
+            const trueTrack = flight[10] ? Math.round(flight[10]) : 'Ukjent';
+            const verticalRate = flight[11] ? Math.round(flight[11] * 60) : 0; // m/s til m/min
+            const sensors = flight[12];
+            const geoAltitude = flight[13] ? Math.round(flight[13]) : null;
+            const squawk = flight[14] || 'Ukjent';
+            const spi = flight[15];
+            const positionSource = flight[16];
+
+            const distance = calculateDistance(lat, lon, latitude, longitude);
+            const compassDirection = getCompassDirection(trueTrack);
+
+            const status = verticalRate > 10 ? 'Stiger' : verticalRate < -10 ? 'Synker' : 'I rute';
+            const currentTime = new Date().toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' });
+
+            // Få flyselskap fra callsign
+            const airline = getAirlineFromCallsign(callsign);
+
+            document.getElementById('flightDisplay').innerHTML = `
+                <div class="flight-info">
+                    <div class="airline-name glow-animation">${airline}</div>
+                    <div class="flight-number">Flight: ${callsign}</div>
+                    
+                    <div class="route-section">
+                        <div class="route-label">Fra: Tromsø</div>
+                        <div class="route-display">Bergen</div>
+                    </div>
+                    
+                    <div class="time-section">
+                        <div class="time-info">${currentTime}</div>
+                        <div class="status-indicator">${onGround ? 'På bakken' : status}</div>
+                    </div>
+                    
+                    <div class="flight-details">
+                        <div class="detail-box">
+                            <div class="detail-label">Total flytid</div>
+                            <div class="detail-value">1t 37m</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Tid igjen</div>
+                            <div class="detail-value">1t 14m</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Retning</div>
+                            <div class="detail-value">${compassDirection}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Høyde</div>
+                            <div class="detail-value">${baroAltitude}m</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Hastighet</div>
+                            <div class="detail-value">${velocity} km/h</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Avstand</div>
+                            <div class="detail-value">${distance.toFixed(1)} km</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getAirlineFromCallsign(callsign) {
+            const airlines = {
+                'SAS': 'SAS', 'SK': 'SAS',
+                'DY': 'Norwegian', 'NAX': 'Norwegian',
+                'WF': 'Widerøe', 'WIF': 'Widerøe',
+                'KLM': 'KLM', 'KL': 'KLM',
+                'LH': 'Lufthansa', 'DLH': 'Lufthansa',
+                'BA': 'British Airways', 'BAW': 'British Airways',
+                'AF': 'Air France', 'AFR': 'Air France',
+                'LX': 'Swiss', 'SWR': 'Swiss',
+                'OS': 'Austrian', 'AUA': 'Austrian',
+                'TK': 'Turkish Airlines', 'THY': 'Turkish Airlines',
+                'EK': 'Emirates', 'UAE': 'Emirates',
+                'QR': 'Qatar Airways', 'QTR': 'Qatar Airways'
+            };
+
+            if (!callsign) return 'Ukjent flyselskap';
+
+            // Prøv forskjellige lengder av callsign-prefix
+            for (let i = 3; i >= 2; i--) {
+                const code = callsign.substring(0, i).toUpperCase();
+                if (airlines[code]) {
+                    return airlines[code];
+                }
+            }
+
+            return callsign; // Returner callsign hvis ingen match
+        }
+
+        function getCompassDirection(heading) {
+            if (heading === 'Ukjent' || heading === null) return 'Ukjent';
+
+            const directions = [
+                'N', 'NNØ', 'NØ', 'ØNØ', 'Ø', 'ØSØ', 'SØ', 'SSØ',
+                'S', 'SSV', 'SV', 'VSV', 'V', 'VNV', 'NV', 'NNV'
+            ];
+
+            const index = Math.round(heading / 22.5) % 16;
+            return `${directions[index]} (${heading}°)`;
+        }
+
+        function displayNoFlights() {
+            document.getElementById('flightDisplay').innerHTML = `
+                <div class="no-flight">
+                    Ingen fly i luftrommet over<br>
+                    <small style="font-size: 1rem; color: #888;">Prøv å endre posisjon eller auke radius</small>
+                </div>
+            `;
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function toggleAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+                alert('Auto-oppdatering deaktivert');
+            } else {
+                autoRefreshInterval = setInterval(getFlights, 30000);
+                alert('Auto-oppdatering aktivert (30s)');
+            }
+        }
+    </script>
+</body>
+
+</html>
