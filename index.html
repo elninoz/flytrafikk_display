@@ -306,7 +306,8 @@
 
 <body>
     <div class="controls">
-        <input type="text" id="gpsCoords" placeholder="GPS koordinatar (59.1166, 9.7194) eller frå Google Maps" style="width: 300px;">
+        <input type="text" id="gpsCoords" placeholder="GPS koordinatar (59.1166, 9.7194) eller frå Google Maps"
+            style="width: 300px;">
         <input type="number" id="latitude" value="61.0873" step="0.0001" placeholder="Breddegrad" style="width: 120px;">
         <input type="number" id="longitude" value="6.9741" step="0.0001" placeholder="Lengdegrad" style="width: 120px;">
         <input type="number" id="radius" value="10" min="1" max="100" placeholder="Radius (km)">
@@ -331,10 +332,10 @@
         let flights = [];
 
         // Legg til event listener for GPS-feltet
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const gpsField = document.getElementById('gpsCoords');
             gpsField.addEventListener('input', parseGPSCoords);
-            gpsField.addEventListener('paste', function(e) {
+            gpsField.addEventListener('paste', function (e) {
                 setTimeout(parseGPSCoords, 10); // Vent litt slik at innhaldet blir limt inn først
             });
         });
@@ -357,12 +358,12 @@
                 if (match) {
                     let lat = parseFloat(match[1].replace(',', '.'));
                     let lon = parseFloat(match[2].replace(',', '.'));
-                    
+
                     // Valider koordinatar
                     if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
                         document.getElementById('latitude').value = lat.toFixed(6);
                         document.getElementById('longitude').value = lon.toFixed(6);
-                        
+
                         // Vis suksess-feedback
                         const gpsField = document.getElementById('gpsCoords');
                         const originalBorder = gpsField.style.border;
@@ -480,24 +481,27 @@
                     console.log('Netlify proxy feilet, prøver fallback...', proxyError.message);
                 }
 
-                // Prøv fallback CORS proxy som backup
-                console.log('Prøver fallback CORS proxy...');
-                const fallbackProxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(`https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`);
+                // Prøv fallback - direkte API-kall utan auth (100 kall/dag)
+                console.log('Prøver direkte API-kall...');
+                const directApiUrl = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
 
-                const fallbackResponse = await fetch(fallbackProxyUrl);
+                try {
+                    const directResponse = await fetch(directApiUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        }
+                    });
 
-                if (!fallbackResponse.ok) {
-                    throw new Error(`Fallback proxy feil: ${fallbackResponse.status}`);
-                }
-
-                const fallbackData = await fallbackResponse.json();
-
-                if (fallbackData.contents) {
-                    const flightData = JSON.parse(fallbackData.contents);
-                    console.log('Hentet data via fallback proxy:', flightData);
-                    return processFlightData(flightData);
-                } else {
-                    console.log('Fallback proxy ga ingen data');
+                    if (directResponse.ok) {
+                        const directData = await directResponse.json();
+                        console.log('✅ Direkte API-kall fungerte!', directData);
+                        return processFlightData(directData);
+                    } else {
+                        throw new Error(`Direct API error: ${directResponse.status}`);
+                    }
+                } catch (directError) {
+                    console.log('Direkte API feilet også:', directError.message);
                     return null;
                 }
 
