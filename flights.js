@@ -29,8 +29,8 @@ exports.handler = async (event, context) => {
         }
 
         // OpenSky Network credentials (set these as environment variables in Netlify)
-        const clientId = process.env.OPENSKY_CLIENT_ID;
-        const clientSecret = process.env.OPENSKY_CLIENT_SECRET;
+        const clientId = process.env.OPENSKY_USERNAME;
+        const clientSecret = process.env.OPENSKY_PASSWORD;
 
         if (!clientId || !clientSecret) {
             console.log('No credentials found, using unauthenticated API');
