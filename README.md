@@ -53,8 +53,8 @@ Nettsida er tilgjengeleg på: [https://[ditt-netlify-namn].netlify.app](https://
 1. I Netlify dashboard, gå til "Site settings"
 2. Klikk "Environment variables" i venstre meny
 3. Legg til desse variablane:
-   - `OPENSKY_CLIENT_ID`: `eldar_r@hotmail.com-api-client`
-   - `OPENSKY_CLIENT_SECRET`: `ipEHReZWeqoR9xMJDBGN8gnjGjGh8Pxi`
+   - `OPENSKY_USERNAME`: `din-opensky-brukarnamn`
+   - `OPENSKY_PASSWORD`: `ditt-opensky-passord`
 4. Klikk "Save"
 
 ### Steg 4: Redeploy
