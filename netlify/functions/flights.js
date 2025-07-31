@@ -92,6 +92,10 @@ exports.handler = async (event, context) => {
         console.log('OAuth2 Client Secret:', clientSecret ? 'Found' : 'Missing');
         console.log('Legacy Username:', username ? 'Found' : 'Missing');
         console.log('Legacy Password:', password ? 'Found' : 'Missing');
+        
+        // Debug: Log første del av credentials hvis dei finnes
+        if (clientId) console.log('Client ID preview:', clientId.substring(0, 10) + '...');
+        if (clientSecret) console.log('Client Secret preview:', clientSecret.substring(0, 10) + '...');
 
         // Bygg OpenSky API URL
         const url = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
