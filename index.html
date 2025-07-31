@@ -399,16 +399,18 @@
 
                 console.log(`Søker etter fly i området: ${lamin.toFixed(4)}, ${lamax.toFixed(4)}, ${lomin.toFixed(4)}, ${lomax.toFixed(4)}`);
 
-                // API utan autentisering - fungerer fint for allmenn bruk
-                const apiUrl = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
-                console.log('API URL:', apiUrl);
+                // Bruk Netlify Functions proxy for sikker API-tilgang med 4000 spørsmålar/dag
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const baseUrl = isLocalhost ? 'http://localhost:8888' : window.location.origin;
+                const proxyUrl = `${baseUrl}/.netlify/functions/flights?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
 
-                // Prøv direkte API-kall først (kan feile på grunn av CORS)
+                console.log('� Bruker Netlify proxy med autentiserte API-kall (4000/dag)');
+                console.log('Proxy URL:', proxyUrl);
+
                 try {
-                    console.log('Prøver direkte API-kall...');
-                    const response = await fetch(apiUrl, {
+                    console.log('Prøver Netlify Functions proxy...');
+                    const response = await fetch(proxyUrl, {
                         method: 'GET',
-                        mode: 'cors',
                         headers: {
                             'Accept': 'application/json',
                         }
@@ -416,31 +418,33 @@
 
                     if (response.ok) {
                         const data = await response.json();
-                        console.log('Direkte API-kall fungerte!', data);
+                        console.log('✅ Netlify proxy fungerte!', data);
                         return processFlightData(data);
+                    } else {
+                        throw new Error(`Proxy feil: ${response.status}`);
                     }
-                } catch (directError) {
-                    console.log('Direkte API-kall feilet (CORS), prøver proxy...', directError.message);
+                } catch (proxyError) {
+                    console.log('Netlify proxy feilet, prøver fallback...', proxyError.message);
                 }
 
-                // Prøv CORS proxy som backup
-                console.log('Prøver CORS proxy...');
-                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(apiUrl);
+                // Prøv fallback CORS proxy som backup
+                console.log('Prøver fallback CORS proxy...');
+                const fallbackProxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(`https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`);
 
-                const proxyResponse = await fetch(proxyUrl);
+                const fallbackResponse = await fetch(fallbackProxyUrl);
 
-                if (!proxyResponse.ok) {
-                    throw new Error(`Proxy feil: ${proxyResponse.status}`);
+                if (!fallbackResponse.ok) {
+                    throw new Error(`Fallback proxy feil: ${fallbackResponse.status}`);
                 }
 
-                const proxyData = await proxyResponse.json();
+                const fallbackData = await fallbackResponse.json();
 
-                if (proxyData.contents) {
-                    const flightData = JSON.parse(proxyData.contents);
-                    console.log('Hentet data via proxy:', flightData);
+                if (fallbackData.contents) {
+                    const flightData = JSON.parse(fallbackData.contents);
+                    console.log('Hentet data via fallback proxy:', flightData);
                     return processFlightData(flightData);
                 } else {
-                    console.log('Proxy ga ingen data');
+                    console.log('Fallback proxy ga ingen data');
                     return null;
                 }
 

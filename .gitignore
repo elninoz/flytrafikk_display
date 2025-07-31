@@ -1,9 +1,13 @@
-# Hemmelege API-nøklar
+# Hemmelege API-nøklar - IKKJE last opp til GitHub!
 credentials.json
 
-# Lokale konfigurasjonsfiler
+# Netlify lokal utvikling
+.netlify/
+
+# Andre konfigurasjonsfiler
 *.env
 .env.local
+config.json
 
 # Backup-filer
 *.bak
@@ -12,3 +16,7 @@ credentials.json
 # OS-spesifikke filer
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Node modules (om du bruker npm)
+node_modules/
