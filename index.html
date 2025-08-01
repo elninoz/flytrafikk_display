@@ -209,7 +209,7 @@
             filter: blur(0.4px);
         }
 
-        .status-indicator {
+        .live-indicator {
             font-size: 1.8rem;
             color: #00ff88;
             text-shadow: 0 0 10px #00ff88;
@@ -496,9 +496,9 @@
             const airline = getAirlineFromCallsign(callsign);
             const currentTime = new Date().toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' });
 
-            // Format flight time information
+            // Format flight time information - with validation
             let flightTimeInfo = squawk; // Fallback to squawk if no time data
-            if (totalDuration && remainingTime !== null) {
+            if (totalDuration && remainingTime !== null && totalDuration < 1440) { // Max 24 hours seems reasonable
                 const totalHours = Math.floor(totalDuration / 60);
                 const totalMinutes = totalDuration % 60;
                 const remainingHours = Math.floor(remainingTime / 60);
@@ -509,7 +509,7 @@
                 } else {
                     flightTimeInfo = `Landa (${totalHours}t ${totalMinutes}m total)`;
                 }
-            } else if (elapsedTime !== null && elapsedTime > 0) {
+            } else if (elapsedTime !== null && elapsedTime > 0 && elapsedTime < 1440) { // Max 24 hours
                 const elapsedHours = Math.floor(elapsedTime / 60);
                 const elapsedMin = elapsedTime % 60;
                 flightTimeInfo = `${elapsedHours}t ${elapsedMin}m i lufta`;
@@ -527,7 +527,7 @@
                     
                     <div class="time-section">
                         <div class="time-info">${currentTime}</div>
-                        <div class="status-indicator">Live</div>
+                        <div class="live-indicator">Live</div>
                     </div>
                     
                     <div class="flight-details">
@@ -562,19 +562,54 @@
 
         function getAirlineFromCallsign(callsign) {
             const airlines = {
+                // Skandinaviske flyselskap
                 'SAS': 'SAS', 'SK': 'SAS',
                 'DY': 'Norwegian', 'NAX': 'Norwegian',
                 'WF': 'Widerøe', 'WIF': 'Widerøe',
+                
+                // Islandske flyselskap
+                'ICE': 'Icelandair', 'FI': 'Icelandair',
+                'WOW': 'WOW air', 'WW': 'WOW air',
+                
+                // Europeiske flyselskap
                 'KLM': 'KLM', 'KL': 'KLM',
                 'LH': 'Lufthansa', 'DLH': 'Lufthansa',
                 'BA': 'British Airways', 'BAW': 'British Airways',
-                'AF': 'Air France', 'AFR': 'Air France'
+                'AF': 'Air France', 'AFR': 'Air France',
+                'RYR': 'Ryanair', 'FR': 'Ryanair',
+                'EZY': 'easyJet', 'U2': 'easyJet',
+                'VLG': 'Vueling', 'VY': 'Vueling',
+                'IBE': 'Iberia', 'IB': 'Iberia',
+                'TAP': 'TAP Air Portugal', 'TP': 'TAP Air Portugal',
+                'SWR': 'Swiss', 'LX': 'Swiss',
+                'AUA': 'Austrian', 'OS': 'Austrian',
+                'BEL': 'Brussels Airlines', 'SN': 'Brussels Airlines',
+                'CSA': 'Czech Airlines', 'OK': 'Czech Airlines',
+                'LOT': 'LOT Polish', 'LO': 'LOT Polish',
+                'FIN': 'Finnair', 'AY': 'Finnair',
+                
+                // Amerikanske flyselskap
+                'UAL': 'United', 'UA': 'United',
+                'AAL': 'American', 'AA': 'American',
+                'DAL': 'Delta', 'DL': 'Delta',
+                'SWA': 'Southwest', 'WN': 'Southwest',
+                
+                // Andre store flyselskap
+                'THY': 'Turkish Airlines', 'TK': 'Turkish Airlines',
+                'ELY': 'El Al', 'LY': 'El Al',
+                'QTR': 'Qatar Airways', 'QR': 'Qatar Airways',
+                'UAE': 'Emirates', 'EK': 'Emirates',
+                'ETD': 'Etihad', 'EY': 'Etihad'
             };
 
             if (!callsign) return 'Ukjent flyselskap';
 
-            for (let i = 3; i >= 2; i--) {
-                const code = callsign.substring(0, i).toUpperCase();
+            // Try exact matches first
+            const cleanCallsign = callsign.trim().toUpperCase();
+            
+            // Check for exact airline codes
+            for (let i = 4; i >= 2; i--) {
+                const code = cleanCallsign.substring(0, i);
                 if (airlines[code]) {
                     return airlines[code];
                 }
@@ -629,7 +664,7 @@
         function updateStatusIndicator(apiStatus) {
             const indicator = document.getElementById('statusIndicator');
             const tooltip = document.getElementById('statusText');
-            
+
             if (!apiStatus) {
                 // No status data - critical error
                 indicator.className = 'status-indicator status-red';
@@ -689,7 +724,7 @@
             const tooltip = document.getElementById('statusTooltip');
             const isVisible = tooltip.style.display === 'block';
             tooltip.style.display = isVisible ? 'none' : 'block';
-            
+
             // Hide after 5 seconds
             if (!isVisible) {
                 setTimeout(() => {
@@ -699,10 +734,10 @@
         }
 
         // Hide tooltip when clicking elsewhere
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const indicator = document.getElementById('statusIndicator');
             const tooltip = document.getElementById('statusTooltip');
-            
+
             if (!indicator.contains(event.target)) {
                 tooltip.style.display = 'none';
             }

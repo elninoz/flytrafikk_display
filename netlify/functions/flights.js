@@ -166,7 +166,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
 
                 if (callsign) {
                     aeroDataBoxTotal++;
-                    
+
                     // Try to get detailed flight info from AeroDataBox first
                     const flightInfo = await getFlightRoute(callsign);
 
@@ -203,7 +203,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
             }
 
             data.states = enhancedStates;
-            
+
             // Add status information
             data.apiStatus = {
                 aeroDataBoxWorking: aeroDataBoxTotal > 0 ? (aeroDataBoxSuccess / aeroDataBoxTotal) : 0,
