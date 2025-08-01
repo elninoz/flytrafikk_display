@@ -50,7 +50,7 @@ function loadAirlineDatabase() {
             } catch (e) {
                 console.log('Could not list directory contents');
             }
-            
+
             // Return empty database but don't crash
             airlineDatabase = {};
             return airlineDatabase;
@@ -234,7 +234,7 @@ async function makeRequest(url, headers = {}, retries = 2) {
 
             const result = await new Promise((resolve, reject) => {
                 const urlObj = new URL(url);
-                
+
                 // Adjust timeout based on the API - OpenSky can be slow
                 const isOpenSky = urlObj.hostname.includes('opensky');
                 const baseTimeout = isOpenSky ? 8000 : 6000; // Even shorter for OpenSky
