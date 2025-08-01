@@ -17,10 +17,10 @@ function loadAirlineDatabase() {
             '/opt/build/repo/airline-database.txt',                // Netlify build path
             './airline-database.txt'                               // Same directory
         ];
-        
+
         let content = null;
         let usedPath = null;
-        
+
         for (const dbPath of possiblePaths) {
             try {
                 content = fs.readFileSync(dbPath, 'utf8');
@@ -32,7 +32,7 @@ function loadAirlineDatabase() {
                 continue;
             }
         }
-        
+
         if (!content) {
             console.error('Could not find airline database in any expected location');
             return {};
@@ -120,13 +120,13 @@ async function getFlightRoute(callsign) {
         };
 
         const data = await makeRequest(url, headers);
-        
+
         // Handle empty or invalid responses
         if (!data || !Array.isArray(data) || data.length === 0) {
             console.log(`No flight data found for ${cleanCallsign} (empty or invalid response)`);
             return null;
         }
-        
+
         console.log(`AeroDataBox response for ${cleanCallsign}:`, JSON.stringify(data, null, 2));
 
         // Extract enhanced flight information from the response
@@ -216,6 +216,10 @@ async function makeRequest(url, headers = {}, retries = 2) {
 
             const result = await new Promise((resolve, reject) => {
                 const urlObj = new URL(url);
+                
+                // Adjust timeout based on the API - OpenSky can be slow
+                const isOpenSky = urlObj.hostname.includes('opensky');
+                const baseTimeout = isOpenSky ? 12000 : 8000; // Shorter for OpenSky
 
                 const options = {
                     hostname: urlObj.hostname,
@@ -227,7 +231,7 @@ async function makeRequest(url, headers = {}, retries = 2) {
                         'User-Agent': 'flytrafikk-display/1.0',
                         ...headers
                     },
-                    timeout: attempt === 0 ? 15000 : 20000 // Longer timeout on retries
+                    timeout: attempt === 0 ? baseTimeout : baseTimeout + 5000
                 };
 
                 const req = https.request(options, (res) => {
@@ -257,7 +261,7 @@ async function makeRequest(url, headers = {}, retries = 2) {
                                 resolve([]);
                                 return;
                             }
-                            
+
                             const parsed = JSON.parse(data);
                             resolve(parsed);
                         } catch (error) {
@@ -412,6 +416,14 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
     } catch (error) {
         console.error('OpenSky request failed:', error.message);
 
+        // Provide helpful error message for different failure types
+        let errorMessage = 'OpenSky API problem';
+        if (error.message.includes('timeout')) {
+            errorMessage = 'OpenSky API timeout - prøv igjen';
+        } else if (error.message.includes('ENOTFOUND')) {
+            errorMessage = 'Nettverksproblem - sjekk tilkopling';
+        }
+
         // Return basic error response with fallback data
         return {
             statusCode: 200, // Don't fail completely
@@ -419,7 +431,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
             body: JSON.stringify({
                 states: [],
                 time: Math.floor(Date.now() / 1000),
-                error: `OpenSky API problem: ${error.message}`,
+                error: errorMessage,
                 apiStatus: {
                     aeroDataBoxWorking: 0,
                     totalFlights: 0,

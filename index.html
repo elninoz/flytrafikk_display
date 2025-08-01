@@ -302,14 +302,35 @@
         }
 
         /* Fullscreen mode styles */
+        :fullscreen {
+            background: #000 !important;
+        }
+
+        :-webkit-full-screen {
+            background: #000 !important;
+        }
+
+        :-moz-full-screen {
+            background: #000 !important;
+        }
+
         body.fullscreen {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
             padding: 0 !important;
             margin: 0 !important;
             overflow: hidden !important;
+            background: #000 !important;
+            z-index: 99999 !important;
         }
 
         body.fullscreen * {
-            box-sizing: border-box;
+            box-sizing: border-box !important;
         }
 
         body.fullscreen .controls {
@@ -317,17 +338,19 @@
             top: 10px !important;
             left: 10px !important;
             right: 10px !important;
-            z-index: 10000 !important;
-            background: rgba(0, 0, 0, 0.8) !important;
-            backdrop-filter: blur(10px) !important;
+            z-index: 100000 !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            backdrop-filter: blur(15px) !important;
             border-radius: 10px !important;
             padding: 10px !important;
-            opacity: 0.7 !important;
+            opacity: 0.6 !important;
             transition: opacity 0.3s ease !important;
+            transform: scale(0.8) !important;
         }
 
         body.fullscreen .controls:hover {
-            opacity: 1;
+            opacity: 1 !important;
+            transform: scale(1) !important;
         }
 
         body.fullscreen .led-display {
@@ -338,36 +361,55 @@
             bottom: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
+            max-width: none !important;
             background: #000 !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            z-index: 9999 !important;
+            z-index: 99998 !important;
             margin: 0 !important;
-            padding: 0 !important;
+            padding: 20px !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
         }
 
         body.fullscreen .flight-info {
-            transform: scale(1.5);
-            max-width: 90vw;
-            max-height: 90vh;
-            overflow: hidden;
+            transform: scale(1.8) !important;
+            max-width: 90vw !important;
+            max-height: 90vh !important;
+            overflow: hidden !important;
+            text-align: center !important;
         }
 
         body.fullscreen .airline-name {
-            font-size: 4rem;
+            font-size: 5rem !important;
+            margin-bottom: 20px !important;
         }
 
         body.fullscreen .flight-number {
-            font-size: 3rem;
+            font-size: 4rem !important;
+            margin-bottom: 30px !important;
         }
 
         body.fullscreen .route-display {
-            font-size: 3rem;
+            font-size: 3.5rem !important;
+            margin-bottom: 30px !important;
         }
 
         body.fullscreen .time-info {
-            font-size: 3.5rem;
+            font-size: 4.5rem !important;
+        }
+
+        body.fullscreen .time-section {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+            text-align: center !important;
+        }
+
+        body.fullscreen .live-indicator {
+            font-size: 2.5rem !important;
+            padding: 15px 30px !important;
         }
     </style>
 </head>
@@ -410,26 +452,26 @@
         // Simple beep sound function
         function playNewFlightSound() {
             if (!soundEnabled) return;
-            
+
             try {
                 // Create a simple beep using Web Audio API
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
-                
+
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
-                
+
                 // Pleasant notification sound: 800Hz for 200ms
                 oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
                 oscillator.type = 'sine';
-                
+
                 gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-                
+
                 oscillator.start();
                 oscillator.stop(audioContext.currentTime + 0.2);
-                
+
                 console.log('🔊 Nytt fly oppdaga - spelar notifikasjonslyd');
             } catch (error) {
                 console.log('Kunne ikkje spele lyd:', error.message);
@@ -447,7 +489,7 @@
                     knownFlights.add(flightId);
                     newFlightDetected = true;
                     console.log(`🆕 Nytt fly oppdaga: ${flightId}`);
-                    
+
                     // Only play sound if we haven't played it for this flight before
                     if (!playedSounds.has(flightId) && soundEnabled) {
                         playedSounds.add(flightId);
@@ -522,7 +564,7 @@
             }
 
             // Listen for fullscreen changes (when user presses ESC)
-            document.addEventListener('fullscreenchange', function() {
+            document.addEventListener('fullscreenchange', function () {
                 const button = document.getElementById('fullscreenButton');
                 if (!document.fullscreenElement) {
                     button.textContent = '🔳 Fullskjerm';
@@ -672,7 +714,7 @@
                 if (!minutes || minutes <= 0) return 'Ukjent';
                 const hours = Math.floor(minutes / 60);
                 const mins = minutes % 60;
-                
+
                 if (hours > 0) {
                     return mins > 0 ? `${hours}H${mins}M` : `${hours}H`;
                 } else {
@@ -682,18 +724,30 @@
 
             // Format flight time information - with validation
             let flightTimeInfo = 'Ukjent tid'; // Better fallback than squawk
+            console.log(`Flygetid debug for ${callsign}:`, {
+                totalDuration, remainingTime, elapsedTime,
+                totalDurationCheck: totalDuration && totalDuration > 0 && totalDuration < 1440,
+                remainingTimeCheck: remainingTime !== null && remainingTime > 0,
+                elapsedTimeCheck: elapsedTime !== null && elapsedTime > 0 && elapsedTime < 1440
+            });
+
             if (totalDuration && totalDuration > 0 && totalDuration < 1440) { // Max 24 hours seems reasonable
                 if (remainingTime !== null && remainingTime > 0) {
                     const formatTotal = formatDuration(totalDuration);
                     const formatRemaining = formatDuration(remainingTime);
                     flightTimeInfo = `${formatRemaining} igjen av ${formatTotal}`;
+                    console.log(`✈️ Flygetid sett til: ${flightTimeInfo}`);
                 } else {
                     const formatTotal = formatDuration(totalDuration);
                     flightTimeInfo = `Total: ${formatTotal}`;
+                    console.log(`✈️ Flygetid sett til: ${flightTimeInfo}`);
                 }
             } else if (elapsedTime !== null && elapsedTime > 0 && elapsedTime < 1440) { // Max 24 hours
                 const formatElapsed = formatDuration(elapsedTime);
                 flightTimeInfo = `${formatElapsed} i lufta`;
+                console.log(`✈️ Flygetid sett til: ${flightTimeInfo}`);
+            } else {
+                console.log(`❌ Ingen flygetid-data passar kriteria for ${callsign}`);
             }
 
             document.getElementById('flightDisplay').innerHTML = `
@@ -864,7 +918,7 @@
         function toggleSound() {
             soundEnabled = !soundEnabled;
             const button = document.getElementById('soundButton');
-            
+
             if (soundEnabled) {
                 button.textContent = '🔊 Lyd på';
                 button.style.background = '#0a84ff';
@@ -874,35 +928,66 @@
                 button.style.background = '#666';
                 console.log('🔇 Fly-notifikasjoner deaktivert');
             }
-            
+
             // Save preference to localStorage
             localStorage.setItem('flightSoundEnabled', soundEnabled);
         }
 
         function toggleFullscreen() {
             const button = document.getElementById('fullscreenButton');
-            
-            if (!document.fullscreenElement) {
+
+            if (!document.fullscreenElement && !document.body.classList.contains('fullscreen')) {
                 // Enter fullscreen
-                document.documentElement.requestFullscreen().then(() => {
+                const enterFullscreen = () => {
                     button.textContent = '🔲 Avslutt fullskjerm';
                     button.style.background = '#ff6b35';
                     document.body.classList.add('fullscreen');
                     console.log('📺 Fullskjerm aktivert');
-                }).catch(err => {
-                    console.error('Kunne ikkje aktivere fullskjerm:', err);
-                    alert('Fullskjerm støttast ikkje eller blei blokkert');
-                });
+                };
+
+                // Try browser fullscreen API first
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen()
+                        .then(enterFullscreen)
+                        .catch(() => {
+                            // Fallback to CSS fullscreen if browser fullscreen fails
+                            console.log('Browser fullscreen failed, using CSS fallback');
+                            enterFullscreen();
+                        });
+                } else {
+                    // Direct CSS fullscreen for browsers without API support
+                    enterFullscreen();
+                }
             } else {
                 // Exit fullscreen
-                document.exitFullscreen().then(() => {
+                const exitFullscreen = () => {
                     button.textContent = '🔳 Fullskjerm';
                     button.style.background = '';
                     document.body.classList.remove('fullscreen');
                     console.log('📺 Fullskjerm deaktivert');
-                });
+                };
+
+                // Exit browser fullscreen if active
+                if (document.fullscreenElement && document.exitFullscreen) {
+                    document.exitFullscreen().then(exitFullscreen);
+                } else {
+                    // Direct CSS exit
+                    exitFullscreen();
+                }
             }
         }
+
+        // Listen for fullscreen changes from browser (F11, ESC, etc.)
+        document.addEventListener('fullscreenchange', () => {
+            const button = document.getElementById('fullscreenButton');
+            if (!document.fullscreenElement && document.body.classList.contains('fullscreen')) {
+                // Browser exited fullscreen but CSS fullscreen is still active
+                button.textContent = '🔳 Fullskjerm';
+                button.style.background = '';
+                document.body.classList.remove('fullscreen');
+                console.log('📺 Browser fullscreen avslutta, ryddar CSS');
+            }
+        });
 
         function updateStatusIndicator(apiStatus) {
             const indicator = document.getElementById('statusIndicator');
