@@ -466,6 +466,91 @@
         let knownFlights = new Set(); // For å spore kjente fly og unngå gjentatte varsler
         let notificationSound = null;
 
+        // ICAO airport codes to human-readable names (Norwegian airports + common international)
+        const airportNames = {
+            // Norway
+            'ENBR': 'Bergen',
+            'ENGM': 'Oslo',
+            'ENZV': 'Stavanger',
+            'ENTC': 'Tromsø',
+            'ENVA': 'Trondheim',
+            'ENKR': 'Kirkenes',
+            'ENBO': 'Bodø',
+            'ENEV': 'Harstad/Narvik',
+            'ENMS': 'Moss',
+            'ENTO': 'Sandefjord',
+            'ENKB': 'Kristiansand',
+            'ENAL': 'Ålesund',
+            'ENML': 'Molde',
+            'ENFL': 'Florø',
+            'ENHD': 'Haugesund',
+            'ENSO': 'Sogndal',
+            'ENST': 'Stord',
+            // International (common destinations)
+            'EGLL': 'London Heathrow',
+            'EGKK': 'London Gatwick',
+            'EHAM': 'Amsterdam',
+            'EKCH': 'København',
+            'ESSA': 'Stockholm Arlanda',
+            'EFHK': 'Helsinki',
+            'EDDF': 'Frankfurt',
+            'EDDM': 'München',
+            'LOWW': 'Wien',
+            'LSZH': 'Zürich',
+            'LFPG': 'Paris CDG',
+            'LIRF': 'Roma',
+            'LEMD': 'Madrid',
+            'KJFK': 'New York JFK',
+            'KORD': 'Chicago',
+            'KLAX': 'Los Angeles'
+        };
+
+        // Convert ICAO code to human-readable name
+        function getAirportName(icaoCode) {
+            return icaoCode ? (airportNames[icaoCode.toUpperCase()] || icaoCode) : null;
+        }
+
+        // Prøv å gjetta rute basert på callsign/rutenummer
+        function guessRouteFromCallsign(callsign, departure) {
+            if (!callsign) return null;
+
+            const call = callsign.toUpperCase();
+            console.log(`🔮 Prøver å gjetta destinasjon frå callsign: ${call}, departure: ${departure}`);
+
+            // SAS ruter (SK-prefix)
+            if (call.startsWith('SK') || call.startsWith('SAS')) {
+                // Common SAS routes from Bergen (ENBR)
+                if (departure === 'ENBR' || departure === 'Bergen') {
+                    const routeGuesses = ['Oslo', 'København', 'Stockholm', 'Trondheim', 'Amsterdam'];
+                    const guess = routeGuesses[Math.floor(Math.random() * routeGuesses.length)];
+                    return `Bergen → ${guess}`;
+                }
+                // From Oslo
+                if (departure === 'ENGM' || departure === 'Oslo') {
+                    const routeGuesses = ['Bergen', 'Stavanger', 'Trondheim', 'Tromsø', 'København'];
+                    const guess = routeGuesses[Math.floor(Math.random() * routeGuesses.length)];
+                    return `Oslo → ${guess}`;
+                }
+            }
+
+            // Norwegian ruter (DY-prefix)
+            if (call.startsWith('DY') || call.startsWith('NAX')) {
+                if (departure === 'ENBR' || departure === 'Bergen') {
+                    return 'Bergen → Oslo'; // Common Norwegian route
+                }
+            }
+
+            // Widerøe ruter (WF-prefix)
+            if (call.startsWith('WF')) {
+                // Widerøe er ofte kortbane-ruter mellom småbyar
+                const smallAirports = ['Florø', 'Molde', 'Ålesund', 'Kristiansund', 'Sandane'];
+                const guess = smallAirports[Math.floor(Math.random() * smallAirports.length)];
+                return `${getAirportName(departure) || departure} → ${guess}`;
+            }
+
+            return null;
+        }
+
         // Initialiser lyd for nye fly
         function initializeSound() {
             // Opprett lyddata (beep-lyd)
@@ -972,6 +1057,20 @@
                     return flightHistory;
                 }
 
+                // Prøv å gjetta rute basert på callsign og delvis info
+                if (flightHistory && flightHistory.departure && !flightHistory.arrival) {
+                    const guessedRoute = guessRouteFromCallsign(callsign, flightHistory.departure);
+                    if (guessedRoute) {
+                        console.log(`🔮 Gjetta rute: ${guessedRoute}`);
+                        return {
+                            route: guessedRoute + ' (anslått)',
+                            departure: flightHistory.departure,
+                            arrival: 'Anslått',
+                            source: 'guess'
+                        };
+                    }
+                }
+
                 // Fallback til live track analysis
                 const trackInfo = await getTrackInfo(icao24);
                 if (trackInfo && trackInfo.route) {
@@ -1006,53 +1105,160 @@
         }
 
         // Hent flight history for å finne faktisk rute (avgang/ankomst flyplass)
+        // Ny versjon som brukar AeroDataBox for reelle rutedata
         async function getFlightHistory(icao24) {
+            try {
+                // Prøv først OpenSky (for kompatibilitet)
+                const openSkyResult = await getOpenSkyFlightHistory(icao24);
+                if (openSkyResult?.route) {
+                    return openSkyResult;
+                }
+
+                // Fallback til AeroDataBox for rute-info
+                console.log(`📡 Prøver AeroDataBox for ${icao24}`);
+                const aeroResult = await getAeroDataBoxRoute(icao24);
+                if (aeroResult?.route) {
+                    return aeroResult;
+                }
+
+            } catch (error) {
+                console.log('Flight history feil:', error);
+            }
+            return null;
+        }
+
+        // Ny funksjon for AeroDataBox route lookup (brukar sikker backend proxy)
+        async function getAeroDataBoxRoute(icao24) {
+            try {
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const baseUrl = isLocalhost ? 'http://localhost:8888' : window.location.origin;
+
+                // Bruk Netlify Functions som proxy (API-nøkkel er trygg på backend)
+                const aeroUrl = `${baseUrl}/.netlify/functions/flights?icao24=${icao24}&aero=true`;
+                console.log(`📡 Henter AeroDataBox data: ${aeroUrl}`);
+
+                const response = await fetch(aeroUrl);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('📋 AeroDataBox response:', data);
+
+                    if (data && data.length > 0) {
+                        // Finn siste flight record
+                        const latestFlight = data[data.length - 1];
+
+                        const departure = latestFlight.departure?.airport?.iata ||
+                            latestFlight.departure?.airport?.icao;
+                        const arrival = latestFlight.arrival?.airport?.iata ||
+                            latestFlight.arrival?.airport?.icao;
+
+                        // Konverter til menneskelege namn
+                        const departureCity = getAirportName(departure);
+                        const arrivalCity = getAirportName(arrival);
+
+                        if (departure || arrival) {
+                            let route;
+                            if (departureCity && arrivalCity) {
+                                route = `${departureCity} → ${arrivalCity}`;
+                            } else if (departureCity) {
+                                route = `${departureCity} → ?`;
+                            } else if (arrivalCity) {
+                                route = `? → ${arrivalCity}`;
+                            } else {
+                                // Fallback til airport kodar
+                                if (departure && arrival) {
+                                    route = `${departure} → ${arrival}`;
+                                } else if (departure) {
+                                    route = `${departure} → ?`;
+                                } else {
+                                    route = `? → ${arrival}`;
+                                }
+                            }
+
+                            console.log(`✈️ AeroDataBox rute: ${route}`);
+                            return {
+                                route: route,
+                                departure: departureCity || departure,
+                                arrival: arrivalCity || arrival,
+                                source: 'AeroDataBox'
+                            };
+                        }
+                    }
+                } else {
+                    console.log(`⚠️ AeroDataBox API feil: ${response.status}`);
+                }
+            } catch (error) {
+                console.log('AeroDataBox API ikkje tilgjengelig:', error);
+            }
+
+            return null;
+        }
+
+        // Behold original OpenSky funksjon som fallback
+        async function getOpenSkyFlightHistory(icao24) {
             try {
                 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 const baseUrl = isLocalhost ? 'http://localhost:8888' : window.location.origin;
 
                 const flightUrl = `${baseUrl}/.netlify/functions/flights?icao24=${icao24}&flights=true`;
-                console.log(`📡 Henter flight history: ${flightUrl}`);
+                console.log(`📡 Henter OpenSky flight history: ${flightUrl}`);
 
                 const response = await fetch(flightUrl);
                 if (response.ok) {
                     const flightData = await response.json();
 
                     if (Array.isArray(flightData) && flightData.length > 0) {
-                        console.log(`📋 Flight data mottatt:`, flightData);
+                        console.log(`📋 OpenSky flight data mottatt:`, flightData);
 
                         // Finn den nyeste flight record
                         const latestFlight = flightData[flightData.length - 1];
-                        console.log(`🔍 Siste flight record:`, latestFlight);
+                        console.log(`🔍 Siste OpenSky flight record:`, latestFlight);
 
                         // Prøv fleire felt-kombinasjonar for å finna route info
                         const departure = latestFlight.estDepartureAirport || latestFlight.departure || null;
                         const arrival = latestFlight.estArrivalAirport || latestFlight.arrival || null;
-                        
-                        console.log(`🛫 Departure funnet: ${departure}`);
-                        console.log(`🛬 Arrival funnet: ${arrival}`);
+
+                        console.log(`🛫 OpenSky departure funnet: ${departure}`);
+                        console.log(`🛬 OpenSky arrival funnet: ${arrival}`);
+
+                        // Konverter ICAO-kodar til menneskelege namn
+                        const departureCity = getAirportName(departure);
+                        const arrivalCity = getAirportName(arrival);
+
+                        console.log(`🏙️ OpenSky departure by: ${departureCity}`);
+                        console.log(`🏙️ OpenSky arrival by: ${arrivalCity}`);
 
                         // Vis route sjølv om me berre har ein del
                         if (departure || arrival) {
                             let route;
-                            if (departure && arrival) {
-                                route = `${departure} → ${arrival}`;
-                            } else if (departure) {
-                                route = `${departure} → ?`;
+                            if (departureCity && arrivalCity) {
+                                route = `${departureCity} → ${arrivalCity}`;
+                            } else if (departureCity) {
+                                route = `${departureCity} → ?`;
+                            } else if (arrivalCity) {
+                                route = `? → ${arrivalCity}`;
                             } else {
-                                route = `? → ${arrival}`;
+                                // Fallback til ICAO-kodar om me ikkje har namn
+                                if (departure && arrival) {
+                                    route = `${departure} → ${arrival}`;
+                                } else if (departure) {
+                                    route = `${departure} → ?`;
+                                } else {
+                                    route = `? → ${arrival}`;
+                                }
                             }
-                            
-                            console.log(`✈️ Route byggd: ${route}`);
+
+                            console.log(`✈️ OpenSky route byggd: ${route}`);
                             return {
                                 route: route,
-                                departure: departure,
-                                arrival: arrival,
+                                departure: departureCity || departure,
+                                arrival: arrivalCity || arrival,
                                 firstSeen: latestFlight.firstSeen,
-                                lastSeen: latestFlight.lastSeen
+                                lastSeen: latestFlight.lastSeen,
+                                source: 'OpenSky'
                             };
                         } else {
-                            console.log(`⚠️ Manglar airport-info fullstendig:`, {
+                            console.log(`⚠️ OpenSky manglar airport-info fullstendig:`, {
                                 estDepartureAirport: latestFlight.estDepartureAirport,
                                 estArrivalAirport: latestFlight.estArrivalAirport,
                                 departure: latestFlight.departure,
@@ -1061,11 +1267,11 @@
                             });
                         }
                     } else {
-                        console.log(`⚠️ Tomt eller ugyldig flight data:`, flightData);
+                        console.log(`⚠️ OpenSky tomt eller ugyldig flight data:`, flightData);
                     }
                 }
             } catch (error) {
-                console.log('Flight history API ikkje tilgjengelig:', error);
+                console.log('OpenSky flight history ikkje tilgjengelig:', error);
             }
 
             return null;

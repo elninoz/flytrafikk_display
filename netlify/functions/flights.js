@@ -186,7 +186,7 @@ async function handleFlightsRequest(icao24, headers) {
     // Søk etter flighter siste dag (OpenSky safe: same partition)
     const now = new Date();
     const endTime = Math.floor(now.getTime() / 1000);
-    
+
     // Start frå same dag kl 00:00 for å unngå partition-spill
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const beginTime = Math.floor(startOfToday.getTime() / 1000);
@@ -238,6 +238,89 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
     }
 }
 
+// Handle AeroDataBox requests (premium route data)
+async function handleAeroDataBoxRequest(icao24, headers) {
+    console.log(`🛩️ AeroDataBox request for aircraft: ${icao24}`);
+
+    const rapidApiKey = process.env.RAPIDAPI_KEY;
+    if (!rapidApiKey) {
+        console.log('❌ No RapidAPI key available');
+        return {
+            statusCode: 401,
+            headers,
+            body: JSON.stringify({ error: 'RapidAPI key required for AeroDataBox' })
+        };
+    }
+
+    console.log(`🔑 Using RapidAPI key for AeroDataBox`);
+
+    const url = `https://aerodatabox.p.rapidapi.com/flights/aircraft/${icao24}`;
+
+    return new Promise((resolve) => {
+        const urlObj = new URL(url);
+
+        const options = {
+            hostname: urlObj.hostname,
+            port: 443,
+            path: urlObj.pathname + urlObj.search,
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-RapidAPI-Key': rapidApiKey,
+                'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com'
+            },
+            timeout: 10000
+        };
+
+        const req = https.request(options, (res) => {
+            let data = '';
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+
+            res.on('end', () => {
+                try {
+                    const jsonData = JSON.parse(data);
+                    console.log(`✅ AeroDataBox data received for ${icao24}`);
+                    resolve({
+                        statusCode: 200,
+                        headers,
+                        body: JSON.stringify(jsonData)
+                    });
+                } catch (parseError) {
+                    console.error('AeroDataBox JSON parse error:', parseError.message);
+                    resolve({
+                        statusCode: 500,
+                        headers,
+                        body: JSON.stringify({ error: 'Invalid response from AeroDataBox' })
+                    });
+                }
+            });
+        });
+
+        req.on('error', (error) => {
+            console.error('AeroDataBox request failed:', error.message);
+            resolve({
+                statusCode: 500,
+                headers,
+                body: JSON.stringify({ error: 'AeroDataBox request failed', message: error.message })
+            });
+        });
+
+        req.on('timeout', () => {
+            req.destroy();
+            console.error('AeroDataBox request timeout');
+            resolve({
+                statusCode: 408,
+                headers,
+                body: JSON.stringify({ error: 'AeroDataBox request timeout' })
+            });
+        });
+
+        req.end();
+    });
+}
+
 exports.handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
@@ -255,11 +338,13 @@ exports.handler = async (event, context) => {
     try {
         const {
             lamin, lamax, lomin, lomax,
-            icao24, track, flights
+            icao24, track, flights, aero
         } = event.queryStringParameters || {};
 
         // Sjekk kva type forespørsel dette er
-        if (track === 'true' && icao24) {
+        if (aero === 'true' && icao24) {
+            return await handleAeroDataBoxRequest(icao24, headers);
+        } else if (track === 'true' && icao24) {
             return await handleTrackRequest(icao24, headers);
         } else if (flights === 'true' && icao24) {
             return await handleFlightsRequest(icao24, headers);
@@ -271,7 +356,7 @@ exports.handler = async (event, context) => {
                 headers,
                 body: JSON.stringify({
                     error: 'Missing required parameters',
-                    usage: 'Use ?lamin=&lamax=&lomin=&lomax= for states, ?icao24=xxx&track=true for tracks, ?icao24=xxx&flights=true for flight history'
+                    usage: 'Use ?lamin=&lamax=&lomin=&lomax= for states, ?icao24=xxx&track=true for tracks, ?icao24=xxx&flights=true for flight history, ?icao24=xxx&aero=true for AeroDataBox'
                 })
             };
         }
