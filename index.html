@@ -34,6 +34,54 @@
             gap: 15px;
             align-items: center;
             flex-wrap: wrap;
+            position: relative;
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator:hover {
+            transform: scale(1.1);
+        }
+
+        .status-green {
+            background: #00ff00;
+            box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+        }
+
+        .status-yellow {
+            background: #ffff00;
+            box-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00;
+        }
+
+        .status-red {
+            background: #ff0000;
+            box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+        }
+
+        .status-tooltip {
+            position: absolute;
+            top: 35px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .controls input,
@@ -257,6 +305,11 @@
 
 <body>
     <div class="controls">
+        <div class="status-indicator" id="statusIndicator" onclick="toggleStatusTooltip()">
+            <div class="status-tooltip" id="statusTooltip">
+                <div id="statusText">Laster status...</div>
+            </div>
+        </div>
         <input type="text" id="gpsCoords" placeholder="GPS koordinatar (59.1166, 9.7194)" style="width: 300px;">
         <input type="number" id="latitude" value="61.0873" step="0.0001" placeholder="Breddegrad" style="width: 120px;">
         <input type="number" id="longitude" value="6.9741" step="0.0001" placeholder="Lengdegrad" style="width: 120px;">
@@ -372,6 +425,9 @@
                 if (response.ok) {
                     const data = await response.json();
 
+                    // Update status indicator based on API response
+                    updateStatusIndicator(data.apiStatus);
+
                     if (data.states && data.states.length > 0) {
                         // Filter out grounded aircraft
                         flights = data.states.filter(flight => {
@@ -428,7 +484,7 @@
             const trueTrack = flight[10] ? Math.round(flight[10]) : 'Ukjent';
             const squawk = flight[14] || 'Ukjent';
             const routeGuess = flight[17] || icao24; // From enhanced data
-            
+
             // New enhanced data from AeroDataBox
             const aircraftType = flight[18] || originCountry; // Fallback to country if no aircraft type
             const totalDuration = flight[19]; // Total flight duration in minutes
@@ -447,7 +503,7 @@
                 const totalMinutes = totalDuration % 60;
                 const remainingHours = Math.floor(remainingTime / 60);
                 const remainingMin = remainingTime % 60;
-                
+
                 if (remainingTime > 0) {
                     flightTimeInfo = `${remainingHours}t ${remainingMin}m igjen av ${totalHours}t ${totalMinutes}m`;
                 } else {
@@ -569,6 +625,88 @@
                 alert('Auto-oppdatering aktivert (30s)');
             }
         }
+
+        function updateStatusIndicator(apiStatus) {
+            const indicator = document.getElementById('statusIndicator');
+            const tooltip = document.getElementById('statusText');
+            
+            if (!apiStatus) {
+                // No status data - critical error
+                indicator.className = 'status-indicator status-red';
+                tooltip.innerHTML = `
+                    <strong>🔴 Kritisk feil</strong><br>
+                    Kunne ikke hente status-informasjon
+                `;
+                return;
+            }
+
+            const { aeroDataBoxWorking, totalFlights, successfulLookups, hasRapidApiKey } = apiStatus;
+
+            if (!hasRapidApiKey) {
+                // Missing RapidAPI key - fallback mode
+                indicator.className = 'status-indicator status-yellow';
+                tooltip.innerHTML = `
+                    <strong>🟡 Fallback-modus</strong><br>
+                    AeroDataBox ikkje konfigurert<br>
+                    Brukar berre grunnleggjande ruteinfo
+                `;
+            } else if (totalFlights === 0) {
+                // No flights to test with
+                indicator.className = 'status-indicator status-yellow';
+                tooltip.innerHTML = `
+                    <strong>🟡 Venter på flydata</strong><br>
+                    AeroDataBox konfigurert ✓<br>
+                    Ingen fly å teste med
+                `;
+            } else if (aeroDataBoxWorking >= 0.8) {
+                // High success rate - all good
+                indicator.className = 'status-indicator status-green';
+                tooltip.innerHTML = `
+                    <strong>🟢 AeroDataBox fungerar</strong><br>
+                    ${successfulLookups}/${totalFlights} oppslag vellykka<br>
+                    Får detaljerte ruter og flytyper
+                `;
+            } else if (aeroDataBoxWorking >= 0.3) {
+                // Partial success - mixed mode
+                indicator.className = 'status-indicator status-yellow';
+                tooltip.innerHTML = `
+                    <strong>🟡 Blandet modus</strong><br>
+                    ${successfulLookups}/${totalFlights} oppslag vellykka<br>
+                    Nokre fly får detaljerte data
+                `;
+            } else {
+                // Low success rate - mostly fallback
+                indicator.className = 'status-indicator status-red';
+                tooltip.innerHTML = `
+                    <strong>🔴 AeroDataBox problem</strong><br>
+                    Berre ${successfulLookups}/${totalFlights} oppslag vellykka<br>
+                    Brukar mest fallback-data
+                `;
+            }
+        }
+
+        function toggleStatusTooltip() {
+            const tooltip = document.getElementById('statusTooltip');
+            const isVisible = tooltip.style.display === 'block';
+            tooltip.style.display = isVisible ? 'none' : 'block';
+            
+            // Hide after 5 seconds
+            if (!isVisible) {
+                setTimeout(() => {
+                    tooltip.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Hide tooltip when clicking elsewhere
+        document.addEventListener('click', function(event) {
+            const indicator = document.getElementById('statusIndicator');
+            const tooltip = document.getElementById('statusTooltip');
+            
+            if (!indicator.contains(event.target)) {
+                tooltip.style.display = 'none';
+            }
+        });
     </script>
 </body>
 

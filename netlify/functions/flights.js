@@ -153,27 +153,35 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
         // Enhanced route lookup with AeroDataBox
         if (data.states) {
             const enhancedStates = [];
+            let aeroDataBoxSuccess = 0;
+            let aeroDataBoxTotal = 0;
 
             for (const state of data.states) {
                 const icao24 = state[0];
                 const callsign = state[1]?.trim();
 
+                // Add enhanced route info to state array
+                const enhancedState = [...state];
                 let routeInfo = null;
 
                 if (callsign) {
+                    aeroDataBoxTotal++;
+                    
                     // Try to get detailed flight info from AeroDataBox first
                     const flightInfo = await getFlightRoute(callsign);
 
                     if (flightInfo && typeof flightInfo === 'object') {
+                        aeroDataBoxSuccess++;
                         // Use detailed flight information
                         routeInfo = flightInfo.route || null;
-                        
+
                         // Add additional flight details to state array
                         enhancedState[18] = flightInfo.aircraftType || null; // Aircraft type
                         enhancedState[19] = flightInfo.totalDuration || null; // Total duration in minutes
                         enhancedState[20] = flightInfo.remainingTime || null; // Remaining time in minutes
                         enhancedState[21] = flightInfo.elapsedTime || null; // Elapsed time in minutes
                     } else if (typeof flightInfo === 'string') {
+                        aeroDataBoxSuccess++;
                         // Backward compatibility - just route string
                         routeInfo = flightInfo;
                     }
@@ -190,14 +198,19 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
                     }
                 }
 
-                // Add enhanced route info to state array
-                const enhancedState = [...state];
                 enhancedState[17] = routeInfo; // Route information
-
                 enhancedStates.push(enhancedState);
             }
 
             data.states = enhancedStates;
+            
+            // Add status information
+            data.apiStatus = {
+                aeroDataBoxWorking: aeroDataBoxTotal > 0 ? (aeroDataBoxSuccess / aeroDataBoxTotal) : 0,
+                totalFlights: aeroDataBoxTotal,
+                successfulLookups: aeroDataBoxSuccess,
+                hasRapidApiKey: !!process.env.RAPIDAPI_KEY
+            };
         }
 
         return {
