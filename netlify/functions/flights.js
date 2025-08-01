@@ -15,27 +15,45 @@ function loadAirlineDatabase() {
             path.join(__dirname, '../../airline-database.txt'),    // Local development
             path.join(process.cwd(), 'airline-database.txt'),      // Netlify root
             '/opt/build/repo/airline-database.txt',                // Netlify build path
-            './airline-database.txt'                               // Same directory
+            '/var/task/airline-database.txt',                      // Lambda path
+            './airline-database.txt',                              // Same directory
+            path.resolve('./airline-database.txt'),               // Resolved path
+            path.resolve(__dirname, '../../airline-database.txt') // Resolved relative path
         ];
 
         let content = null;
         let usedPath = null;
 
+        // Debug current working directory and __dirname
+        console.log(`Current working directory: ${process.cwd()}`);
+        console.log(`__dirname: ${__dirname}`);
+        console.log(`Trying ${possiblePaths.length} possible paths for airline database`);
+
         for (const dbPath of possiblePaths) {
             try {
                 content = fs.readFileSync(dbPath, 'utf8');
                 usedPath = dbPath;
-                console.log(`Successfully loaded airline database from: ${dbPath}`);
+                console.log(`✅ Successfully loaded airline database from: ${dbPath}`);
                 break;
             } catch (err) {
-                console.log(`Failed to load from ${dbPath}: ${err.message}`);
+                console.log(`❌ Failed to load from ${dbPath}: ${err.message}`);
                 continue;
             }
         }
 
         if (!content) {
-            console.error('Could not find airline database in any expected location');
-            return {};
+            console.error('⚠️ Could not find airline database in any expected location');
+            console.log('📂 Available files in current directory:');
+            try {
+                const files = fs.readdirSync(process.cwd());
+                console.log(files.filter(f => f.includes('airline') || f.endsWith('.txt')));
+            } catch (e) {
+                console.log('Could not list directory contents');
+            }
+            
+            // Return empty database but don't crash
+            airlineDatabase = {};
+            return airlineDatabase;
         }
 
         airlineDatabase = {};
@@ -219,7 +237,8 @@ async function makeRequest(url, headers = {}, retries = 2) {
                 
                 // Adjust timeout based on the API - OpenSky can be slow
                 const isOpenSky = urlObj.hostname.includes('opensky');
-                const baseTimeout = isOpenSky ? 12000 : 8000; // Shorter for OpenSky
+                const baseTimeout = isOpenSky ? 8000 : 6000; // Even shorter for OpenSky
+                const maxTimeout = isOpenSky ? 12000 : 10000; // Max timeout cap
 
                 const options = {
                     hostname: urlObj.hostname,
@@ -231,7 +250,7 @@ async function makeRequest(url, headers = {}, retries = 2) {
                         'User-Agent': 'flytrafikk-display/1.0',
                         ...headers
                     },
-                    timeout: attempt === 0 ? baseTimeout : baseTimeout + 5000
+                    timeout: attempt === 0 ? baseTimeout : Math.min(baseTimeout + (attempt * 2000), maxTimeout)
                 };
 
                 const req = https.request(options, (res) => {
@@ -372,8 +391,23 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
                                     routeInfo = 'Widerøe Regional';
                                 } else if (callsign.startsWith('ICE') || callsign.startsWith('FI')) {
                                     routeInfo = 'Icelandair Route';
+                                } else if (callsign.startsWith('AFR')) {
+                                    routeInfo = 'Air France Route';
+                                } else if (callsign.startsWith('KLM')) {
+                                    routeInfo = 'KLM Route';
+                                } else if (callsign.startsWith('LH')) {
+                                    routeInfo = 'Lufthansa Route';
+                                } else if (callsign.startsWith('WIF')) {
+                                    routeInfo = 'Widerøe Route';
                                 } else {
                                     routeInfo = `${airlineName} Route`;
+                                }
+                            } else {
+                                // Final fallback - use callsign pattern matching
+                                if (callsign.match(/^[A-Z]{2,3}\d/)) {
+                                    routeInfo = `${callsign.substring(0, 3)} Flight`;
+                                } else {
+                                    routeInfo = 'Commercial Flight';
                                 }
                             }
                         }
