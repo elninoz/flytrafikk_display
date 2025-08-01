@@ -1108,22 +1108,40 @@
         // Ny versjon som brukar AeroDataBox for reelle rutedata
         async function getFlightHistory(icao24) {
             try {
-                // Prøv først OpenSky (for kompatibilitet)
-                const openSkyResult = await getOpenSkyFlightHistory(icao24);
-                if (openSkyResult?.route) {
-                    return openSkyResult;
-                }
-
-                // Fallback til AeroDataBox for rute-info
-                console.log(`📡 Prøver AeroDataBox for ${icao24}`);
+                // Prøv AeroDataBox FØRST for reelle rutedata
+                console.log(`📡 Startar route-søk for ${icao24}`);
+                console.log(`🥇 Prøver AeroDataBox først for premium rutedata...`);
+                
                 const aeroResult = await getAeroDataBoxRoute(icao24);
                 if (aeroResult?.route) {
+                    console.log(`🏆 AeroDataBox SUCCESS! Rute: ${aeroResult.route} (Kjelde: ${aeroResult.source})`);
                     return aeroResult;
+                } else {
+                    console.log(`⚠️ AeroDataBox returnerte ingen rute-data`);
                 }
 
+                // Fallback til OpenSky (for kompatibilitet)
+                console.log(`� AeroDataBox gav ingen data, prøver OpenSky som fallback...`);
+                const openSkyResult = await getOpenSkyFlightHistory(icao24);
+                if (openSkyResult?.route) {
+                    console.log(`🥈 OpenSky FALLBACK: ${openSkyResult.route} (Kjelde: ${openSkyResult.source})`);
+                    
+                    // Sjekk om det er berre partial info
+                    if (openSkyResult.route.includes('?')) {
+                        console.log(`🔎 OpenSky gav berre partial info, men me brukar det me har`);
+                    }
+                    return openSkyResult;
+                } else {
+                    console.log(`❌ OpenSky returnerte heller ingen rute-data`);
+                }
+
+                console.log(`💥 Begge API-ar feila for ${icao24}`);
+
             } catch (error) {
-                console.log('Flight history feil:', error);
+                console.log('❌ Flight history total feil:', error);
             }
+            
+            console.log(`🚫 Ingen rute-data funne for ${icao24}`);
             return null;
         }
 
