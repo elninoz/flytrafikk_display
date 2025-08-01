@@ -679,9 +679,7 @@
             document.querySelector('button[onclick="getFlights()"]').style.display = 'none';
 
             // Show searching status
-            document.querySelector('.flight-info h2').textContent = 'Søker etter fly...';
-            document.querySelector('.flight-callsign').textContent = '';
-            document.querySelector('.flight-details').innerHTML = '<div style="text-align: center; color: #00ff00; font-size: 1.2em;">📡 Søker i luftrommet...</div>';
+            document.getElementById('flightDisplay').innerHTML = '<div style="text-align: center; color: #00ff00; font-size: 1.2em; padding: 2rem;">📡 Søker i luftrommet...</div>';
 
             // Start immediate search, then continue with intervals
             performFlightSearch();
@@ -705,10 +703,13 @@
 
             console.log('⏹️ Smart søk stoppa');
 
-            // Clear display
-            document.querySelector('.flight-info h2').textContent = 'Norsk LED Flytracker';
-            document.querySelector('.flight-callsign').textContent = '';
-            document.querySelector('.flight-details').innerHTML = '';
+            // Clear display and restore original state
+            document.getElementById('flightDisplay').innerHTML = `
+                <div class="no-flight">
+                    Ingen fly registrert<br>
+                    <small style="font-size: 1rem; color: #888;">Trykk søk for å finne fly i området</small>
+                </div>
+            `;
         }
 
         async function performFlightSearch() {
@@ -857,9 +858,7 @@
         }
 
         function displaySearchingStatus() {
-            document.querySelector('.flight-info h2').textContent = 'Ingen fly i luftrommet over';
-            document.querySelector('.flight-callsign').textContent = '';
-            document.querySelector('.flight-details').innerHTML = '<div style="text-align: center; color: #00ff00; font-size: 1.2em;">📡 Søker kontinuerleg...</div>';
+            document.getElementById('flightDisplay').innerHTML = '<div style="text-align: center; color: #00ff00; font-size: 1.2em; padding: 2rem;">📡 Ingen fly i luftrommet<br><small>Søker kontinuerleg...</small></div>';
         }
 
         function switchFlight() {
