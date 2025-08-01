@@ -303,23 +303,27 @@
 
         /* Fullscreen mode styles */
         body.fullscreen {
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+        }
+
+        body.fullscreen * {
+            box-sizing: border-box;
         }
 
         body.fullscreen .controls {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 10px;
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
+            position: fixed !important;
+            top: 10px !important;
+            left: 10px !important;
+            right: 10px !important;
+            z-index: 10000 !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            backdrop-filter: blur(10px) !important;
+            border-radius: 10px !important;
+            padding: 10px !important;
+            opacity: 0.7 !important;
+            transition: opacity 0.3s ease !important;
         }
 
         body.fullscreen .controls:hover {
@@ -327,16 +331,20 @@
         }
 
         body.fullscreen .led-display {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: #000 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 9999 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         body.fullscreen .flight-info {
@@ -640,10 +648,10 @@
             const velocity = flight[9] ? Math.round(flight[9] * 3.6) : 'Ukjent';
             const trueTrack = flight[10] ? Math.round(flight[10]) : 'Ukjent';
             const squawk = flight[14] || 'Ukjent';
-            const routeGuess = flight[17] || icao24; // From enhanced data
+            const routeGuess = flight[17] || `${airline} Route`; // From enhanced data or airline fallback
 
             // New enhanced data from AeroDataBox
-            const aircraftType = flight[18] || originCountry; // Fallback to country if no aircraft type
+            const aircraftType = flight[18] || 'Ukjent flytype'; // Better fallback than country
             const totalDuration = flight[19]; // Total flight duration in minutes
             const remainingTime = flight[20]; // Remaining time in minutes
             const elapsedTime = flight[21]; // Elapsed time in minutes
