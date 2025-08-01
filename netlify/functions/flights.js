@@ -10,8 +10,33 @@ function loadAirlineDatabase() {
     if (airlineDatabase) return airlineDatabase;
 
     try {
-        const dbPath = path.join(__dirname, '../../airline-database.txt');
-        const content = fs.readFileSync(dbPath, 'utf8');
+        // Try multiple possible paths for the airline database
+        const possiblePaths = [
+            path.join(__dirname, '../../airline-database.txt'),    // Local development
+            path.join(process.cwd(), 'airline-database.txt'),      // Netlify root
+            '/opt/build/repo/airline-database.txt',                // Netlify build path
+            './airline-database.txt'                               // Same directory
+        ];
+        
+        let content = null;
+        let usedPath = null;
+        
+        for (const dbPath of possiblePaths) {
+            try {
+                content = fs.readFileSync(dbPath, 'utf8');
+                usedPath = dbPath;
+                console.log(`Successfully loaded airline database from: ${dbPath}`);
+                break;
+            } catch (err) {
+                console.log(`Failed to load from ${dbPath}: ${err.message}`);
+                continue;
+            }
+        }
+        
+        if (!content) {
+            console.error('Could not find airline database in any expected location');
+            return {};
+        }
 
         airlineDatabase = {};
         const lines = content.split('\n');
@@ -35,7 +60,7 @@ function loadAirlineDatabase() {
             }
         }
 
-        console.log(`Loaded ${Object.keys(airlineDatabase).length} airline codes from database`);
+        console.log(`Loaded ${Object.keys(airlineDatabase).length} airline codes from database (${usedPath})`);
         return airlineDatabase;
     } catch (error) {
         console.error('Failed to load airline database:', error.message);
@@ -95,6 +120,13 @@ async function getFlightRoute(callsign) {
         };
 
         const data = await makeRequest(url, headers);
+        
+        // Handle empty or invalid responses
+        if (!data || !Array.isArray(data) || data.length === 0) {
+            console.log(`No flight data found for ${cleanCallsign} (empty or invalid response)`);
+            return null;
+        }
+        
         console.log(`AeroDataBox response for ${cleanCallsign}:`, JSON.stringify(data, null, 2));
 
         // Extract enhanced flight information from the response
@@ -219,8 +251,17 @@ async function makeRequest(url, headers = {}, retries = 2) {
                         }
 
                         try {
-                            resolve(JSON.parse(data));
+                            // Handle empty responses gracefully
+                            if (!data || data.trim() === '') {
+                                console.log('Received empty response from API');
+                                resolve([]);
+                                return;
+                            }
+                            
+                            const parsed = JSON.parse(data);
+                            resolve(parsed);
                         } catch (error) {
+                            console.log(`Raw response data: "${data}"`);
                             reject(new Error(`JSON parse error: ${error.message}`));
                         }
                     });
