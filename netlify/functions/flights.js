@@ -1,7 +1,7 @@
 const https = require('https');
 const { URL } = require('url');
 
-// Simplified auth for OpenSky (basic auth only)
+// Basic auth for OpenSky
 function getOpenSkyAuth() {
     const username = process.env.OPENSKY_USERNAME;
     const password = process.env.OPENSKY_PASSWORD;
@@ -13,7 +13,7 @@ function getOpenSkyAuth() {
     return null;
 }
 
-// Make HTTP request
+// HTTP request helper
 async function makeRequest(url, headers = {}) {
     return new Promise((resolve, reject) => {
         const urlObj = new URL(url);
@@ -59,73 +59,7 @@ async function makeRequest(url, headers = {}) {
     });
 }
 
-// Get aircraft details from AeroDataBox using registration
-async function getAircraftByRegistration(registration) {
-    const rapidApiKey = process.env.RAPIDAPI_KEY;
-    if (!rapidApiKey) return null;
-
-    const url = `https://aerodatabox.p.rapidapi.com/aircraft/reg/${registration}`;
-
-    try {
-        const headers = {
-            'X-RapidAPI-Key': rapidApiKey,
-            'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com'
-        };
-
-        const data = await makeRequest(url, headers);
-        console.log(`✅ Aircraft info received for ${registration}`);
-        return data;
-    } catch (error) {
-        console.log(`❌ AeroDataBox aircraft lookup failed: ${error.message}`);
-        return null;
-    }
-}
-
-// Get flights by registration (more reliable than ICAO24)
-async function getFlightsByRegistration(registration) {
-    const rapidApiKey = process.env.RAPIDAPI_KEY;
-    if (!rapidApiKey) return null;
-
-    const url = `https://aerodatabox.p.rapidapi.com/flights/aircraft/reg/${registration}`;
-
-    try {
-        const headers = {
-            'X-RapidAPI-Key': rapidApiKey,
-            'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com'
-        };
-
-        const data = await makeRequest(url, headers);
-        console.log(`✅ Flight data received for ${registration}`);
-        return data;
-    } catch (error) {
-        console.log(`❌ AeroDataBox flights lookup failed: ${error.message}`);
-        return null;
-    }
-}
-
-// Convert ICAO24 to potential registration
-function icao24ToRegistration(icao24) {
-    // Norwegian aircraft: LN-xxx
-    if (icao24.startsWith('0d')) {
-        // Norwegian ICAO24 range: 0d0000-0d7fff
-        const hex = icao24.substring(2);
-        const num = parseInt(hex, 16);
-        if (num < 32768) { // 0x8000
-            // Simple mapping - not 100% accurate but gives starting point
-            const letters = String.fromCharCode(65 + (num % 26), 65 + ((num >> 5) % 26));
-            const digit = (num >> 10) % 10;
-            return `LN-${letters}${digit}`;
-        }
-    }
-
-    // Add more country mappings as needed
-    // Swedish: SE-xxx (ICAO24: 4a0000-4a7fff)
-    // Danish: OY-xxx (ICAO24: 458000-45ffff)
-
-    return null;
-}
-
-// Handle states request (aircraft positions)
+// Enhanced OpenSky states with basic route guessing
 async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
     const auth = getOpenSkyAuth();
     const authHeaders = auth ? { 'Authorization': auth } : {};
@@ -135,42 +69,30 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
     try {
         const data = await makeRequest(url, authHeaders);
 
-        // Enhance each aircraft with potential registration and route info
+        // Add basic route guessing for Norwegian flights
         if (data.states) {
-            const enhancedStates = await Promise.all(
-                data.states.map(async (state) => {
-                    const icao24 = state[0];
-                    const callsign = state[1]?.trim();
+            data.states = data.states.map(state => {
+                const icao24 = state[0];
+                const callsign = state[1]?.trim();
 
-                    // Try to get registration from ICAO24
-                    const registration = icao24ToRegistration(icao24);
-
-                    // Enhanced state with additional info
-                    const enhancedState = [...state];
-
-                    // If we have registration, try to get route info
-                    if (registration) {
-                        try {
-                            const flightData = await getFlightsByRegistration(registration);
-                            if (flightData && flightData.length > 0) {
-                                const latestFlight = flightData[0];
-
-                                // Add route info to state (custom fields)
-                                enhancedState[17] = registration; // Add registration
-                                enhancedState[18] = latestFlight.departure?.airport?.iata; // Departure
-                                enhancedState[19] = latestFlight.arrival?.airport?.iata; // Arrival
-                                enhancedState[20] = latestFlight.aircraft?.model; // Aircraft type
-                            }
-                        } catch (error) {
-                            console.log(`Failed to enhance ${registration}: ${error.message}`);
-                        }
+                // Add route guess for Norwegian flights
+                let routeGuess = null;
+                if (callsign) {
+                    if (callsign.startsWith('SAS') || callsign.startsWith('SK')) {
+                        routeGuess = 'SAS Domestic/European';
+                    } else if (callsign.startsWith('DY') || callsign.startsWith('NAX')) {
+                        routeGuess = 'Norwegian Route';
+                    } else if (callsign.startsWith('WF')) {
+                        routeGuess = 'Widerøe Regional';
                     }
+                }
 
-                    return enhancedState;
-                })
-            );
+                // Add to state array (custom field)
+                const enhancedState = [...state];
+                enhancedState[17] = routeGuess; // Route guess
 
-            data.states = enhancedStates;
+                return enhancedState;
+            });
         }
 
         return {
@@ -179,33 +101,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
             body: JSON.stringify(data)
         };
     } catch (error) {
-        return {
-            statusCode: 500,
-            headers,
-            body: JSON.stringify({ error: error.message })
-        };
-    }
-}
-
-// Handle specific aircraft lookup
-async function handleAircraftLookup(registration, headers) {
-    try {
-        const [aircraftInfo, flightData] = await Promise.all([
-            getAircraftByRegistration(registration),
-            getFlightsByRegistration(registration)
-        ]);
-
-        const result = {
-            aircraft: aircraftInfo,
-            flights: flightData
-        };
-
-        return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify(result)
-        };
-    } catch (error) {
+        console.error('OpenSky request failed:', error.message);
         return {
             statusCode: 500,
             headers,
@@ -230,19 +126,17 @@ exports.handler = async (event, context) => {
 
     try {
         const params = event.queryStringParameters || {};
-        const { lamin, lamax, lomin, lomax, registration } = params;
+        const { lamin, lamax, lomin, lomax } = params;
 
         if (lamin && lamax && lomin && lomax) {
             return await handleStatesRequest(lamin, lamax, lomin, lomax, headers);
-        } else if (registration) {
-            return await handleAircraftLookup(registration, headers);
         } else {
             return {
                 statusCode: 400,
                 headers,
                 body: JSON.stringify({
                     error: 'Missing parameters',
-                    usage: 'Use ?lamin=&lamax=&lomin=&lomax= for positions or ?registration=LN-ABC for aircraft details'
+                    usage: 'Use ?lamin=&lamax=&lomin=&lomax= for aircraft positions'
                 })
             };
         }

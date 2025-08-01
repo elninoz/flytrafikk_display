@@ -1,244 +1,550 @@
-const https = require('https');
-const { URL } = require('url');
+<!DOCTYPE html>
+<html lang="no">
 
-// Simplified auth for OpenSky (basic auth only)
-function getOpenSkyAuth() {
-const username = process.env.OPENSKY_USERNAME;
-const password = process.env.OPENSKY_PASSWORD;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Flytrafikk Display</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
 
-if (username && password) {
-const auth = Buffer.from(`${username}:${password}`).toString('base64');
-return `Basic ${auth}`;
-}
-return null;
-}
-
-// Make HTTP request
-async function makeRequest(url, headers = {}) {
-return new Promise((resolve, reject) => {
-const urlObj = new URL(url);
-
-const options = {
-hostname: urlObj.hostname,
-port: 443,
-path: urlObj.pathname + urlObj.search,
-method: 'GET',
-headers: {
-'Accept': 'application/json',
-'User-Agent': 'flytrafikk-display/1.0',
-...headers
-},
-timeout: 10000
-};
-
-const req = https.request(options, (res) => {
-let data = '';
-res.on('data', (chunk) => data += chunk);
-
-res.on('end', () => {
-if (data.trim().startsWith('<')) { reject(new Error('HTML error page received')); return; } try {
-    resolve(JSON.parse(data)); } catch (error) { reject(new Error(`JSON parse error: ${error.message}`)); } }); });
-    req.on('error', reject); req.on('timeout', ()=> {
-    req.destroy();
-    reject(new Error('Request timeout'));
-    });
-
-    req.end();
-    });
-    }
-
-    // Get aircraft details from AeroDataBox using registration
-    async function getAircraftByRegistration(registration) {
-    const rapidApiKey = process.env.RAPIDAPI_KEY;
-    if (!rapidApiKey) return null;
-
-    const url = `https://aerodatabox.p.rapidapi.com/aircraft/reg/${registration}`;
-
-    try {
-    const headers = {
-    'X-RapidAPI-Key': rapidApiKey,
-    'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com'
-    };
-
-    const data = await makeRequest(url, headers);
-    console.log(`✅ Aircraft info received for ${registration}`);
-    return data;
-    } catch (error) {
-    console.log(`❌ AeroDataBox aircraft lookup failed: ${error.message}`);
-    return null;
-    }
-    }
-
-    // Get flights by registration (more reliable than ICAO24)
-    async function getFlightsByRegistration(registration) {
-    const rapidApiKey = process.env.RAPIDAPI_KEY;
-    if (!rapidApiKey) return null;
-
-    const url = `https://aerodatabox.p.rapidapi.com/flights/aircraft/reg/${registration}`;
-
-    try {
-    const headers = {
-    'X-RapidAPI-Key': rapidApiKey,
-    'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com'
-    };
-
-    const data = await makeRequest(url, headers);
-    console.log(`✅ Flight data received for ${registration}`);
-    return data;
-    } catch (error) {
-    console.log(`❌ AeroDataBox flights lookup failed: ${error.message}`);
-    return null;
-    }
-    }
-
-    // Convert ICAO24 to potential registration
-    function icao24ToRegistration(icao24) {
-    // Norwegian aircraft: LN-xxx
-    if (icao24.startsWith('0d')) {
-    // Norwegian ICAO24 range: 0d0000-0d7fff
-    const hex = icao24.substring(2);
-    const num = parseInt(hex, 16);
-    if (num < 32768) { // 0x8000 // Simple mapping - not 100% accurate but gives starting point const
-        letters=String.fromCharCode(65 + (num % 26), 65 + ((num>> 5) % 26));
-        const digit = (num >> 10) % 10;
-        return `LN-${letters}${digit}`;
-        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        // Add more country mappings as needed
-        // Swedish: SE-xxx (ICAO24: 4a0000-4a7fff)
-        // Danish: OY-xxx (ICAO24: 458000-45ffff)
-
-        return null;
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #1a1a1a;
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        // Handle states request (aircraft positions)
-        async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
-        const auth = getOpenSkyAuth();
-        const authHeaders = auth ? { 'Authorization': auth } : {};
-
-        const url =
-        `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
-
-        try {
-        const data = await makeRequest(url, authHeaders);
-
-        // Enhance each aircraft with potential registration and route info
-        if (data.states) {
-        const enhancedStates = await Promise.all(
-        data.states.map(async (state) => {
-        const icao24 = state[0];
-        const callsign = state[1]?.trim();
-
-        // Try to get registration from ICAO24
-        const registration = icao24ToRegistration(icao24);
-
-        // Enhanced state with additional info
-        const enhancedState = [...state];
-
-        // If we have registration, try to get route info
-        if (registration) {
-        try {
-        const flightData = await getFlightsByRegistration(registration);
-        if (flightData && flightData.length > 0) {
-        const latestFlight = flightData[0];
-
-        // Add route info to state (custom fields)
-        enhancedState[17] = registration; // Add registration
-        enhancedState[18] = latestFlight.departure?.airport?.iata; // Departure
-        enhancedState[19] = latestFlight.arrival?.airport?.iata; // Arrival
-        enhancedState[20] = latestFlight.aircraft?.model; // Aircraft type
-        }
-        } catch (error) {
-        console.log(`Failed to enhance ${registration}: ${error.message}`);
-        }
+        .controls {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
-        return enhancedState;
-        })
-        );
-
-        data.states = enhancedStates;
+        .controls input,
+        .controls button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
         }
 
-        return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify(data)
-        };
-        } catch (error) {
-        return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ error: error.message })
-        };
-        }
+        .controls input {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            width: 120px;
         }
 
-        // Handle specific aircraft lookup
-        async function handleAircraftLookup(registration, headers) {
-        try {
-        const [aircraftInfo, flightData] = await Promise.all([
-        getAircraftByRegistration(registration),
-        getFlightsByRegistration(registration)
-        ]);
-
-        const result = {
-        aircraft: aircraftInfo,
-        flights: flightData
-        };
-
-        return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify(result)
-        };
-        } catch (error) {
-        return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ error: error.message })
-        };
-        }
+        .controls button {
+            background: #00ff88;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
         }
 
-        exports.handler = async (event, context) => {
-        context.callbackWaitsForEmptyEventLoop = false;
-
-        const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Content-Type': 'application/json'
-        };
-
-        if (event.httpMethod === 'OPTIONS') {
-        return { statusCode: 200, headers, body: '' };
+        .controls button:hover {
+            background: #00cc6a;
         }
 
-        try {
-        const params = event.queryStringParameters || {};
-        const { lamin, lamax, lomin, lomax, registration } = params;
+        .led-display {
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border: 8px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow:
+                inset 0 0 20px rgba(0, 0, 0, 0.8),
+                0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            min-height: 300px;
+        }
 
-        if (lamin && lamax && lomin && lomax) {
-        return await handleStatesRequest(lamin, lamax, lomin, lomax, headers);
-        } else if (registration) {
-        return await handleAircraftLookup(registration, headers);
-        } else {
-        return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({
-        error: 'Missing parameters',
-        usage: 'Use ?lamin=&lamax=&lomin=&lomax= for positions or ?registration=LN-ABC for aircraft details'
-        })
-        };
+        .led-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 2px 2px, rgba(0, 255, 136, 0.15) 1px, transparent 1px);
+            background-size: 6px 6px;
+            pointer-events: none;
+            border-radius: 8px;
         }
-        } catch (error) {
-        return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ error: error.message })
-        };
+
+        .flight-info {
+            position: relative;
+            z-index: 1;
         }
-        };
+
+        .airline-name {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow:
+                0 0 10px #00ffff,
+                0 0 20px #00ffff,
+                0 0 30px #00ffff;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            filter: blur(0.5px);
+        }
+
+        .flight-number {
+            font-size: 2.8rem;
+            color: #00ffff;
+            text-shadow:
+                0 0 8px #00ffff,
+                0 0 16px #00ffff;
+            margin-bottom: 20px;
+            letter-spacing: 0.08em;
+            filter: blur(0.3px);
+        }
+
+        .route-section {
+            margin: 25px 0;
+        }
+
+        .route-label {
+            font-size: 1.2rem;
+            color: #00ffff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px #00ffff;
+            filter: blur(0.3px);
+        }
+
+        .route-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow:
+                0 0 8px #00ffff,
+                0 0 16px #00ffff;
+            letter-spacing: 0.05em;
+            filter: blur(0.3px);
+        }
+
+        .time-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            margin-top: 30px;
+            align-items: end;
+        }
+
+        .time-info {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow:
+                0 0 10px #00ffff,
+                0 0 20px #00ffff;
+            filter: blur(0.4px);
+        }
+
+        .status-indicator {
+            font-size: 1.8rem;
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            filter: blur(0.2px);
+        }
+
+        .no-flight {
+            text-align: center;
+            font-size: 2rem;
+            color: #666;
+            margin: 60px 0;
+        }
+
+        .flight-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+
+        .detail-box {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #00ffff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-shadow: 0 0 5px #00ffff;
+            filter: blur(0.2px);
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                text-shadow:
+                    0 0 5px #00ffff,
+                    0 0 10px #00ffff,
+                    0 0 15px #00ffff;
+            }
+
+            50% {
+                text-shadow:
+                    0 0 10px #00ffff,
+                    0 0 20px #00ffff,
+                    0 0 30px #00ffff;
+            }
+        }
+
+        .glow-animation {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .airline-name {
+                font-size: 2.5rem;
+            }
+
+            .flight-number {
+                font-size: 2rem;
+            }
+
+            .route-display {
+                font-size: 1.8rem;
+            }
+
+            .time-info {
+                font-size: 2.2rem;
+            }
+
+            .time-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="controls">
+        <input type="text" id="gpsCoords" placeholder="GPS koordinatar (59.1166, 9.7194)" style="width: 300px;">
+        <input type="number" id="latitude" value="61.0873" step="0.0001" placeholder="Breddegrad" style="width: 120px;">
+        <input type="number" id="longitude" value="6.9741" step="0.0001" placeholder="Lengdegrad" style="width: 120px;">
+        <input type="number" id="radius" value="10" min="1" max="100" placeholder="Radius (km)">
+        <button onclick="getFlights()">🔍 Søk etter fly</button>
+        <button onclick="getLocationAndSearch()">📍 Min posisjon</button>
+        <button onclick="toggleAutoRefresh()">🔄 Auto-oppdater</button>
+    </div>
+
+    <div class="led-display">
+        <div id="flightDisplay">
+            <div class="no-flight">
+                Ingen fly registrert<br>
+                <small style="font-size: 1rem; color: #888;">Trykk søk for å finne fly i området</small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let autoRefreshInterval;
+        let currentFlightIndex = 0;
+        let flights = [];
+
+        // Parse GPS coordinates from input
+        function parseGPSCoords() {
+            const gpsInput = document.getElementById('gpsCoords').value;
+            if (!gpsInput) return;
+
+            const patterns = [
+                /(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)/,
+                /(-?\d+\.?\d*)°?\s*[NS]?\s*,?\s*(-?\d+\.?\d*)°?\s*[EW]?/i,
+            ];
+
+            for (let pattern of patterns) {
+                const match = gpsInput.match(pattern);
+                if (match) {
+                    let lat = parseFloat(match[1].replace(',', '.'));
+                    let lon = parseFloat(match[2].replace(',', '.'));
+
+                    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                        document.getElementById('latitude').value = lat.toFixed(6);
+                        document.getElementById('longitude').value = lon.toFixed(6);
+
+                        const gpsField = document.getElementById('gpsCoords');
+                        gpsField.style.border = '2px solid #00ff88';
+                        setTimeout(() => {
+                            gpsField.style.border = '';
+                        }, 1000);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // GPS parsing event listeners
+        document.addEventListener('DOMContentLoaded', function () {
+            const gpsField = document.getElementById('gpsCoords');
+            gpsField.addEventListener('input', parseGPSCoords);
+            gpsField.addEventListener('paste', () => setTimeout(parseGPSCoords, 10));
+        });
+
+        function getLocationAndSearch() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        document.getElementById('latitude').value = position.coords.latitude.toFixed(6);
+                        document.getElementById('longitude').value = position.coords.longitude.toFixed(6);
+                        getFlights();
+                    },
+                    function (error) {
+                        alert('Kunne ikke hente posisjon. Vennligst skriv inn koordinater manuelt.');
+                    }
+                );
+            } else {
+                alert('Geolokalisering støttes ikke av denne nettleseren.');
+            }
+        }
+
+        async function getFlights() {
+            const gpsInput = document.getElementById('gpsCoords').value;
+            if (gpsInput) {
+                parseGPSCoords();
+            }
+
+            const lat = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+            const lon = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
+            const radius = parseFloat(document.getElementById('radius').value.replace(',', '.'));
+
+            if (!lat || !lon || !radius) {
+                alert('Vennligst fyll inn alle felt eller lim inn GPS-koordinatar');
+                return;
+            }
+
+            console.log(`Søker etter fly ved koordinatar: ${lat}, ${lon} med radius ${radius}km`);
+
+            try {
+                const kmPerDegree = 111.32;
+                const deltaLat = radius / kmPerDegree;
+                const deltaLon = radius / (kmPerDegree * Math.cos(lat * Math.PI / 180));
+
+                const lamin = lat - deltaLat;
+                const lamax = lat + deltaLat;
+                const lomin = lon - deltaLon;
+                const lomax = lon + deltaLon;
+
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const baseUrl = isLocalhost ? 'http://localhost:8888' : window.location.origin;
+
+                const url = `${baseUrl}/.netlify/functions/flights?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
+
+                const response = await fetch(url);
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    if (data.states && data.states.length > 0) {
+                        // Filter out grounded aircraft
+                        flights = data.states.filter(flight => {
+                            const altitude = flight[7];
+                            const onGround = flight[8];
+                            return !onGround && altitude && altitude > 100;
+                        });
+
+                        console.log(`${flights.length} fly funnet i lufta`);
+
+                        if (flights.length > 0) {
+                            currentFlightIndex = 0;
+                            displayCurrentFlight();
+
+                            if (flights.length > 1) {
+                                // Cycle through flights every 8 seconds
+                                setInterval(switchFlight, 8000);
+                            }
+                            return;
+                        }
+                    }
+                }
+
+                console.log('Ingen fly funnet');
+                displayNoFlights();
+
+            } catch (error) {
+                console.error('Feil ved henting av flydata:', error);
+                displayNoFlights();
+            }
+        }
+
+        function switchFlight() {
+            if (flights.length > 1) {
+                currentFlightIndex = (currentFlightIndex + 1) % flights.length;
+                displayCurrentFlight();
+            }
+        }
+
+        function displayCurrentFlight() {
+            if (flights.length === 0) return;
+
+            const flight = flights[currentFlightIndex];
+            const lat = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+            const lon = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
+
+            const icao24 = flight[0] || 'Ukjent';
+            const callsign = flight[1] ? flight[1].trim() : 'Ukjent';
+            const originCountry = flight[2] || 'Ukjent';
+            const longitude = flight[5];
+            const latitude = flight[6];
+            const baroAltitude = flight[7] ? Math.round(flight[7]) : 'Ukjent';
+            const velocity = flight[9] ? Math.round(flight[9] * 3.6) : 'Ukjent';
+            const trueTrack = flight[10] ? Math.round(flight[10]) : 'Ukjent';
+            const squawk = flight[14] || 'Ukjent';
+            const routeGuess = flight[17] || icao24; // From enhanced data
+
+            const distance = calculateDistance(lat, lon, latitude, longitude);
+            const compassDirection = getCompassDirection(trueTrack);
+            const airline = getAirlineFromCallsign(callsign);
+            const currentTime = new Date().toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' });
+
+            document.getElementById('flightDisplay').innerHTML = `
+                <div class="flight-info">
+                    <div class="airline-name glow-animation">${airline}</div>
+                    <div class="flight-number">${callsign}</div>
+                    
+                    <div class="route-section">
+                        <div class="route-label">Type/Rute</div>
+                        <div class="route-display">${routeGuess}</div>
+                    </div>
+                    
+                    <div class="time-section">
+                        <div class="time-info">${currentTime}</div>
+                        <div class="status-indicator">Live</div>
+                    </div>
+                    
+                    <div class="flight-details">
+                        <div class="detail-box">
+                            <div class="detail-label">Land</div>
+                            <div class="detail-value">${originCountry}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Squawk</div>
+                            <div class="detail-value">${squawk}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Retning</div>
+                            <div class="detail-value">${compassDirection}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Høyde</div>
+                            <div class="detail-value">${baroAltitude}m</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Hastighet</div>
+                            <div class="detail-value">${velocity} km/h</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Avstand</div>
+                            <div class="detail-value">${distance.toFixed(1)} km</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getAirlineFromCallsign(callsign) {
+            const airlines = {
+                'SAS': 'SAS', 'SK': 'SAS',
+                'DY': 'Norwegian', 'NAX': 'Norwegian',
+                'WF': 'Widerøe', 'WIF': 'Widerøe',
+                'KLM': 'KLM', 'KL': 'KLM',
+                'LH': 'Lufthansa', 'DLH': 'Lufthansa',
+                'BA': 'British Airways', 'BAW': 'British Airways',
+                'AF': 'Air France', 'AFR': 'Air France'
+            };
+
+            if (!callsign) return 'Ukjent flyselskap';
+
+            for (let i = 3; i >= 2; i--) {
+                const code = callsign.substring(0, i).toUpperCase();
+                if (airlines[code]) {
+                    return airlines[code];
+                }
+            }
+
+            return 'Ukjent flyselskap';
+        }
+
+        function getCompassDirection(heading) {
+            if (heading === 'Ukjent' || heading === null) return 'Ukjent';
+
+            const directions = [
+                'N', 'NNØ', 'NØ', 'ØNØ', 'Ø', 'ØSØ', 'SØ', 'SSØ',
+                'S', 'SSV', 'SV', 'VSV', 'V', 'VNV', 'NV', 'NNV'
+            ];
+
+            const index = Math.round(heading / 22.5) % 16;
+            return `${directions[index]} (${heading}°)`;
+        }
+
+        function displayNoFlights() {
+            document.getElementById('flightDisplay').innerHTML = `
+                <div class="no-flight">
+                    Ingen fly i luftrommet over<br>
+                    <small style="font-size: 1rem; color: #888;">Prøv å endre posisjon eller auke radius</small>
+                </div>
+            `;
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function toggleAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+                alert('Auto-oppdatering deaktivert');
+            } else {
+                autoRefreshInterval = setInterval(getFlights, 30000);
+                alert('Auto-oppdatering aktivert (30s)');
+            }
+        }
+    </script>
+</body>
+
+</html>
