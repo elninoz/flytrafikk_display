@@ -63,6 +63,63 @@
             background: #00cc6a;
         }
 
+        .fullscreen-btn {
+            background: #ff6600 !important;
+            color: white !important;
+        }
+
+        .fullscreen-btn:hover {
+            background: #e55a00 !important;
+        }
+
+        .controls.hidden {
+            display: none;
+        }
+
+        body.fullscreen {
+            padding: 0;
+        }
+
+        body.fullscreen .led-display {
+            margin: 0;
+            border-radius: 0;
+            min-height: 100vh;
+            max-width: none;
+            width: 100vw;
+        }
+
+        /* Flash-effekt for nye fly */
+        @keyframes borderFlash {
+            0% {
+                border-color: #333;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+
+            25% {
+                border-color: #00ff88;
+                box-shadow: 0 0 50px #00ff88, inset 0 0 50px rgba(0, 255, 136, 0.3);
+            }
+
+            50% {
+                border-color: #00ffff;
+                box-shadow: 0 0 80px #00ffff, inset 0 0 80px rgba(0, 255, 255, 0.4);
+            }
+
+            75% {
+                border-color: #00ff88;
+                box-shadow: 0 0 50px #00ff88, inset 0 0 50px rgba(0, 255, 136, 0.3);
+            }
+
+            100% {
+                border-color: #333;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .new-flight-flash {
+            animation: borderFlash 2s ease-in-out;
+        }
+
         .led-display {
             background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
             border: 8px solid #333;
@@ -305,7 +362,7 @@
 </head>
 
 <body>
-    <div class="controls">
+    <div class="controls" id="controls">
         <input type="text" id="gpsCoords" placeholder="GPS koordinatar (59.1166, 9.7194) eller frå Google Maps"
             style="width: 300px;">
         <input type="number" id="latitude" value="61.0873" step="0.0001" placeholder="Breddegrad" style="width: 120px;">
@@ -314,6 +371,7 @@
         <button onclick="getFlights()">🔍 Søk etter fly</button>
         <button onclick="getLocationAndSearch()">📍 Min posisjon</button>
         <button onclick="toggleAutoRefresh()">🔄 Auto-oppdater</button>
+        <button onclick="toggleFullscreen()" class="fullscreen-btn" id="fullscreenBtn">⛶ Fullskjerm</button>
     </div>
 
     <div class="led-display">
@@ -330,6 +388,122 @@
         let autoRefreshInterval;
         let currentFlightIndex = 0;
         let flights = [];
+        let isFullscreen = false;
+        let knownFlights = new Set(); // For å spore kjente fly og unngå gjentatte varsler
+        let notificationSound = null;
+
+        // Initialiser lyd for nye fly
+        function initializeSound() {
+            // Opprett lyddata (beep-lyd)
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 800; // 800Hz tone
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        function playNewFlightSound() {
+            try {
+                // Opprett ein enkel beep-lyd
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                // Opprett ein behageleg tone-sekvens
+                oscillator.frequency.value = 600;
+                oscillator.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.05);
+                gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.2);
+                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.35);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.8);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.8);
+
+                console.log('🔊 Spelar lyd for nytt fly');
+            } catch (error) {
+                console.log('🔇 Kunne ikkje spele lyd:', error);
+            }
+        }
+
+        function flashBorderForNewFlight() {
+            const ledDisplay = document.querySelector('.led-display');
+            ledDisplay.classList.add('new-flight-flash');
+
+            console.log('✨ Viser visuell flash for nytt fly');
+
+            // Fjern animasjon etter at den er ferdig
+            setTimeout(() => {
+                ledDisplay.classList.remove('new-flight-flash');
+            }, 2000);
+        }
+
+        function toggleFullscreen() {
+            const controls = document.getElementById('controls');
+            const body = document.body;
+            const btn = document.getElementById('fullscreenBtn');
+
+            isFullscreen = !isFullscreen;
+
+            if (isFullscreen) {
+                controls.classList.add('hidden');
+                body.classList.add('fullscreen');
+                btn.innerHTML = '⛶ Avslutt fullskjerm';
+
+                // Prøv også å aktivere nettleser fullskjerm
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log('Kunne ikkje aktivere fullskjerm:', err);
+                    });
+                }
+
+                console.log('📺 Fullskjerm aktivert');
+            } else {
+                controls.classList.remove('hidden');
+                body.classList.remove('fullscreen');
+                btn.innerHTML = '⛶ Fullskjerm';
+
+                // Avslutt nettleser fullskjerm
+                if (document.fullscreenElement && document.exitFullscreen) {
+                    document.exitFullscreen().catch(err => {
+                        console.log('Kunne ikkje avslutte fullskjerm:', err);
+                    });
+                }
+
+                console.log('📺 Fullskjerm deaktivert');
+            }
+        }
+
+        // Legg til event listener for ESC-taste for å avslutte fullskjerm
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && isFullscreen) {
+                toggleFullscreen();
+            }
+        });
+
+        // Legg til event listener for fullskjerm-endringer
+        document.addEventListener('fullscreenchange', function () {
+            if (!document.fullscreenElement && isFullscreen) {
+                // Brukar avslutta fullskjerm med F11 eller liknande
+                toggleFullscreen();
+            }
+        });
 
         // Legg til event listener for GPS-feltet
         document.addEventListener('DOMContentLoaded', function () {
@@ -417,6 +591,25 @@
                 const realData = await fetchRealFlights(lat, lon, radius);
 
                 if (realData && realData.states && realData.states.length > 0) {
+                    // Sjekk for nye fly
+                    const currentFlightIds = new Set(realData.states.map(flight => flight[0])); // icao24
+                    const newFlights = realData.states.filter(flight => !knownFlights.has(flight[0]));
+
+                    if (newFlights.length > 0 && knownFlights.size > 0) {
+                        // Det er nye fly og me har sett fly tidlegare (ikkje første gong)
+                        console.log(`🆕 ${newFlights.length} nye fly oppdaga!`);
+                        playNewFlightSound();
+                        flashBorderForNewFlight();
+
+                        newFlights.forEach(flight => {
+                            const callsign = flight[1] ? flight[1].trim() : flight[0];
+                            console.log(`✈️ Nytt fly: ${callsign}`);
+                        });
+                    }
+
+                    // Oppdater lista over kjente fly
+                    knownFlights = currentFlightIds;
+
                     // Bruk ekte data hvis tilgjengelig
                     flights = realData.states;
                     console.log('✅ Hentet ekte flydata:', flights.length, 'fly funnet');
@@ -436,6 +629,7 @@
             // Hvis ingen ekte fly er funne, vis melding
             console.log('⚠️ Ingen fly funnet i området');
             flights = [];
+            knownFlights.clear(); // Tøm kjente fly når ingen fly er funnet
             displayNoFlights();
         }
 
