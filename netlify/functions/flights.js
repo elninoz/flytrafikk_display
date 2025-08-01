@@ -1,5 +1,65 @@
 const https = require('https');
 const { URL } = require('url');
+const fs = require('fs');
+const path = require('path');
+
+// Load airline database
+let airlineDatabase = null;
+
+function loadAirlineDatabase() {
+    if (airlineDatabase) return airlineDatabase;
+
+    try {
+        const dbPath = path.join(__dirname, '../../airline-database.txt');
+        const content = fs.readFileSync(dbPath, 'utf8');
+
+        airlineDatabase = {};
+        const lines = content.split('\n');
+
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed || trimmed.length < 10) continue;
+
+            // Parse format: "Airline Name    IATA / ICAO    Aircraft count"
+            const match = trimmed.match(/^(.+?)\s+([A-Z0-9]{1,3})\s*\/\s*([A-Z0-9]{2,4})\s+\d+\s+aircraft/);
+            if (match) {
+                const [, airlineName, iata, icao] = match;
+
+                // Store by both IATA and ICAO codes
+                if (iata && iata.length >= 1) {
+                    airlineDatabase[iata.toUpperCase()] = airlineName.trim();
+                }
+                if (icao && icao.length >= 2) {
+                    airlineDatabase[icao.toUpperCase()] = airlineName.trim();
+                }
+            }
+        }
+
+        console.log(`Loaded ${Object.keys(airlineDatabase).length} airline codes from database`);
+        return airlineDatabase;
+    } catch (error) {
+        console.error('Failed to load airline database:', error.message);
+        return {};
+    }
+}
+
+// Get airline name from callsign using database
+function getAirlineFromCallsign(callsign) {
+    if (!callsign) return 'Ukjent flyselskap';
+
+    const airlines = loadAirlineDatabase();
+    const cleanCallsign = callsign.trim().toUpperCase();
+
+    // Try exact matches with different lengths (4, 3, 2 characters)
+    for (let i = Math.min(4, cleanCallsign.length); i >= 2; i--) {
+        const code = cleanCallsign.substring(0, i);
+        if (airlines[code]) {
+            return airlines[code];
+        }
+    }
+
+    return 'Ukjent flyselskap';
+}
 
 // Basic auth for OpenSky
 function getOpenSkyAuth() {
@@ -56,9 +116,9 @@ async function getFlightRoute(callsign) {
             }
 
             // Flight duration and remaining time
-            if (flight.departure?.scheduledTimeLocal && flight.arrival?.scheduledTimeLocal) {
-                const depTime = new Date(flight.departure.scheduledTimeLocal);
-                const arrTime = new Date(flight.arrival.scheduledTimeLocal);
+            if (flight.departure?.scheduledTime?.utc && flight.arrival?.scheduledTime?.utc) {
+                const depTime = new Date(flight.departure.scheduledTime.utc);
+                const arrTime = new Date(flight.arrival.scheduledTime.utc);
                 const currentTime = new Date();
 
                 // Total flight duration in minutes
@@ -66,7 +126,7 @@ async function getFlightRoute(callsign) {
                 flightInfo.totalDuration = totalDuration;
 
                 // Remaining time
-                if (currentTime < arrTime) {
+                if (currentTime < arrTime && flight.status !== 'Arrived') {
                     const remainingTime = Math.round((arrTime - currentTime) / (1000 * 60));
                     flightInfo.remainingTime = remainingTime;
                 } else {
@@ -79,6 +139,28 @@ async function getFlightRoute(callsign) {
                     flightInfo.elapsedTime = elapsedTime;
                 } else {
                     flightInfo.elapsedTime = 0; // Flight hasn't departed yet
+                }
+            } else if (flight.departure?.scheduledTimeLocal && flight.arrival?.scheduledTimeLocal) {
+                // Fallback to local times if UTC not available
+                const depTime = new Date(flight.departure.scheduledTimeLocal);
+                const arrTime = new Date(flight.arrival.scheduledTimeLocal);
+                const currentTime = new Date();
+
+                const totalDuration = Math.round((arrTime - depTime) / (1000 * 60));
+                flightInfo.totalDuration = totalDuration;
+
+                if (currentTime < arrTime && flight.status !== 'Arrived') {
+                    const remainingTime = Math.round((arrTime - currentTime) / (1000 * 60));
+                    flightInfo.remainingTime = remainingTime;
+                } else {
+                    flightInfo.remainingTime = 0;
+                }
+
+                if (currentTime > depTime) {
+                    const elapsedTime = Math.round((currentTime - depTime) / (1000 * 60));
+                    flightInfo.elapsedTime = elapsedTime;
+                } else {
+                    flightInfo.elapsedTime = 0;
                 }
             }
 
@@ -99,7 +181,7 @@ async function makeRequest(url, headers = {}, retries = 2) {
     for (let attempt = 0; attempt <= retries; attempt++) {
         try {
             console.log(`Making request to ${url} (attempt ${attempt + 1}/${retries + 1})`);
-            
+
             const result = await new Promise((resolve, reject) => {
                 const urlObj = new URL(url);
 
@@ -125,7 +207,7 @@ async function makeRequest(url, headers = {}, retries = 2) {
                             reject(new Error('Rate limited - too many requests'));
                             return;
                         }
-                        
+
                         if (res.statusCode >= 400) {
                             reject(new Error(`HTTP ${res.statusCode}: ${data}`));
                             return;
@@ -152,17 +234,17 @@ async function makeRequest(url, headers = {}, retries = 2) {
 
                 req.end();
             });
-            
+
             console.log(`Request successful on attempt ${attempt + 1}`);
             return result;
-            
+
         } catch (error) {
             console.log(`Request failed on attempt ${attempt + 1}: ${error.message}`);
-            
+
             if (attempt === retries) {
                 throw error; // Final attempt failed
             }
-            
+
             // Wait before retrying (exponential backoff)
             const waitTime = Math.pow(2, attempt) * 1000; // 1s, 2s, 4s...
             console.log(`Waiting ${waitTime}ms before retry...`);
@@ -181,9 +263,9 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
     try {
         console.log(`Fetching OpenSky data from: ${url}`);
         const startTime = Date.now();
-        
+
         const data = await makeRequest(url, authHeaders);
-        
+
         const openSkyTime = Date.now() - startTime;
         console.log(`OpenSky request completed in ${openSkyTime}ms`);
 
@@ -197,7 +279,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
             const batchSize = 3; // Max 3 concurrent AeroDataBox requests
             for (let i = 0; i < data.states.length; i += batchSize) {
                 const batch = data.states.slice(i, i + batchSize);
-                
+
                 const batchPromises = batch.map(async (state) => {
                     const icao24 = state[0];
                     const callsign = state[1]?.trim();
@@ -234,12 +316,20 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
 
                         // Fallback to basic airline detection if AeroDataBox fails
                         if (!routeInfo) {
-                            if (callsign.startsWith('SAS') || callsign.startsWith('SK')) {
-                                routeInfo = 'SAS Domestic/European';
-                            } else if (callsign.startsWith('DY') || callsign.startsWith('NAX')) {
-                                routeInfo = 'Norwegian Route';
-                            } else if (callsign.startsWith('WF')) {
-                                routeInfo = 'Widerøe Regional';
+                            const airlineName = getAirlineFromCallsign(callsign);
+                            if (airlineName !== 'Ukjent flyselskap') {
+                                // Use airline name with generic route info
+                                if (callsign.startsWith('SAS') || callsign.startsWith('SK')) {
+                                    routeInfo = 'SAS Domestic/European';
+                                } else if (callsign.startsWith('DY') || callsign.startsWith('NOZ')) {
+                                    routeInfo = 'Norwegian Route';
+                                } else if (callsign.startsWith('WF')) {
+                                    routeInfo = 'Widerøe Regional';
+                                } else if (callsign.startsWith('ICE') || callsign.startsWith('FI')) {
+                                    routeInfo = 'Icelandair Route';
+                                } else {
+                                    routeInfo = `${airlineName} Route`;
+                                }
                             }
                         }
                     }
@@ -251,7 +341,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
                 // Wait for this batch to complete before starting next batch
                 const batchResults = await Promise.all(batchPromises);
                 enhancedStates.push(...batchResults);
-                
+
                 // Small delay between batches to be nice to APIs
                 if (i + batchSize < data.states.length) {
                     await new Promise(resolve => setTimeout(resolve, 100));
@@ -259,7 +349,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
             }
 
             data.states = enhancedStates;
-            
+
             // Add status information
             data.apiStatus = {
                 aeroDataBoxWorking: aeroDataBoxTotal > 0 ? (aeroDataBoxSuccess / aeroDataBoxTotal) : 0,
@@ -280,13 +370,13 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
         };
     } catch (error) {
         console.error('OpenSky request failed:', error.message);
-        
+
         // Return basic error response with fallback data
         return {
             statusCode: 200, // Don't fail completely
             headers,
-            body: JSON.stringify({ 
-                states: [], 
+            body: JSON.stringify({
+                states: [],
                 time: Math.floor(Date.now() / 1000),
                 error: `OpenSky API problem: ${error.message}`,
                 apiStatus: {
@@ -299,7 +389,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
             })
         };
     }
-}exports.handler = async (event, context) => {
+} exports.handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
     const headers = {

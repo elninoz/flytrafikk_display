@@ -1,0 +1,2876 @@
+ 		 
+ 	2		 
+ 		21 Air	2I / CSB	2 aircraft	 
+ 		247 Aviation	EMC	4 aircraft	 
+ 		2Excel Aviation	BRO	24 aircraft	 
+ 	3		 
+ 	
+30 West Jets	LVA	1 aircraft	 
+ 	4		 
+ 	
+4Airways	DAK	3 aircraft	 
+ 	7		 
+ 	
+748 Air Services	IHO	6 aircraft	 
+ 		748 Air Services	FE / IHO	6 aircraft	 
+ 	
+7Air Cargo	TXG	3 aircraft	 
+ 	9		 
+ 		9 Air	AQ / JYH	27 aircraft	 
+ 	A		 
+ 	
+Abakan Air	S5 / NKP	5 aircraft	 
+ 	
+Abu Dhabi Aviation	BAR	14 aircraft	 
+ 		ABX Air	GB / ABX	11 aircraft	 
+ 	
+ACASS Ireland	SON	2 aircraft	 
+ 		Advanced Air	AN / WSN	23 aircraft	 
+ 	
+Advanced Flight Training	ADV	5 aircraft	 
+ 		Aegean Airlines	A3 / AEE	68 aircraft	 
+ 		Aegean Executive	AEW	2 aircraft	 
+ 		Aer Lingus	EI / EIN	81 aircraft	 
+ 		AerCaribe Cargo	JK / ACL	4 aircraft	 
+ 	
+Aero	5E / BLK	5 aircraft	 
+ 		Aero	N2 / NIG	7 aircraft	 
+ 	
+Aero Asahi	AKF	39 aircraft	 
+ 	
+Aero Charter	GLT	13 aircraft	 
+ 	
+Aero Charter and Transport	CTA	2 aircraft	 
+ 	
+Aero Clube de Coimbra	MOD	1 aircraft	 
+ 	
+Aero Coatl Mexicano	IGM	1 aircraft	 
+ 	
+Aero Dili	8G / DTL	2 aircraft	 
+ 		Aero K	RF / EOK	7 aircraft	 
+ 	
+Aero Mongolia	M0 / MNG	5 aircraft	 
+ 		Aero Nomad	KA / ANK	2 aircraft	 
+ 	
+Aero Sotravia	ASR	5 aircraft	 
+ 	
+Aero Tak	KAT	1 aircraft	 
+ 	
+Aero Ways	TKK	6 aircraft	 
+ 	
+Aero-Beta Flight Training	ABA	12 aircraft	 
+ 	
+Aero-Dienst	ADN	5 aircraft	 
+ 	
+Aero-Tech Services	TEK	4 aircraft	 
+ 	
+Aeroclub Barcelona-Sabadell	BSO	14 aircraft	 
+ 	
+Aerodynamics Academy	DNC	17 aircraft	 
+ 		Aeroflot	SU / AFL	169 aircraft	 
+ 	
+AeroGuard Flight Training Center	ASI	113 aircraft	 
+ 		Aeroitalia	XZ / AEZ	13 aircraft	 
+ 		Aerolineas Argentinas	AR / ARG	85 aircraft	 
+ 	
+Aerolineas Ejecutivas	LET	26 aircraft	 
+ 	
+Aerolineas Sosa	P4 / NSO	4 aircraft	 
+ 		AeroLogic	3S / BOX	14 aircraft	 
+ 	
+Aeromas	MSM	2 aircraft	 
+ 		Aeromexico	AM / AMX	129 aircraft	 
+ 		Aeromexico Connect	5D / SLI	35 aircraft	 
+ 		Aeronaves TSM	VTM	97 aircraft	 
+ 	
+Aeropapa	APY	1 aircraft	 
+ 		Aeropartner	DFC	9 aircraft	 
+ 	
+Aeropyrenees	EAP	13 aircraft	 
+ 		Aeroregional	6G / RER	4 aircraft	 
+ 	
+Aerosafin	FIC	3 aircraft	 
+ 	
+Aeroservicios de la Costa	TAA	8 aircraft	 
+ 		Aerostan	KW / BSC	3 aircraft	 
+ 	
+Aerosucre	A4 / KRE	7 aircraft	 
+ 	
+Aerotec	AEP	13 aircraft	 
+ 	
+Aerotours	ATU	3 aircraft	 
+ 	
+Aerotranscargo	F5 / ATG	3 aircraft	 
+ 	
+Aeroturpial	TUR	2 aircraft	 
+ 		Aerovias DAP	V5 / DAP	11 aircraft	 
+ 		Aerovis Airlines	VIZ	1 aircraft	 
+ 		Aeroways	MCK	11 aircraft	 
+ 	
+Aerowest	AWH	13 aircraft	 
+ 	
+Aerus	ZV / RFD	7 aircraft	 
+ 	
+Africa Airlines	AAT	2 aircraft	 
+ 	
+Africa Charter Airline	FSK	6 aircraft	 
+ 		Africa World Airlines	AW / AFW	8 aircraft	 
+ 		African Express Airways	XU / AXK	2 aircraft	 
+ 		Afrijet	J7 / ABS	5 aircraft	 
+ 		Afriqiyah Airways	8U / AAW	9 aircraft	 
+ 	
+Aims Community College Aviation	RTY	18 aircraft	 
+ 	
+Air 1st Aviation	RUF	2 aircraft	 
+ 	
+Air Adelphi	MUS	5 aircraft	 
+ 		Air Albania	ZB / ABN	2 aircraft	 
+ 		Air Algerie	AH / DAH	56 aircraft	 
+ 		Air Alliance	AYY	8 aircraft	 
+ 		Air Alsie	6I / MMD	4 aircraft	 
+ 		Air Anka	6K / TAH	2 aircraft	 
+ 	
+Air Antilles	KES	5 aircraft	 
+ 		Air Arabia	G9 / ABY	77 aircraft	 
+ 		Air Astana	KC / KZR	34 aircraft	 
+ 		Air Astra	2A / AWA	4 aircraft	 
+ 		Air Atlanta Icelandic	CC / ABD	1 aircraft	 
+ 		Air Austral	UU / REU	7 aircraft	 
+ 		Air Baltic	BT / BTI	50 aircraft	 
+ 	
+Air Bohemia	BOH	5 aircraft	 
+ 		Air Borealis	LBR	9 aircraft	 
+ 		Air Botswana	BP / BOT	6 aircraft	 
+ 		Air Burkina	2J / VBW	3 aircraft	 
+ 		Air Busan	BX / ABL	21 aircraft	 
+ 		Air Cairo	SM / MSC	37 aircraft	 
+ 		Air Caledonie	TY / TPC	4 aircraft	 
+ 		Air Cambodia	K6 / KHV	6 aircraft	 
+ 		Air Canada	AC / ACA	319 aircraft	 
+ 		Air Canada Rouge	RV / ROU	37 aircraft	 
+ 		Air Caraibes	TX / FWI	13 aircraft	 
+ 		Air Care Alliance	CMF	8 aircraft	 
+ 		Air Cargo Carriers	2Q / SNC	30 aircraft	 
+ 	
+Air Central	GI / LHA	15 aircraft	 
+ 		Air Century	Y2 / CEY	7 aircraft	 
+ 		Air Changan	9H / CGN	14 aircraft	 
+ 		Air Charter Scotland	EDC	10 aircraft	 
+ 		Air Charter Scotland Europe	SCO	1 aircraft	 
+ 		Air Charters Europe	AGR	4 aircraft	 
+ 		Air Chathams	3C / CVA	16 aircraft	 
+ 		Air China	CA / CCA	507 aircraft	 
+ 		Air China Cargo	CAO	25 aircraft	 
+ 		Air China Inner Mongolia	CNM	9 aircraft	 
+ 	
+Air Class	QCL	4 aircraft	 
+ 	
+Air Corporate	CPV	15 aircraft	 
+ 		Air Corsica	XK / CCM	13 aircraft	 
+ 		Air Côte d'Ivoire	HF / VRE	12 aircraft	 
+ 		Air Creebec	YN / CRQ	21 aircraft	 
+ 		Air Do	HD / ADO	13 aircraft	 
+ 		Air Dolomiti	EN / DLA	26 aircraft	 
+ 	
+Air Dream College	ADM	10 aircraft	 
+ 	
+Air Eagle	EG / EPE	1 aircraft	 
+ 		Air Europa	UX / AEA	58 aircraft	 
+ 	
+Air Excel	XLL	1 aircraft	 
+ 	
+Air Falcon	FS / FPK	1 aircraft	 
+ 		Air Flamenco	F4 / WAF	13 aircraft	 
+ 		Air France	AF / AFR	281 aircraft	 
+ 		Air Greenland	GL / GRL	23 aircraft	 
+ 		Air Guilin	GT / CGH	9 aircraft	 
+ 		Air Horizont	HT / HAT	6 aircraft	 
+ 		Air Incheon	KJ / AIH	12 aircraft	 
+ 		Air India	AI / AIC	191 aircraft	 
+ 		Air India Express	IX / AXB	115 aircraft	 
+ 		Air Inuit	3H / AIE	36 aircraft	 
+ 		Air Japan	NQ / AJX	2 aircraft	 
+ 	
+Air Key West	KWX	3 aircraft	 
+ 		Air Kiribati	IK / AKL	5 aircraft	 
+ 		Air Koryo	JS / KOR	9 aircraft	 
+ 		Air Liaison	DU / LSJ	14 aircraft	 
+ 		Air Libya	7I / TLR	8 aircraft	 
+ 	
+Air Loyaute	RLY	4 aircraft	 
+ 		Air Macau	NX / AMU	22 aircraft	 
+ 		Air Manas	ZM / MBB	1 aircraft	 
+ 		Air Mauritius	MK / MAU	12 aircraft	 
+ 		Air Mediterranean	MV / MAR	2 aircraft	 
+ 	
+Air Methods	LIF	23 aircraft	 
+ 		Air Moana	NM / NTR	3 aircraft	 
+ 		Air Montenegro	4O / MNE	3 aircraft	 
+ 	
+Air Mountain	AMT	2 aircraft	 
+ 		Air New Zealand	NZ / ANZ	114 aircraft	 
+ 		Air Niugini	PX / ANG	29 aircraft	 
+ 		Air North	4N / ANT	11 aircraft	 
+ 		Air Nunavut	BFF	15 aircraft	 
+ 	
+Air Ocean Maroc	AOM	6 aircraft	 
+ 		Air Panama	7P / PST	5 aircraft	 
+ 		Air Peace	P4 / APK	22 aircraft	 
+ 		Air Premia	YP / APZ	8 aircraft	 
+ 	
+Air Rarotonga	GZ / RAR	6 aircraft	 
+ 	
+Air Safaris	SRI	6 aircraft	 
+ 		Air Saint-Pierre	PJ / SPM	1 aircraft	 
+ 		Air Samarkand	9S / UZS	3 aircraft	 
+ 		Air Senegal	HC / SZN	9 aircraft	 
+ 		Air Seoul	RS / ASV	6 aircraft	 
+ 		Air Seychelles	HM / SEY	7 aircraft	 
+ 	
+Air Spray	ASB	46 aircraft	 
+ 	
+Air Sunshine	RSI	8 aircraft	 
+ 		Air Tahiti	VT / VTA	12 aircraft	 
+ 		Air Tahiti Nui	TN / THT	4 aircraft	 
+ 		Air Tanzania	TC / ATC	17 aircraft	 
+ 	
+Air Taxi & Charter International	IBJ	1 aircraft	 
+ 	
+Air Tetiaroa	TOA	7 aircraft	 
+ 		Air Thanlwin	ST / RTL	4 aircraft	 
+ 		Air Tindi	8T / TIN	7 aircraft	 
+ 		Air Transat	TS / TSC	43 aircraft	 
+ 	
+Air Transport Europe	EAT	10 aircraft	 
+ 		Air Transport International	8C / ATN	10 aircraft	 
+ 		Air Travel	A6 / OTC	16 aircraft	 
+ 	
+AIR TXT	XTX	1 aircraft	 
+ 		Air Urga	3N / URG	4 aircraft	 
+ 		Air Vanuatu	NF / AVN	3 aircraft	 
+ 	
+Air Volta	VLB	4 aircraft	 
+ 		Air Wisconsin	ZW / AWI	3 aircraft	 
+ 		Air Zimbabwe	UM / AZW	4 aircraft	 
+ 	
+Air-Glaciers	AGV	24 aircraft	 
+ 	
+Air-Taxi Europe	TWG	4 aircraft	 
+ 	
+Air1Air	INA	2 aircraft	 
+ 	
+Air65 Aviation	FGB	1 aircraft	 
+ 		AirACT	9T / RUN	2 aircraft	 
+ 		AirAsia	AK / AXM	226 aircraft	 
+ 		AirAsia X	D7 / XAX	25 aircraft	 
+ 		airblue	PA / ABQ	12 aircraft	 
+ 	
+Airborne Imaging	ARZ	4 aircraft	 
+ 		Airbus	AIB	891 aircraft	 
+ 		Airbus Transport International	4Y / BGA	11 aircraft	 
+ 		Aircalin	SB / ACI	6 aircraft	 
+ 	
+Aircharters Worldwide	MJS	2 aircraft	 
+ 	
+Aircraft Management Group	RVJ	16 aircraft	 
+ 		Airest	AEG	6 aircraft	 
+ 		AirExplore	ED / AXE	8 aircraft	 
+ 		Airfast Indonesia	FS / AFE	10 aircraft	 
+ 	
+AirGO Private Airline	XGO	3 aircraft	 
+ 	
+airHaifa	E2 / HFA	3 aircraft	 
+ 		Airhub Airlines	RE / GJM	1 aircraft	 
+ 	
+AirJet	MBC	2 aircraft	 
+ 	
+Airkenya Express	P2 / XAK	5 aircraft	 
+ 		Airlec Air Espace	ARL	8 aircraft	 
+ 	
+Airlift	ALI	10 aircraft	 
+ 		Airlink	JAR	13 aircraft	 
+ 		Airlink	4Z / LNK	74 aircraft	 
+ 	
+AirMaster	MR / RMX	2 aircraft	 
+ 		AirNet	USC	20 aircraft	 
+ 		Airnorth	TL / ANO	13 aircraft	 
+ 	
+Airone	RNO	1 aircraft	 
+ 		AIRPAC Airlines	APC	8 aircraft	 
+ 	
+AirQuest Aviation	RQT	2 aircraft	 
+ 		AirSERBIA	JU / ASL	29 aircraft	 
+ 	
+AirSF Flight Services	XSN	9 aircraft	 
+ 		Airshare	XSR	70 aircraft	 
+ 		AirSial	PF / SIF	7 aircraft	 
+ 		AirSmart	XSM	8 aircraft	 
+ 		AirSprint	ASP	40 aircraft	 
+ 	
+AirStar Charter	OLV	3 aircraft	 
+ 		Airstream	AQS	2 aircraft	 
+ 		AirSWIFT	T6 / ATX	5 aircraft	 
+ 		AirTanker	9L / TOW	2 aircraft	 
+ 	
+Airtask	DCT	3 aircraft	 
+ 	
+AirTraffic	ATY	4 aircraft	 
+ 	
+Airwork	AWK	10 aircraft	 
+ 		AirX	AXY	19 aircraft	 
+ 		AIS Airlines	PNX	7 aircraft	 
+ 	
+Aitheras Aviation Group	PXG	9 aircraft	 
+ 		AJet	VF / TKJ	90 aircraft	 
+ 		Akasa Air	QP / AKJ	30 aircraft	 
+ 	
+Aladdin Jet	ADJ	1 aircraft	 
+ 	
+Alaman Air	TTR	2 aircraft	 
+ 	
+Alante Air Charter	SVL	5 aircraft	 
+ 		Alaska Airlines	AS / ASA	332 aircraft	 
+ 		Alaska Central Express	KO / AER	19 aircraft	 
+ 		AlbaStar	LAV	5 aircraft	 
+ 	
+Albatros Airlines	G0 / GAL	1 aircraft	 
+ 	
+Albinati Aeronautics	LUC	2 aircraft	 
+ 		Albinati Aviation	ULC	1 aircraft	 
+ 	
+Alexandria Airlines	DQ / KHH	1 aircraft	 
+ 	
+Alfa Airlines	5E / AAJ	1 aircraft	 
+ 	
+Alhaya Aviation	HYA	2 aircraft	 
+ 	
+Alidaunia	D4 / LID	9 aircraft	 
+ 		Aliserio	TJD	11 aircraft	 
+ 	
+ALK Airlines	VBB	1 aircraft	 
+ 		Alkan Air	AKN	21 aircraft	 
+ 		All Nippon Airways	NH / ANA	246 aircraft	 
+ 		Allegiant Air	G4 / AAY	132 aircraft	 
+ 		Alliance Air	9I / LLR	22 aircraft	 
+ 		Alliance Airlines	QQ / UTY	45 aircraft	 
+ 	
+Alliance Executive Jets	ALE	4 aircraft	 
+ 		Allied Air	4W / AJK	4 aircraft	 
+ 		AlMasria Universal Airlines	UJ / LMU	8 aircraft	 
+ 		Aloha Air Cargo	KH / AAH	9 aircraft	 
+ 	
+AlpAvia	AL / APP	2 aircraft	 
+ 		Alpha Aviation	AAO	21 aircraft	 
+ 	
+Alpha Three Aviation	APW	1 aircraft	 
+ 	
+Alphaland Aviation	0A / BIC	2 aircraft	 
+ 	
+AlphaSky	AS / JAG	3 aircraft	 
+ 		Alpine Air Express	5A / AIP	76 aircraft	 
+ 		Alpine Flightservice	FSE	2 aircraft	 
+ 		Alrosa	6R / DRU	5 aircraft	 
+ 	
+Altagna	AGH	2 aircraft	 
+ 	
+Altair Airlines	AQL	1 aircraft	 
+ 	
+Altius Aviation	STY	4 aircraft	 
+ 	
+Amakusa Airlines	MZ / AHX	1 aircraft	 
+ 		AMC Airlines	AMV	3 aircraft	 
+ 		AMC Aviation	AMQ	17 aircraft	 
+ 		Amelia	8R / AIA	20 aircraft	 
+ 	
+American Air Charter	GTW	8 aircraft	 
+ 		American Airlines	AA / AAL	1604 aircraft	 
+ 	
+American Jet	AJB	6 aircraft	 
+ 		American Jet International	SCM	10 aircraft	 
+ 		Ameriflight	A8 / AMF	132 aircraft	 
+ 		Amerijet International	M6 / AJT	12 aircraft	 
+ 	
+Ameristar	7Z / AJI	12 aircraft	 
+ 	
+Anap Jets	AJP	7 aircraft	 
+ 		Andes Lineas Aereas	O4 / ANS	4 aircraft	 
+ 		Angara Airlines	AGU	2 aircraft	 
+ 		Anguilla Air Services	Q3 / AXL	6 aircraft	 
+ 	
+Animawings	A2 / AWG	4 aircraft	 
+ 		Antonov Airlines	ADB	7 aircraft	 
+ 		APG Airlines	GP / RIV	1 aircraft	 
+ 	
+Arab Wings	AWS	5 aircraft	 
+ 		Arajet	DM / DWI	11 aircraft	 
+ 	
+Arc en Ciel	JMS	4 aircraft	 
+ 		Arcus Air	AZE	9 aircraft	 
+ 	
+Argentina - Air Force	FAG	61 aircraft	 
+ 		Ariana Afghan Airlines	FG / AFG	6 aircraft	 
+ 		Arik Air	W3 / ARA	9 aircraft	 
+ 	
+Arirang Aviation	MGP	2 aircraft	 
+ 	
+Arkhangelsk Airlines	OAO	3 aircraft	 
+ 		Arkia Israeli Airlines	IZ / AIZ	7 aircraft	 
+ 	
+ARM Aviacion	MMG	7 aircraft	 
+ 		Armenia Airways	6A / AMW	3 aircraft	 
+ 	
+Arrow Aviation	HEZ	4 aircraft	 
+ 		Aruba Airlines	AG / ARU	1 aircraft	 
+ 		Ascend Airways	YD / SYG	5 aircraft	 
+ 		ASG Business Aviation	ESW	7 aircraft	 
+ 	
+Asia Cargo Airlines	GM / TMG	2 aircraft	 
+ 		Asia Pacific Airlines	P9 / MGE	5 aircraft	 
+ 	
+Asia Union Airlines	7Q / AUV	2 aircraft	 
+ 	
+Asian Express Airlines	RS / TXP	1 aircraft	 
+ 	
+Asian Express General Aviation Wuxi	WUA	4 aircraft	 
+ 		Asiana Airlines	OZ / AAR	76 aircraft	 
+ 		ASKY Airlines	KP / SKK	17 aircraft	 
+ 		ASL Airlines	5H / ABR	78 aircraft	 
+ 	
+Asman Airlines	KGN	1 aircraft	 
+ 	
+Aspen Helicopters	AHF	15 aircraft	 
+ 	
+Asta Linhas Aereas	0A / SUL	3 aircraft	 
+ 	
+Astonfly	BLT	17 aircraft	 
+ 		Astonjet	ASJ	8 aircraft	 
+ 		Astral Aviation	8V / ACP	6 aircraft	 
+ 		ATA Airlines	I3 / TBZ	16 aircraft	 
+ 	
+ATI Jet	CYO	21 aircraft	 
+ 	
+Atlanta Air Charter	CTE	3 aircraft	 
+ 		Atlantic Airways	RC / FLI	6 aircraft	 
+ 	
+Atlantic Flight Training Academy	AFZ	19 aircraft	 
+ 		Atlas Air	5Y / GTI	68 aircraft	 
+ 	
+Atlas Air	IRH	1 aircraft	 
+ 		Atlas Air Service	ATL	10 aircraft	 
+ 	
+ATM Information Service Japan	ATO	4 aircraft	 
+ 	
+Atmospherica Aviation	AAN	6 aircraft	 
+ 	
+ATP Flight School	CXK	4 aircraft	 
+ 	
+ATR	EVX	71 aircraft	 
+ 		Atran	V8 / VAS	3 aircraft	 
+ 	
+Atsa Airlines	4A / AMP	9 aircraft	 
+ 	
+Auckland Rescue Helicopter	WPR	4 aircraft	 
+ 	
+Auric Air	UI / AUK	25 aircraft	 
+ 		Aurigny Air Services	GR / AUR	7 aircraft	 
+ 		Aurora	HZ / SHU	19 aircraft	 
+ 	
+Aurora Flight Sciences	AUU	4 aircraft	 
+ 	
+Australia - Customs	CUS	1 aircraft	 
+ 	
+Australia - Federal Police	FPL	1 aircraft	 
+ 		Australia - Royal Australian Air Force	ASY	162 aircraft	 
+ 	
+Austria - Air Force	ASF	10 aircraft	 
+ 		Austrian Airlines	OS / AUA	68 aircraft	 
+ 	
+Av8Jet	AJO	4 aircraft	 
+ 	
+AVA Airlines	AXV	4 aircraft	 
+ 		Avalair Aircraft Management	ARR	11 aircraft	 
+ 		Avanti Air	ATV	2 aircraft	 
+ 	
+AvCenter	TTE	5 aircraft	 
+ 		Avcon Jet	AOJ	11 aircraft	 
+ 		Avelo Airlines	XP / VXP	19 aircraft	 
+ 		Avia Traffic	YK / AVJ	6 aircraft	 
+ 		Aviacon Zitotrans	ZR / AZS	5 aircraft	 
+ 		Avianca	AV / AVA	150 aircraft	 
+ 		Avianca Cargo	QT / TPA	8 aircraft	 
+ 	
+Aviaservice	KZN	5 aircraft	 
+ 	
+Aviastar	VIT	1 aircraft	 
+ 		Aviastar-TU	4B / TUP	8 aircraft	 
+ 	
+Aviation Adventures	AVL	54 aircraft	 
+ 		Aviation Advisor	LKF	16 aircraft	 
+ 	
+Aviation Défense Service	DEF	5 aircraft	 
+ 	
+Aviation Horizons	ZS / HZS	5 aircraft	 
+ 	
+Aviation Services Management	VGG	3 aircraft	 
+ 	
+Aviator College	WCP	54 aircraft	 
+ 	
+Aviator Zone Academy	OZN	16 aircraft	 
+ 	
+AVIATOR.S5	VIO	2 aircraft	 
+ 	
+Aviatsa	VVT	1 aircraft	 
+ 		Avincis	INR	103 aircraft	 
+ 		Avion Express	X9 / NVD	10 aircraft	 
+ 	
+Avionco	RJR	1 aircraft	 
+ 	
+Avionord	VND	7 aircraft	 
+ 		Avior Airlines	9V / ROI	6 aircraft	 
+ 	
+Aviostart	VSR	3 aircraft	 
+ 	
+AWA	WEY	15 aircraft	 
+ 	
+Awesome Cargo	A7 / WIN	3 aircraft	 
+ 	
+Axio	AXO	6 aircraft	 
+ 	
+AXIS Aviation	BQA	7 aircraft	 
+ 	
+Ayit Aviation	AYT	3 aircraft	 
+ 		Azerbaijan Airlines	J2 / AHY	33 aircraft	 
+ 		Azimuth	A4 / AZO	20 aircraft	 
+ 		Azman Air	ZU / AZM	5 aircraft	 
+ 		Azores Airlines	S4 / RZO	10 aircraft	 
+ 		Aztec Airways	AJ / AZY	13 aircraft	 
+ 		Azul	AD / AZU	209 aircraft	 
+ 	
+Azul Conecta	2F / ACN	1 aircraft	 
+ 		Azur Air	ZF / AZV	20 aircraft	 
+ 	
+Azure Aviation	ALZ	2 aircraft	 
+ 	B		 
+ 	
+BAA Training	BFS	7 aircraft	 
+ 		Babcock	RHD	51 aircraft	 
+ 	
+Baden Aircraft Operations	BAO	1 aircraft	 
+ 		Badr Airlines	J4 / BDR	8 aircraft	 
+ 	
+BAe Systems	BAE	1 aircraft	 
+ 	
+BAE Systems	MOG	2 aircraft	 
+ 		Bahamasair	UP / BHS	10 aircraft	 
+ 		Bahrain Royal Flight	BAH	4 aircraft	 
+ 		Bairline	BRJ	3 aircraft	 
+ 		Baker Aviation	KOW	22 aircraft	 
+ 		Bamboo Airways	QH / BAV	6 aircraft	 
+ 		Bangkok Airways	PG / BKP	26 aircraft	 
+ 	
+BankAir	BKA	5 aircraft	 
+ 	
+Bar XH Air	BXH	2 aircraft	 
+ 	
+Bartolini Air	BNI	31 aircraft	 
+ 		Bassaka Air	5B / BSX	2 aircraft	 
+ 		Batik Air	ID / BTK	104 aircraft	 
+ 	
+Batot Air	BTO	1 aircraft	 
+ 		BBN Airlines	B5 / BBT	3 aircraft	 
+ 		BBN Airlines Indonesia	0B / BBL	5 aircraft	 
+ 	
+Beijing Airlines	BJN	7 aircraft	 
+ 	
+Bel Air Aviation	BBX	6 aircraft	 
+ 		Belavia	B2 / BRU	14 aircraft	 
+ 		Belgium - Air Force	BAF	30 aircraft	 
+ 	
+Belgium - Navy	NYB	3 aircraft	 
+ 	
+Bell Helicopter	TXH	91 aircraft	 
+ 	
+BellAir	TCN	10 aircraft	 
+ 		Bemidji Aviation	CH / BMJ	44 aircraft	 
+ 	
+Benin Airlines	ABT	2 aircraft	 
+ 		beOnd	B4 / BYD	2 aircraft	 
+ 		Bering Air	8E / BRG	40 aircraft	 
+ 	
+Berjaya Air	J8 / BVT	2 aircraft	 
+ 		BermudAir	2T / BMA	4 aircraft	 
+ 		Berniq Airways	NB / BNL	7 aircraft	 
+ 		Berry Aviation	BYA	20 aircraft	 
+ 	
+Best Jets International	DOW	2 aircraft	 
+ 		Bestfly Aruba	BFY	13 aircraft	 
+ 		Bhutan Airlines	B3 / BTN	2 aircraft	 
+ 	
+Big Bend Community College Aviation	BGB	35 aircraft	 
+ 	
+Bighorn Airways	BHR	24 aircraft	 
+ 		Biman Bangladesh Airlines	BG / BBC	21 aircraft	 
+ 		BinAir	BID	4 aircraft	 
+ 		Binter Canarias	NT / IBB	44 aircraft	 
+ 		Bioflight	BIO	12 aircraft	 
+ 	
+Birdbase Aviation	BAG	2 aircraft	 
+ 	
+Blessings Aviation Charter	TJJ	8 aircraft	 
+ 		Blue Dart Aviation	BZ / BDA	5 aircraft	 
+ 		Blue Islands	SI / BCI	5 aircraft	 
+ 	
+Blue Square Aviation	BSG	1 aircraft	 
+ 		Bluebird Airways	BZ / BBG	4 aircraft	 
+ 	
+Bluebird Aviation	BBZ	7 aircraft	 
+ 	
+Bluesky Airways	BSF	3 aircraft	 
+ 		Boeing	BOE	334 aircraft	 
+ 		Boliviana de Aviacion	OB / BOV	26 aircraft	 
+ 	
+Bookajet	BOO	1 aircraft	 
+ 		Boutique Air	4B / BTQ	14 aircraft	 
+ 		BRA	TF / BRX	17 aircraft	 
+ 	
+Braspress Air Cargo	BPC	2 aircraft	 
+ 		Bravo Airways	BAY	2 aircraft	 
+ 		Brazil - Air Force	BRS	253 aircraft	 
+ 	
+Brazil - Army	EXB	5 aircraft	 
+ 	
+Brazil - Navy	MBR	6 aircraft	 
+ 		Breeze Airways	MX / MXY	55 aircraft	 
+ 	
+Bridger Aerospace	BGR	17 aircraft	 
+ 	
+Brilliant Jet	TXJ	1 aircraft	 
+ 		Bristow Helicopters	BHL	113 aircraft	 
+ 	
+Bristow Nigeria	BHN	6 aircraft	 
+ 		British Airways	BA / BAW	305 aircraft	 
+ 	
+British International Helicopters	BRT	5 aircraft	 
+ 	
+Bromma Air Maintenance	CFL	4 aircraft	 
+ 		Brussels Airlines	SN / BEL	48 aircraft	 
+ 	
+Budapest Aircraft Service	RP / BPS	3 aircraft	 
+ 		Buddha Air	U4 / BHA	19 aircraft	 
+ 		Buffalo Airways	J0 / BFL	57 aircraft	 
+ 	
+Buffalo River Aviation	OFT	3 aircraft	 
+ 		Bul Air	LB / BVL	8 aircraft	 
+ 	
+Bulgaria - Air Force	AFB	21 aircraft	 
+ 	
+Bulgaria - Government	BGF	1 aircraft	 
+ 		Bulgaria Air	FB / LZB	14 aircraft	 
+ 		Buraq Air	UZ / BRQ	4 aircraft	 
+ 	
+Business Aviation Asia	UN / UNA	7 aircraft	 
+ 		Business Wings	JMP	4 aircraft	 
+ 		Buzz	RR / RYS	13 aircraft	 
+ 	
+BySky	BYS	3 aircraft	 
+ 	C		 
+ 		CAA	BU / DBP	10 aircraft	 
+ 		Cabo Verde Airlines	VR / TCV	2 aircraft	 
+ 	
+CAE	CSR	12 aircraft	 
+ 		CAE	OXF	112 aircraft	 
+ 	
+CAE Aviation	LXC	2 aircraft	 
+ 		Caicos Express Airways	9Q / CXE	8 aircraft	 
+ 		Calm Air	MO / CAV	6 aircraft	 
+ 		Calstar	CMD	14 aircraft	 
+ 		Camair-Co	QC / CRC	5 aircraft	 
+ 		Cambodia Airways	KR / KME	6 aircraft	 
+ 		CAMEX Airlines	Z7 / CMS	3 aircraft	 
+ 	
+Canada - Coast Guard	CTG	26 aircraft	 
+ 	
+Canada - Department of Transport	TGO	37 aircraft	 
+ 	
+Canada - Ontario Ministry of Natural Resources	ONT	25 aircraft	 
+ 		Canada - Royal Canadian Air Force	CFC	159 aircraft	 
+ 	
+Canada - Royal Canadian Mounted Police	SST	1 aircraft	 
+ 	
+Canada - Saskatchewan Air Ambulance Service	SLG	4 aircraft	 
+ 	
+Canadian Airways Congo	TWC	3 aircraft	 
+ 		Canadian North	5T / AKT	33 aircraft	 
+ 		CanaryFly	PM / CNF	6 aircraft	 
+ 	
+Canavia	CNA	12 aircraft	 
+ 	
+Canlink Aviation	MFC	59 aircraft	 
+ 		CanWest Air	CWA	19 aircraft	 
+ 		Cape Air	9K / KAP	103 aircraft	 
+ 		Capital Air Ambulance	EGL	4 aircraft	 
+ 		Capital Airlines	JD / CBJ	88 aircraft	 
+ 	
+Capital City Air Carriers	CCQ	3 aircraft	 
+ 		Cardig Air	7D / CAD	1 aircraft	 
+ 		CareFlight	CFH	16 aircraft	 
+ 		Cargo Air	CGF	11 aircraft	 
+ 		Cargojet Airways	W8 / CJT	40 aircraft	 
+ 		Cargolux	CV / CLX	30 aircraft	 
+ 		Caribbean Airlines	BW / BWA	20 aircraft	 
+ 		Carpatair	V3 / KRP	3 aircraft	 
+ 		Carson Air	CRN	22 aircraft	 
+ 		Caspian Airlines	IV / CPN	11 aircraft	 
+ 		Castle Aviation	CSJ	21 aircraft	 
+ 		Cathay Pacific	CX / CPA	179 aircraft	 
+ 	
+Catreus	VCG	5 aircraft	 
+ 		Cavok Air	CVK	5 aircraft	 
+ 		Cayman Airways	KX / CAY	9 aircraft	 
+ 	
+CB SkyShare	CBC	10 aircraft	 
+ 		Cebu Pacific	5J / CEB	93 aircraft	 
+ 		Ceiba Intercontinental	CEL	3 aircraft	 
+ 		CemAir	5Z / KEM	22 aircraft	 
+ 	
+Central Air Southwest	CTL	27 aircraft	 
+ 		Central Airlines	I9 / HLF	9 aircraft	 
+ 		Central Mountain Air	9M / GLR	27 aircraft	 
+ 		Centreline	CLF	10 aircraft	 
+ 	
+Chabahar Airlines	IRU	6 aircraft	 
+ 		Chair Airlines	CS / CSW	4 aircraft	 
+ 		Chalair Aviation	CE / CLG	11 aircraft	 
+ 		Challenge Airlines BE	X7 / CHG	10 aircraft	 
+ 	
+Charter Airlines	RKJ	9 aircraft	 
+ 		Charter Jets	LTC	4 aircraft	 
+ 		Chartright Air	HRT	21 aircraft	 
+ 		CHC Helicopter	HMB	91 aircraft	 
+ 		Chengdu Airlines	EU / UEA	82 aircraft	 
+ 	
+Chevron USA	CVR	11 aircraft	 
+ 	
+Chicago Jet Group	WDY	4 aircraft	 
+ 	
+China - Air Force	CKJ	16 aircraft	 
+ 	
+China - Civil Aviation Administration	CFI	20 aircraft	 
+ 		China Airlines	CI / CAL	85 aircraft	 
+ 		China Cargo Airlines	CK / CKK	17 aircraft	 
+ 		China Eastern Airlines	MU / CES	671 aircraft	 
+ 		China Express Airlines	G5 / HXA	78 aircraft	 
+ 	
+China Flight General Aviation Company	CFZ	2 aircraft	 
+ 		China Postal Airlines	CF / CYZ	39 aircraft	 
+ 		China Southern Airlines	CZ / CSN	684 aircraft	 
+ 	
+China Southern Airlines General Aviation	SAG	6 aircraft	 
+ 		China Southern Cargo	CSG	11 aircraft	 
+ 		China United Airlines	KN / CUA	59 aircraft	 
+ 	
+Chodang University	CDQ	13 aircraft	 
+ 		Chongqing Airlines	OQ / CQN	36 aircraft	 
+ 		Chrono Aviation	MB / NDL	10 aircraft	 
+ 		Chrono Jet	MB / MBK	3 aircraft	 
+ 		CITIC Offshore Helicopter	CHC	31 aircraft	 
+ 		Citilink	QG / CTV	59 aircraft	 
+ 		CityJet	WX / BCY	8 aircraft	 
+ 		Civil Air Patrol	CAP	659 aircraft	 
+ 	
+Civil Aviation Flight University of China	FTU	78 aircraft	 
+ 	
+Class Aviation	DUC	1 aircraft	 
+ 	
+Clay Lacy Aviation	CLY	1 aircraft	 
+ 		Clic	VE / EFY	21 aircraft	 
+ 	
+ClipperJet	ORO	1 aircraft	 
+ 	
+CM Airlines	H5 / OMT	1 aircraft	 
+ 		CMA CGM Air Cargo	2C / CMA	6 aircraft	 
+ 		Coastal Aviation	CQ / CSV	9 aircraft	 
+ 	
+Colombia - Air Force	FAC	124 aircraft	 
+ 		Colorful Guizhou Airlines	GY / CGZ	20 aircraft	 
+ 	
+Colorful Yunnan Airlines	CYN	1 aircraft	 
+ 		Comlux	CLA	6 aircraft	 
+ 		CommuteAir	C5 / UCA	1 aircraft	 
+ 	
+Compagnia Aeronautica Italiana	CPI	1 aircraft	 
+ 		Compass Air Cargo	HQ / ADZ	7 aircraft	 
+ 		Conair	FGD	75 aircraft	 
+ 		Condor	DE / CFG	70 aircraft	 
+ 	
+ConocoPhillips	CON	6 aircraft	 
+ 		Conquest Air	C4 / QAI	2 aircraft	 
+ 	
+Constanta Airline	UZA	2 aircraft	 
+ 		Contour Aviation	LF / VTE	44 aircraft	 
+ 		Conviasa	V0 / VCV	24 aircraft	 
+ 		Copa Airlines	CM / CMP	106 aircraft	 
+ 		Copenhagen Airtaxi	CAT	7 aircraft	 
+ 		Corendon Airlines	XC / CAI	32 aircraft	 
+ 	
+Corporate Air	MLN	1 aircraft	 
+ 	
+Corporate Jet	PHJ	2 aircraft	 
+ 		Corsair	SS / CRL	10 aircraft	 
+ 	
+Costa Rica - Ministry of Public Security	MSP	10 aircraft	 
+ 		Costa Rica Green Airways	GW / CRG	5 aircraft	 
+ 	
+Coulson Aviation	CUL	15 aircraft	 
+ 	
+Cranfield Flight Training	MGB	8 aircraft	 
+ 	
+Croatia - Air Force	HRZ	20 aircraft	 
+ 		Croatia Airlines	OU / CTN	16 aircraft	 
+ 	
+Cronos Airlines	C8 / CRA	4 aircraft	 
+ 	
+Cronos Airlines Benin	CKL	1 aircraft	 
+ 	
+Cross Aviation	CRX	3 aircraft	 
+ 	
+Crown Airlines	FQ / CWN	1 aircraft	 
+ 	
+Crystal Air	CYT	6 aircraft	 
+ 	
+CTP Aviation	CTP	6 aircraft	 
+ 		Cubana	CU / CUB	9 aircraft	 
+ 		Cygnus Air	RGN	5 aircraft	 
+ 		Cyprus Airways	CY / CYP	6 aircraft	 
+ 		Czechia - Air Force	CEF	21 aircraft	 
+ 	D		 
+ 		Daallo Airlines	D3 / DAO	4 aircraft	 
+ 		Dalian Airlines	CCD	13 aircraft	 
+ 		Dan Air	DN / DNA	3 aircraft	 
+ 		Dana Air	9J / DAN	7 aircraft	 
+ 		DAS Private Jets	DWW	5 aircraft	 
+ 	
+Dassault Falcon Service	DSO	8 aircraft	 
+ 		DAT	DX / DTR	23 aircraft	 
+ 	
+DB Aviation	DBT	4 aircraft	 
+ 	
+De Havilland Canada	DHC	25 aircraft	 
+ 	
+DEA Aviation	WKT	3 aircraft	 
+ 		Deer Jet	DER	15 aircraft	 
+ 	
+Deer Jet Beijing	BDJ	7 aircraft	 
+ 		Delta Air Lines	DL / DAL	1303 aircraft	 
+ 	
+Delta State University Aviation	DSU	28 aircraft	 
+ 	
+Desert Jet	DJR	3 aircraft	 
+ 	
+Dexter Air Taxi	DXT	5 aircraft	 
+ 		DHL Air	D0 / DHK	231 aircraft	 
+ 	
+Diamond Sky	DMS	5 aircraft	 
+ 	
+DigaJet	DGJ	4 aircraft	 
+ 	
+Direct2	LND	1 aircraft	 
+ 		Discover Airlines	4Y / OCN	30 aircraft	 
+ 		Divi Divi Air	3R / DVR	5 aircraft	 
+ 	
+Dokia Air	DKA	1 aircraft	 
+ 		Donghai Airlines	DZ / EPA	24 aircraft	 
+ 	
+Dornier Aviation Nigeria Aiep	DO / DAV	4 aircraft	 
+ 	
+DragonFly Executive	CBM	4 aircraft	 
+ 	
+Draken Europe	FRA	29 aircraft	 
+ 		Dreamline Aviation	DLX	11 aircraft	 
+ 		DRF Luftrettung	1I / AMB	54 aircraft	 
+ 		Druk Air	KB / DRK	7 aircraft	 
+ 	E		 
+ 	
+E+S Air	CAH	12 aircraft	 
+ 		E-Aviation	EFD	4 aircraft	 
+ 	
+E-Cargo Airlines	RF / ERF	1 aircraft	 
+ 	
+EADS CASA	AED	41 aircraft	 
+ 		Eagle Air Iceland	FEI	3 aircraft	 
+ 		Eagle Creek Aviation	EGC	2 aircraft	 
+ 	
+EagleMed	EMD	17 aircraft	 
+ 	
+EAS Barcelona	EAX	17 aircraft	 
+ 	
+East Coast Flight Services	JTM	2 aircraft	 
+ 	
+East Coast Jets	ECJ	5 aircraft	 
+ 	
+East Wing	EWZ	2 aircraft	 
+ 		Eastar Jet	ZE / ESR	16 aircraft	 
+ 		Eastern Air Express	BBQ	23 aircraft	 
+ 		Eastern Airlines	2D / EAL	2 aircraft	 
+ 		Eastern Airways	T3 / EZE	19 aircraft	 
+ 	
+Easy Charter	RD / LOL	1 aircraft	 
+ 		easyJet	U2 / EZY	358 aircraft	 
+ 		EATIS	SRK	1 aircraft	 
+ 	
+EC Charter	EXC	3 aircraft	 
+ 		EcoJet	8J / ECO	4 aircraft	 
+ 	
+Ecuador - Air Force	FAE	22 aircraft	 
+ 		Edelweiss Air	WK / EDW	21 aircraft	 
+ 		EGT Jet	EGT	3 aircraft	 
+ 	
+Egypt - Air Force	EGY	56 aircraft	 
+ 		Egyptair	MS / MSR	67 aircraft	 
+ 		Egyptair Cargo	MSX	5 aircraft	 
+ 	
+EIS Aircraft	EIS	12 aircraft	 
+ 		EJM Europe	JME	9 aircraft	 
+ 		El Al	LY / ELY	45 aircraft	 
+ 	
+Elan Express	ELX	1 aircraft	 
+ 	
+Elangeni	ELG	6 aircraft	 
+ 		Electra Airways	3E / EAF	8 aircraft	 
+ 	
+Elemental Aviation	MWH	3 aircraft	 
+ 	
+Elemental Aviation	MWH	3 aircraft	 
+ 	
+Elifriulia	EFG	17 aircraft	 
+ 	
+Elilombarda	EOA	5 aircraft	 
+ 	
+Elin Group	ELN	1 aircraft	 
+ 	
+Eliossola	EOS	6 aircraft	 
+ 	
+Elitaliana	ELA	12 aircraft	 
+ 		Elite Air	ELZ	13 aircraft	 
+ 	
+Elitellina	FGS	5 aircraft	 
+ 	
+Elvetia Aviation	ELV	1 aircraft	 
+ 		Embraer	EMB	149 aircraft	 
+ 	
+Embry-Riddle Aeronautical University	ERU	244 aircraft	 
+ 		Emirates	EK / UAE	269 aircraft	 
+ 	
+Emirates Flight Training Academy	EFC	30 aircraft	 
+ 		Emperor Aviation	EMM	4 aircraft	 
+ 	
+Empire Aviation	MJE	6 aircraft	 
+ 		ENAC Ecole Aviation Civile	NAK	90 aircraft	 
+ 	
+Encore Air Cargo	DKT	14 aircraft	 
+ 	
+ENG Aviation	ENG	3 aircraft	 
+ 		Enter Air	E4 / ENT	35 aircraft	 
+ 	
+Epic Flight Academy	EPI	49 aircraft	 
+ 	
+Epsilon Aviation	GRV	4 aircraft	 
+ 	
+Era Helicopters	ERH	59 aircraft	 
+ 		Estafeta Carga Aerea	E7 / ESF	6 aircraft	 
+ 		Estelar	ES / ETR	4 aircraft	 
+ 	
+Estonia - Air Force	EEF	4 aircraft	 
+ 	
+Eswatini Air	RN / SZL	2 aircraft	 
+ 	
+ETF Airways	2E / EZZ	1 aircraft	 
+ 		Ethiopian Airlines	ET / ETH	143 aircraft	 
+ 		Etihad Airways	EY / ETD	106 aircraft	 
+ 		Euro Link	EUL	4 aircraft	 
+ 	
+Euro-Asia Air	5B / EAK	5 aircraft	 
+ 		EuroAtlantic Airways	YU / MMZ	5 aircraft	 
+ 	
+Euroavia Airlines	M8 / SEB	1 aircraft	 
+ 		Eurocopter Deutschland	RDF	126 aircraft	 
+ 		European Air Charter	H6 / BUC	6 aircraft	 
+ 	
+European Aircraft Private Club	PGC	10 aircraft	 
+ 		European Cargo	SE / URO	9 aircraft	 
+ 		European Flight Academy	PTO	24 aircraft	 
+ 		European Flight Service	EUW	4 aircraft	 
+ 	
+European Flyers	FYS	14 aircraft	 
+ 		Eurowings	EW / EWG	124 aircraft	 
+ 		EVA Air	BR / EVA	90 aircraft	 
+ 	
+Everett Aviation	EVQ	3 aircraft	 
+ 		Everts Air Alaska	5V / VTS	32 aircraft	 
+ 		EWA Air	ZD / EWR	2 aircraft	 
+ 	
+ExcelAire	XLS	1 aircraft	 
+ 		Excellent Air	ECA	12 aircraft	 
+ 	
+Exclusive Aviation	REE	1 aircraft	 
+ 	
+Execuflight	EFT	1 aircraft	 
+ 	
+ExecuJet Middle East	EJO	4 aircraft	 
+ 	
+Executive Airlink	ENK	1 aircraft	 
+ 	
+Executive Aviation Corporation	SIY	4 aircraft	 
+ 	
+Executive Aviation Services	VYR	2 aircraft	 
+ 	
+Executive Fliteways	XFL	12 aircraft	 
+ 		Executive Jet Management	EJM	76 aircraft	 
+ 		Express Air Cargo	7A / XRC	3 aircraft	 
+ 	
+Exxaero	XRO	4 aircraft	 
+ 		Eznis Airways	MG / EZA	1 aircraft	 
+ 	
+Ezy Airlines	EZT	2 aircraft	 
+ 	F		 
+ 		FAI rent-a-jet	IFA	25 aircraft	 
+ 	
+Fairoaks Flight Centre	FFC	5 aircraft	 
+ 	
+Falcon Aviation Services	FVS	22 aircraft	 
+ 	
+Falcon Luxe	AXJ	3 aircraft	 
+ 	
+Fanjet Express	7F / FJE	2 aircraft	 
+ 	
+Farmingdale State University Aviation	FDL	17 aircraft	 
+ 	
+Fast Air	PBR	11 aircraft	 
+ 		Fastjet	FN / FJW	5 aircraft	 
+ 	
+Federal Airlines	C8 / FDR	11 aircraft	 
+ 		FedEx	FX / FDX	698 aircraft	 
+ 		Fenix Air Charter	AXO	6 aircraft	 
+ 		Feuerwehr-Flugdienst Niedersachsen	FFD	2 aircraft	 
+ 	
+FFL Flugschule	FFE	12 aircraft	 
+ 		Fiji Airways	FJ / FJI	23 aircraft	 
+ 	
+Finistair	FTR	1 aircraft	 
+ 		Finland - Air Force	FNF	33 aircraft	 
+ 		Finnair	AY / FIN	80 aircraft	 
+ 		FinnHEMS	FIH	4 aircraft	 
+ 	
+Fireblade Aviation	OPM	2 aircraft	 
+ 		Firefly	FY / FFM	14 aircraft	 
+ 		FitsAir	8D / EXV	3 aircraft	 
+ 		Flair Airlines	F8 / FLE	20 aircraft	 
+ 		Fleet Air International	FRF	12 aircraft	 
+ 		Flexflight	W2 / FXT	3 aircraft	 
+ 		Flexjet	LXJ	311 aircraft	 
+ 		Flight Calibration Services	FCK	2 aircraft	 
+ 	
+Flight Calibration Services	VOR	11 aircraft	 
+ 	
+Flight Fast Track	FTT	10 aircraft	 
+ 		Flight Options	OPT	5 aircraft	 
+ 	
+Flight Training Europe	AYR	29 aircraft	 
+ 		Flightline	FTL	6 aircraft	 
+ 		Flightlink	YS / FLZ	4 aircraft	 
+ 	
+Flightpath Charter Airways	KNT	13 aircraft	 
+ 	
+Flightstar	FSR	2 aircraft	 
+ 	
+Flightworks	FWK	2 aircraft	 
+ 	
+Florida Air Cargo	FAS	5 aircraft	 
+ 	
+Florida Flyers Flight Academy	FFY	13 aircraft	 
+ 		Florida Tech College of Aeronautics	TCF	47 aircraft	 
+ 	
+Fltplan	DCM	15 aircraft	 
+ 		Fly 7	FSF	19 aircraft	 
+ 	
+Fly Across	ACW	16 aircraft	 
+ 	
+Fly Alliance	KPO	15 aircraft	 
+ 		Fly AllWays	8W / EDR	3 aircraft	 
+ 	
+Fly ALS	ALW	4 aircraft	 
+ 		Fly Angola	EQ / FLA	1 aircraft	 
+ 	
+Fly Away	BFX	2 aircraft	 
+ 		Fly Baghdad	IF / FBA	7 aircraft	 
+ 	
+Fly Cham	FCY	4 aircraft	 
+ 	
+Fly Jet.kz	FJK	6 aircraft	 
+ 		Fly Jinnah	9P / FJL	6 aircraft	 
+ 	
+Fly Khiva	2U / FKH	3 aircraft	 
+ 		Fly OYA	YI / OYA	3 aircraft	 
+ 	
+Fly Pro	FP / PVV	3 aircraft	 
+ 	
+Fly Sky Airlines	FY / FSQ	4 aircraft	 
+ 		Fly Tyrol	FTY	6 aircraft	 
+ 	
+Fly Us	FUU	1 aircraft	 
+ 	
+Fly Vaayu	VYU	2 aircraft	 
+ 		Fly-Coop Air Service	FCA	19 aircraft	 
+ 	
+Fly2Sky	F6 / VAW	10 aircraft	 
+ 	
+Fly4 Airlines	F4 / FFA	4 aircraft	 
+ 		Fly540	5H / FFV	3 aircraft	 
+ 		Fly91	IC / GOA	3 aircraft	 
+ 		flyadeal	F3 / FAD	44 aircraft	 
+ 		FlyArystan	FS / AYN	27 aircraft	 
+ 		FlyBig	S9 / FLG	4 aircraft	 
+ 		Flybondi	FO / FBZ	14 aircraft	 
+ 	
+FlyBy	FBY	30 aircraft	 
+ 	
+Flycom Aviation	FLO	1 aircraft	 
+ 		flydubai	FZ / FDB	92 aircraft	 
+ 		FlyErbil Airline	UBD	5 aircraft	 
+ 		flyExclusive	JRE	117 aircraft	 
+ 		FLYGTA Airlines	SX / TOR	4 aircraft	 
+ 		Flylili	FL / LIL	3 aircraft	 
+ 		FlyMe	VP / VQI	2 aircraft	 
+ 	
+FlyMontserrat	5M / MNT	2 aircraft	 
+ 	
+FlyNamibia	WV / FLN	6 aircraft	 
+ 		flynas	XY / KNE	68 aircraft	 
+ 		FlyOne	5F / FIA	16 aircraft	 
+ 		FlySafair	FA / SFR	38 aircraft	 
+ 	
+FlySchool	FSM	16 aircraft	 
+ 	
+FlyWales	PYN	5 aircraft	 
+ 	
+FLYYO	4D / DIR	3 aircraft	 
+ 	
+Fort Aero	FRX	1 aircraft	 
+ 	
+Four Corners Aviation	ULA	5 aircraft	 
+ 	
+Fox Aviation	FIX	3 aircraft	 
+ 	
+France - Air Force	FAF	32 aircraft	 
+ 		France - Air Forces Command	CTM	6 aircraft	 
+ 	
+France - Army	FMY	1 aircraft	 
+ 	
+France - Navy	FNY	10 aircraft	 
+ 	
+France - Securite Civile	FRU	13 aircraft	 
+ 	
+Franconia Air Service	FRC	1 aircraft	 
+ 		Freebird Airlines	FH / FHY	17 aircraft	 
+ 	
+Freedom Air	FDJ	1 aircraft	 
+ 		Freedom Airline Express	4F / FDT	5 aircraft	 
+ 	
+Freedom Airline Express	4K / SMK	1 aircraft	 
+ 		Freight Runners Express	FRG	15 aircraft	 
+ 		French bee	BF / FBU	6 aircraft	 
+ 		Frontier Airlines	F9 / FFT	165 aircraft	 
+ 	
+FROST	FRO	4 aircraft	 
+ 	
+FSH Aviation	LEJ	3 aircraft	 
+ 	
+FTL Airlines	C0 / FGO	1 aircraft	 
+ 		Fuji Dream Airlines	JH / FDA	16 aircraft	 
+ 		Fuzhou Airlines	FU / FZA	16 aircraft	 
+ 	G		 
+ 	
+G.A.D Flights	GFT	2 aircraft	 
+ 	
+GainJet	GNJ	5 aircraft	 
+ 	
+Galistair Infinite Aviation	8S / GTR	2 aircraft	 
+ 		Gama Aviation	GMA	16 aircraft	 
+ 	
+Garmin	GMN	8 aircraft	 
+ 		Garuda Indonesia	GA / GIA	76 aircraft	 
+ 		Gazpromavia	4G / GZP	39 aircraft	 
+ 	
+Gelix Airlines	GC / GLX	4 aircraft	 
+ 	
+General Atomic AeroTech Systems	DOR	2 aircraft	 
+ 	
+Genex	GNX	2 aircraft	 
+ 	
+Genghis Khan Airlines	9D / NMG	7 aircraft	 
+ 		Georgian Airlines	GH / IGT	5 aircraft	 
+ 		Georgian Airways	A9 / TGZ	10 aircraft	 
+ 	
+Georgian Aviation University	AUG	1 aircraft	 
+ 		Geosky	D4 / GEL	6 aircraft	 
+ 		German Airways	ZQ / GER	9 aircraft	 
+ 	
+Germany - Air Ambulance	CHX	68 aircraft	 
+ 		Germany - Air Force	GAF	114 aircraft	 
+ 	
+Germany - Army	GAM	34 aircraft	 
+ 	
+Germany - DLR Flugbetriebe	LFO	10 aircraft	 
+ 	
+Germany - Navy	GNY	13 aircraft	 
+ 	
+Gesellschaft Fur Flugzieldarstellung	GFD	16 aircraft	 
+ 		Gestair	GES	20 aircraft	 
+ 		Getjet Airlines	GW / GJT	16 aircraft	 
+ 	
+Ghadames Air Transport	NJ / GMS	1 aircraft	 
+ 	
+Glencore Canada	RAG	2 aircraft	 
+ 	
+Global Air Charters	GJE	2 aircraft	 
+ 	
+Global Air Transport	5S / GAK	3 aircraft	 
+ 	
+Global Aviation	MSS	6 aircraft	 
+ 	
+Global Aviation	IG / GEA	2 aircraft	 
+ 	
+Global Jet Luxembourg	SVW	14 aircraft	 
+ 	
+Global Reach Aviation	GAV	2 aircraft	 
+ 		GlobalX	G6 / GXA	11 aircraft	 
+ 		GlobeAir	GAC	20 aircraft	 
+ 	
+Glock Aviation	GCK	1 aircraft	 
+ 		Go2Sky	6G / RLX	3 aircraft	 
+ 		GOL Linhas Aereas	G3 / GLO	125 aircraft	 
+ 	
+Goldeck-Flug	GDK	4 aircraft	 
+ 	
+GoodJET	GDG	4 aircraft	 
+ 	
+Gouvernement du Quebec	QUE	19 aircraft	 
+ 	
+GP Aviation	IV / GPX	3 aircraft	 
+ 	
+Grafair	GFM	3 aircraft	 
+ 		Grand Canyon Airlines	YR / CVU	10 aircraft	 
+ 		Grand China Air	CN / GDC	3 aircraft	 
+ 		Grant Aviation	GV / GUN	14 aircraft	 
+ 		Greater Bay Airlines	HB / HGB	7 aircraft	 
+ 	
+Greece - Air Force	HAF	49 aircraft	 
+ 	
+Greece - Army	HLA	1 aircraft	 
+ 		Green Africa	Q9 / GWG	3 aircraft	 
+ 	
+Greybird Aviation	GAG	11 aircraft	 
+ 	
+Gryphon Air	GRP	1 aircraft	 
+ 	
+GTA Air	GTX	17 aircraft	 
+ 	
+Guardian Air	GRA	3 aircraft	 
+ 		Gulf Air	GF / GFA	43 aircraft	 
+ 	
+Gulf Wings	GWC	3 aircraft	 
+ 	
+Gulfstream Aerospace	GLF	336 aircraft	 
+ 	
+GullivAir	G2 / GBG	2 aircraft	 
+ 	
+Gum Air	GUM	9 aircraft	 
+ 		Guna Airlines	GUA	7 aircraft	 
+ 		GX Airlines	GX / CBG	22 aircraft	 
+ 	H		 
+ 		Hahn Air	HR / HHN	2 aircraft	 
+ 	
+Hai Au Aviation	HAI	5 aircraft	 
+ 		Hainan Airlines	HU / CHH	226 aircraft	 
+ 	
+Hainan Lily Jet	HZY	1 aircraft	 
+ 	
+Hala Air	HG / HTP	1 aircraft	 
+ 	
+Hanseo University Flight Education Center	HSF	9 aircraft	 
+ 	
+Harco Aviation	HRC	5 aircraft	 
+ 		Harmony Jets	HMJ	4 aircraft	 
+ 	
+Haute Aviation	BOM	1 aircraft	 
+ 		Hawaiian Airlines	HA / HAL	65 aircraft	 
+ 	
+Hayways	Y5 / HYY	1 aircraft	 
+ 		Hebei Airlines	NS / HBH	28 aircraft	 
+ 	
+Heli Air Monaco	YO / MCM	1 aircraft	 
+ 	
+Heli Air Services	HLR	4 aircraft	 
+ 		Heli Holland	HHE	16 aircraft	 
+ 	
+Heli Securite	HS / HLI	1 aircraft	 
+ 	
+Heli Securite	HLI	1 aircraft	 
+ 		Heli Service International	HSO	10 aircraft	 
+ 	
+Heli-Team	RDL	6 aircraft	 
+ 	
+Héli-Union	HLU	7 aircraft	 
+ 	
+Helibravo	HIB	2 aircraft	 
+ 	
+Helicol	HEL	6 aircraft	 
+ 	
+HeliDubai	HDB	5 aircraft	 
+ 	
+Helijet International	JBA	14 aircraft	 
+ 	
+Heliservicio	HLV	9 aircraft	 
+ 	
+Helistar	HTS	18 aircraft	 
+ 	
+Helistar	HSR	8 aircraft	 
+ 		Helitrans	HDR	25 aircraft	 
+ 	
+HELITY Copter Airlines	HTY	4 aircraft	 
+ 	
+HelloJets	H3 / HLJ	8 aircraft	 
+ 	
+Helsinki Citycopter	HCX	3 aircraft	 
+ 		Helvetic Airways	2L / OAW	22 aircraft	 
+ 		Hera Flight	HER	15 aircraft	 
+ 		Heron Aviation	HRN	8 aircraft	 
+ 		Heston Airlines	HN / HST	10 aircraft	 
+ 		Hi Fly	5K / HFY	13 aircraft	 
+ 		Himalaya Airlines	H9 / HIM	4 aircraft	 
+ 		Hinterland Aviation	OI / HND	16 aircraft	 
+ 		HiSky	H7 / HYM	8 aircraft	 
+ 		HK express	UO / HKE	41 aircraft	 
+ 	
+Hokkaido Air System	NTH	4 aircraft	 
+ 	
+Honeywell International	HNW	2 aircraft	 
+ 		Hong Kong Air Cargo	RH / HKC	5 aircraft	 
+ 		Hong Kong Airlines	HX / CRK	28 aircraft	 
+ 		Hop-A-Jet	HPJ	7 aircraft	 
+ 	
+Hoper	FHR	5 aircraft	 
+ 	
+Hoverfly	HOV	3 aircraft	 
+ 		HTM Helicopter Travel Munich	HTM	15 aircraft	 
+ 	
+Hubei Sky-Blue International Aviation Academy	WLF	3 aircraft	 
+ 	
+Hughes Flying Service	GMH	1 aircraft	 
+ 	
+Hummingbird Aviation	ETI	3 aircraft	 
+ 	
+Hungary - Air Force	HUF	12 aircraft	 
+ 	
+Hungary Airlines	HUA	1 aircraft	 
+ 		Hunnu Air	MR / MML	6 aircraft	 
+ 		Hydro-Québec	0Q / HYD	4 aircraft	 
+ 		Hyperion Aviation	HYP	7 aircraft	 
+ 	I		 
+ 		I-Fly	F7 / RSY	6 aircraft	 
+ 	
+I-Fly Air	IFY	3 aircraft	 
+ 	
+IAS Medical	MDI	7 aircraft	 
+ 	
+IASCO Flight Training	MMY	24 aircraft	 
+ 		IBC Airways	II / CSQ	15 aircraft	 
+ 		Iberia	IB / IBE	138 aircraft	 
+ 		Iberia Express	I2 / IBS	29 aircraft	 
+ 		Iberojet	E9 / EVE	8 aircraft	 
+ 		Ibex Airlines	FW / IBX	9 aircraft	 
+ 		Ibom Air	QI / IAN	7 aircraft	 
+ 		Icar Air	RAC	1 aircraft	 
+ 		Icelandair	FI / ICE	46 aircraft	 
+ 	
+ICS-Aero	ICF	2 aircraft	 
+ 	
+IFA - Instituto de Formacao Aeronautica	IFJ	16 aircraft	 
+ 		IFL Group	IFL	22 aircraft	 
+ 		Ikar	EO / KAR	8 aircraft	 
+ 	
+Image Air Charter	BMG	1 aircraft	 
+ 	
+ImperialJet	JTI	1 aircraft	 
+ 	
+India - Air Force	IFC	276 aircraft	 
+ 	
+Indiana State University Flight Academy	ISU	14 aircraft	 
+ 		IndiaOne Air	I7 / IOA	2 aircraft	 
+ 		IndiGo	6E / IGO	409 aircraft	 
+ 	
+Initium Aviation	INI	4 aircraft	 
+ 	
+Inner Mongolia Northern Express	BFK	1 aircraft	 
+ 		Intel Air Shuttle	HGT	2 aircraft	 
+ 		InterCaribbean Airways	JY / IWY	22 aircraft	 
+ 	
+International Committee of the Red Cross	RED	1 aircraft	 
+ 	
+International Jet	IJA	6 aircraft	 
+ 		International Jet Management	IJM	11 aircraft	 
+ 		IrAero	IO / IAE	9 aircraft	 
+ 		Iran Air	IR / IRA	32 aircraft	 
+ 		Iran Airtour	B9 / IRB	17 aircraft	 
+ 		Iran Aseman Airlines	EP / IRC	16 aircraft	 
+ 	
+Iraq Gate Company	IGC	5 aircraft	 
+ 		Iraqi Airways	IA / IAW	28 aircraft	 
+ 	
+Island Aviation	SOY	2 aircraft	 
+ 	
+Island Wings Charter	IWL	2 aircraft	 
+ 		Israir Airlines	6H / ISR	8 aircraft	 
+ 		ITA Airways	AZ / ITY	102 aircraft	 
+ 		Italfly	ITL	11 aircraft	 
+ 	
+Italy - Air Force	IAM	207 aircraft	 
+ 	
+Italy - Army	IEI	39 aircraft	 
+ 	
+Italy - Coast Guard	GCI	20 aircraft	 
+ 	
+Italy - Navy	MMI	36 aircraft	 
+ 	
+iXAir	IXR	4 aircraft	 
+ 		Izhavia	I8 / IZA	7 aircraft	 
+ 	J		 
+ 	
+J D Aviation	JDA	2 aircraft	 
+ 		Jambojet	JM / JMA	9 aircraft	 
+ 		Japan Air Commuter	JC / JAC	11 aircraft	 
+ 		Japan Airlines	JL / JAL	152 aircraft	 
+ 		Japan Transocean Air	NU / JTA	19 aircraft	 
+ 	
+Jayawijaya Dirgantara	JWD	1 aircraft	 
+ 		Jazeera Airways	J9 / JZR	23 aircraft	 
+ 	
+JDL Airlines	JG / JDL	10 aircraft	 
+ 		Jeju Air	7C / JJA	44 aircraft	 
+ 	
+Jet Access	JXA	3 aircraft	 
+ 	
+Jet Air Group	JSI	3 aircraft	 
+ 	
+Jet Aviation Business Jets	PP / PJS	6 aircraft	 
+ 	
+Jet Aviation Business Jets Deutschland	JBD	1 aircraft	 
+ 		Jet Aviation Flight Services	JAS	3 aircraft	 
+ 	
+Jet Concierge Club	JCO	1 aircraft	 
+ 		Jet Edge	EDG	6 aircraft	 
+ 		Jet Executive	JEI	4 aircraft	 
+ 	
+Jet Fly Airline	JFL	3 aircraft	 
+ 		Jet It	JIT	8 aircraft	 
+ 		Jet Linx Aviation	JL / JTL	132 aircraft	 
+ 	
+Jet Logistics	JLG	5 aircraft	 
+ 	
+Jet Net Services	JNS	2 aircraft	 
+ 		Jet OUT	CRE	9 aircraft	 
+ 	
+Jet Rescue Air Ambulance	MTS	4 aircraft	 
+ 		Jet Story	JDI	10 aircraft	 
+ 	
+Jet-A	PRV	1 aircraft	 
+ 		Jet2	LS / EXS	133 aircraft	 
+ 		JetBee	JBC	4 aircraft	 
+ 		JetBlue	B6 / JBU	297 aircraft	 
+ 	
+Jetcall	JCL	1 aircraft	 
+ 		Jetfly Aviation	JFA	43 aircraft	 
+ 	
+Jetica	JTC	7 aircraft	 
+ 		Jetkontor	JKH	3 aircraft	 
+ 		JetNetherlands	JNL	10 aircraft	 
+ 	
+jetNEXA	JNX	1 aircraft	 
+ 	
+Jetology	JTY	2 aircraft	 
+ 		JetRight	JRT	10 aircraft	 
+ 	
+Jetset	CEO	3 aircraft	 
+ 		JetSMART	JA / JAT	49 aircraft	 
+ 		Jetstar	JQ / JST	125 aircraft	 
+ 		JetStream	JSH	9 aircraft	 
+ 	
+Jetstream Aviation Congo	JSC	1 aircraft	 
+ 		Jettime	JP / JTD	14 aircraft	 
+ 		Jetways Airlines	WU / JWX	4 aircraft	 
+ 	
+Jhonlin Air Transport	JLB	4 aircraft	 
+ 	
+Jiangsu Jet	JSU	1 aircraft	 
+ 		Jiangxi Air	RY / CJX	18 aircraft	 
+ 	
+Jiangxi Express Aviation	KXA	11 aircraft	 
+ 		Jin Air	LJ / JNA	31 aircraft	 
+ 	
+Jinxiang Airlines	JXX	3 aircraft	 
+ 	
+Jivair	JIV	2 aircraft	 
+ 	
+JoinJet	JNJ	6 aircraft	 
+ 		Jonair	JON	6 aircraft	 
+ 	
+Jonika	JNK	2 aircraft	 
+ 	
+Jordan - Air Force	RJZ	32 aircraft	 
+ 	
+Jordan - Air Force	RJZ	32 aircraft	 
+ 		Jordan Aviation	R5 / JAV	7 aircraft	 
+ 	
+Journey Aviation	JNY	8 aircraft	 
+ 		JS Aviation	JSM	2 aircraft	 
+ 		JSX	XE / JSX	72 aircraft	 
+ 	
+Jump Air	JUP	2 aircraft	 
+ 		Juneyao Air	HO / DKH	103 aircraft	 
+ 		Jung Sky	JSY	3 aircraft	 
+ 	K		 
+ 	
+K&R Aviation	OPN	9 aircraft	 
+ 		K-Mile Air	8K / KMI	7 aircraft	 
+ 	
+KaiserAir	KAI	3 aircraft	 
+ 		Kalitta Air	K4 / CKS	31 aircraft	 
+ 		Kalitta Charters	K9 / KFS	29 aircraft	 
+ 	
+Kalitta Charters II	K5 / KII	12 aircraft	 
+ 		Kam Air	RQ / KMF	11 aircraft	 
+ 		Kamaka Air	KMK	10 aircraft	 
+ 	
+Kangala Air Express	KAE	1 aircraft	 
+ 	
+Kansas State University Aviation	KSU	32 aircraft	 
+ 		Karun Airlines	KRU	13 aircraft	 
+ 	
+Kaz Air Jet	KEJ	7 aircraft	 
+ 		Keewatin Air	FK / KEW	3 aircraft	 
+ 	
+Kenai Aviation	KNW	2 aircraft	 
+ 		Kenmore Air	M5 / KEN	34 aircraft	 
+ 	
+Kenn Borek Air	4K / KBA	36 aircraft	 
+ 	
+Kent State University College of Aeronautics	KSF	37 aircraft	 
+ 		Kenya Airways	KQ / KQA	36 aircraft	 
+ 		Key Lime Air	KG / LYM	24 aircraft	 
+ 		KF Aerospace	FK / KFA	6 aircraft	 
+ 	
+KhabAvia	KHF	4 aircraft	 
+ 		Kish Air	KIS	11 aircraft	 
+ 	
+KlasJet	KJ / KLJ	12 aircraft	 
+ 		KLM	KL / KLM	192 aircraft	 
+ 		KM Malta Airlines	KM / KMM	8 aircraft	 
+ 	
+KN Helicopters	SHW	9 aircraft	 
+ 	
+Kolob Canyons Air Services	KCR	4 aircraft	 
+ 	
+Korea Aerospace University	HGD	19 aircraft	 
+ 	
+Korea Aviation College	KAG	8 aircraft	 
+ 	
+Korea National University of Transportation	KTU	5 aircraft	 
+ 		Korean Air	KE / KAL	157 aircraft	 
+ 		Krasavia	KV / SSJ	19 aircraft	 
+ 	
+Kudlik Aviation	KUK	3 aircraft	 
+ 		Kunming Airlines	KY / KNA	31 aircraft	 
+ 	
+Kush Aviation	KUH	3 aircraft	 
+ 		Kuwait Airways	KU / KAC	32 aircraft	 
+ 	
+Kyungwoon University	WCD	8 aircraft	 
+ 	L		 
+ 	
+L.J. Aviation	LJY	14 aircraft	 
+ 	
+L3Harris Airline Academy	LFA	109 aircraft	 
+ 		La Compagnie	B0 / DJT	2 aircraft	 
+ 		La Costena	LC / NIS	4 aircraft	 
+ 		Labcorp	SKQ	13 aircraft	 
+ 	
+Lahak Aviation	LHK	1 aircraft	 
+ 		LAM	TM / LAM	3 aircraft	 
+ 	
+LaneXang	5A / LXW	2 aircraft	 
+ 	
+Lanexang Airways International	LXW	2 aircraft	 
+ 		Lao Airlines	QV / LAO	12 aircraft	 
+ 		Lao Skyway	LK / LLL	4 aircraft	 
+ 		LAS Cargo	4L / LAU	4 aircraft	 
+ 		Laser Airlines	QL / LER	9 aircraft	 
+ 		LATAM Airlines	LA / LAN	331 aircraft	 
+ 		LATAM Cargo	UC / LCO	19 aircraft	 
+ 	
+Latitude Air Ambulance	HTT	4 aircraft	 
+ 	
+Latvia - Air Force	LAF	3 aircraft	 
+ 		Lauda Europe	LW / LDA	26 aircraft	 
+ 		LEAV Aviation	KK / NGN	2 aircraft	 
+ 	
+Legacy Airways	LGF	1 aircraft	 
+ 		Legend Airlines	LZ / LAL	3 aircraft	 
+ 	
+Legends Airways	DVY	7 aircraft	 
+ 	
+LeTourneau University Aviation	JKA	22 aircraft	 
+ 	
+Level	LL / LVL	7 aircraft	 
+ 	
+Leviate Air Group	SBE	7 aircraft	 
+ 		LIAT 20	GAO	4 aircraft	 
+ 	
+Liberty Jet Management	LRT	1 aircraft	 
+ 	
+Libya - Air Force	LBF	1 aircraft	 
+ 		Libyan Airlines	LN / LAA	5 aircraft	 
+ 	
+Libyan Express	LXX	4 aircraft	 
+ 		Libyan Wings	YL / LWA	4 aircraft	 
+ 	
+Liebherr Aerospace	LHB	6 aircraft	 
+ 	
+Life Line Aviation	LLK	4 aircraft	 
+ 	
+LifeFlight Australia	GDY	21 aircraft	 
+ 		Lift	GE / GBB	4 aircraft	 
+ 	
+LIFT Academy	LTA	80 aircraft	 
+ 		Lion Air	JT / LNI	83 aircraft	 
+ 	
+Lipican Aer	8I / LIP	3 aircraft	 
+ 	
+Liz Aviation	L0 / LAZ	1 aircraft	 
+ 		Loganair	LM / LOG	42 aircraft	 
+ 	
+Lone Star Communications	LSO	1 aircraft	 
+ 		LongJiang Airlines	LT / SNG	9 aircraft	 
+ 	
+Longtail Aviation	6T / LGT	2 aircraft	 
+ 		Loong Air	GJ / CDC	74 aircraft	 
+ 		LOT	LO / LOT	84 aircraft	 
+ 		Lucky Air	8L / LKE	53 aircraft	 
+ 		Lufthansa	LH / DLH	308 aircraft	 
+ 		Lufthansa Cargo	GEC	16 aircraft	 
+ 	
+Lufthansa City	VL / LHX	11 aircraft	 
+ 		Lufttransport	LTR	6 aircraft	 
+ 	
+Lukoil-Avia	LUK	5 aircraft	 
+ 	
+Luminair	LUA	3 aircraft	 
+ 		Lumiwings	L9 / LWI	2 aircraft	 
+ 	
+Lunds University School of Aviation	UNY	9 aircraft	 
+ 		Luxair	LG / LGL	21 aircraft	 
+ 		Luxaviation	LXA	41 aircraft	 
+ 	
+Luxembourg Air Ambulance	LRQ	7 aircraft	 
+ 		Luxwing	BN / LWG	15 aircraft	 
+ 		Lydd Air	LYD	1 aircraft	 
+ 	
+Lynden Air Cargo	L2 / LYC	13 aircraft	 
+ 	M		 
+ 	
+Mack Air	MKB	22 aircraft	 
+ 	
+Madagascar Airlines	MGY	5 aircraft	 
+ 	
+MAE Aircraft Management	MA / MEN	1 aircraft	 
+ 		Maersk Air Cargo	DJ / SRR	21 aircraft	 
+ 	
+Magnicharters	UJ / GMT	6 aircraft	 
+ 		Mahan Air	W5 / IRM	35 aircraft	 
+ 	
+MAK KG Airlines	MSK	4 aircraft	 
+ 		Makers Air	WMA	8 aircraft	 
+ 		Malawi Airlines	3W / MWI	3 aircraft	 
+ 	
+Malaysia - Air Force	RMF	14 aircraft	 
+ 		Malaysia Airlines	MH / MAS	90 aircraft	 
+ 		Maldivian	Q2 / DQA	22 aircraft	 
+ 	
+Maleth-Aero	DB / MLT	4 aircraft	 
+ 	
+Mali Air	MAE	5 aircraft	 
+ 		Malta Air	MW / MAY	6 aircraft	 
+ 	
+Malta MedAir	MT / MMO	1 aircraft	 
+ 	
+Manasik Aviation	XN / MNM	2 aircraft	 
+ 		Mandarin Airlines	AE / MDA	13 aircraft	 
+ 	
+Mango	MGO	1 aircraft	 
+ 		Mann Yadanarpon Airlines	7Y / MYP	3 aircraft	 
+ 		Manta Air	NR / MAV	23 aircraft	 
+ 		Map Linhas Aereas	7M / PAM	1 aircraft	 
+ 		Marabu	DI / MBU	10 aircraft	 
+ 		Marathon Airlines	O8 / MTO	2 aircraft	 
+ 	
+Marshall University Aviation	HRD	12 aircraft	 
+ 		Martinair	MP / MPH	1 aircraft	 
+ 	
+Martinaire	MRA	25 aircraft	 
+ 	
+Martin’s Famous Pastry Shoppe	HGE	4 aircraft	 
+ 		mas	M7 / MAA	4 aircraft	 
+ 	
+Massey University School of Aviation	MSY	14 aircraft	 
+ 		MASwings	MY / MWG	14 aircraft	 
+ 		Mauritania Airlines	L6 / MAI	5 aircraft	 
+ 		Mavi Gök Airlines	4M / MGH	13 aircraft	 
+ 		Max Air	VM / NGL	6 aircraft	 
+ 	
+Max Air	FCE	6 aircraft	 
+ 		Max Aviation	MAX	13 aircraft	 
+ 	
+Maxair	NTW	9 aircraft	 
+ 		Maximus Airlines	6M / MXM	1 aircraft	 
+ 	
+Maya Island Air	2M / MYD	7 aircraft	 
+ 	
+McDan Aviation	MDN	2 aircraft	 
+ 	
+McNeely Charter Services	MDS	5 aircraft	 
+ 		MEA	ME / MEA	23 aircraft	 
+ 	
+Med-Trans	MEK	13 aircraft	 
+ 	
+Medavia	MDM	3 aircraft	 
+ 	
+Medsky Airways	BM / MNS	3 aircraft	 
+ 	
+Memorial Hermann Life Flight	RDK	8 aircraft	 
+ 		Meraj Airlines	MRJ	8 aircraft	 
+ 	
+Meregrass	QHD	5 aircraft	 
+ 	
+Meridian	MEM	3 aircraft	 
+ 	
+Meridian Air Company	MMM	5 aircraft	 
+ 	
+Mermoz-Academy	MZY	4 aircraft	 
+ 		Mesa Airlines	YV / ASH	6 aircraft	 
+ 	
+Mexicana	XN / MXA	8 aircraft	 
+ 	
+Mexico - Air Force	FAM	93 aircraft	 
+ 	
+Mexico - Navy	ANX	50 aircraft	 
+ 		MHS Aviation	M2 / MHV	6 aircraft	 
+ 		MIAT Mongolian Airlines	OM / MGL	10 aircraft	 
+ 	
+MidAmerica Jet	MJR	5 aircraft	 
+ 	
+Middle Georgia State University School of Aviation	NIT	62 aircraft	 
+ 	
+Middle Tennessee State University Aerospace	MTU	56 aircraft	 
+ 		Midwest Aviation	DZR	10 aircraft	 
+ 		Midwest Aviation Division	MWT	7 aircraft	 
+ 		Millesime Aviation	MIM	2 aircraft	 
+ 		Mingalar	K7 / KBZ	4 aircraft	 
+ 	
+MJets Air	WW / KXP	6 aircraft	 
+ 		MNG Airlines	MB / MNB	12 aircraft	 
+ 	
+Moalem Aviation	2Y / AMA	3 aircraft	 
+ 	
+Moçambique Expresso	MXE	4 aircraft	 
+ 	
+Modern Logistics	WD / MWM	3 aircraft	 
+ 		Monacair	QM / MCR	3 aircraft	 
+ 	
+Mongolian Airways	XF / MGW	2 aircraft	 
+ 		Motor Sich Airlines	M9 / MSI	9 aircraft	 
+ 		Mountain Aviation	FTH	18 aircraft	 
+ 	
+Mountain Flyers	MFB	9 aircraft	 
+ 	
+Mounthill Aviation	MHH	2 aircraft	 
+ 	
+MPC Air	MPC	3 aircraft	 
+ 	
+Multiflight	MFT	4 aircraft	 
+ 		My Freighter	C6 / MFX	9 aircraft	 
+ 		My Indo Airlines	2Y / MYU	10 aircraft	 
+ 	
+My Jet	MYJ	7 aircraft	 
+ 		Myanmar Airways International	8M / MMA	10 aircraft	 
+ 		Myanmar National Airlines	UB / UBA	10 aircraft	 
+ 		MyWay Airlines	MJ / MYW	2 aircraft	 
+ 	N		 
+ 	
+NAC Charter	SLE	1 aircraft	 
+ 	
+Naljets	APX	4 aircraft	 
+ 		Nam Air	IN / LKN	16 aircraft	 
+ 	
+Nanshan Flying	NSY	10 aircraft	 
+ 	
+Nanshan Jet	NSJ	2 aircraft	 
+ 	
+National Airways Corporation	NTN	8 aircraft	 
+ 		National Jet Express	WO / JTE	20 aircraft	 
+ 	
+National Jets	EGS	1 aircraft	 
+ 		NATO	OAN	26 aircraft	 
+ 		Nauru Airlines	ON / RON	7 aircraft	 
+ 		NEAJETS	NEW	4 aircraft	 
+ 	
+Neojets	NJZ	1 aircraft	 
+ 		Neos	NO / NOS	18 aircraft	 
+ 		Nepal Airlines	RA / RNA	5 aircraft	 
+ 		Nesma Airlines	NE / NMA	8 aircraft	 
+ 	
+Netherlands - Coast Guard	NCG	7 aircraft	 
+ 	
+Netherlands - Navy	NRN	8 aircraft	 
+ 		Netherlands - Royal Air Force	NAF	66 aircraft	 
+ 		NetJets	EJA	811 aircraft	 
+ 		New England Airlines	EJ / NEA	8 aircraft	 
+ 		New Pacific Airlines	7H / RVF	8 aircraft	 
+ 	
+New Way Cargo Airlines	NU / NWY	5 aircraft	 
+ 		New Zealand - Royal New Zealand Air Force	KIW	42 aircraft	 
+ 	
+NexGen Aviation	NXC	4 aircraft	 
+ 	
+NextGen Flight Solutions	XGN	1 aircraft	 
+ 	
+NG Eagle	2N / XLE	4 aircraft	 
+ 		NHC Northern Helicopter	NHC	15 aircraft	 
+ 	
+Nigeria - Air Force	NGR	10 aircraft	 
+ 		Nile Air	NP / NIA	5 aircraft	 
+ 		Nippon Cargo Airlines	KZ / NCA	8 aircraft	 
+ 		Nok Air	DD / NOK	11 aircraft	 
+ 		Nolinor Aviation	N5 / NRL	11 aircraft	 
+ 	
+Nomad Aviation	NA / NUM	1 aircraft	 
+ 		Noordzee Helikopters Vlaanderen	NHX	19 aircraft	 
+ 	
+Nordic Unmanned	NOU	9 aircraft	 
+ 	
+NordJet Airlines	SGP	1 aircraft	 
+ 		NordStar	Y7 / TYA	9 aircraft	 
+ 		Nordwind Airlines	N4 / NWS	27 aircraft	 
+ 	
+Norlandair	FNA	7 aircraft	 
+ 		Norse	N0 / NBT	11 aircraft	 
+ 	
+Norsk Luftambulanse	DOC	26 aircraft	 
+ 	
+Nortavia	RTV	20 aircraft	 
+ 		North Cariboo Air	NCB	18 aircraft	 
+ 	
+North Central Aviation	NCJ	2 aircraft	 
+ 	
+North Country Aviation	NKT	3 aircraft	 
+ 		North Flying	NFA	8 aircraft	 
+ 	
+North Star Aviation	MVK	48 aircraft	 
+ 	
+North-West Air Company	0E / NWC	16 aircraft	 
+ 	
+North-Western Cargo International Airlines	CO / CNW	4 aircraft	 
+ 	
+North-Wright Airways	HW / NWL	18 aircraft	 
+ 	
+Northern Air	NLI	5 aircraft	 
+ 		Northern Air Cargo	NC / NAC	8 aircraft	 
+ 	
+Northern Air Fiji	FJN	2 aircraft	 
+ 		Northern Jet Management	NJM	27 aircraft	 
+ 	
+Northern Thunderbird Air	NTA	4 aircraft	 
+ 	
+Northway Aviation	NAL	9 aircraft	 
+ 	
+Northwest Flyers	NWF	3 aircraft	 
+ 		Northwestern Air	J3 / PLR	12 aircraft	 
+ 	
+Norway - Air Force	NOW	25 aircraft	 
+ 		Norwegian	DY / NOZ	95 aircraft	 
+ 		Nouvelair	BJ / LBT	15 aircraft	 
+ 	
+Novair	NG / NAI	1 aircraft	 
+ 	
+NovaJet	NOJ	5 aircraft	 
+ 		Novoair	VQ / NVQ	5 aircraft	 
+ 		NyxAir	OJ / NYX	9 aircraft	 
+ 	O		 
+ 		Offshore Helicopter Services	ULR	27 aircraft	 
+ 	
+Ohio State University Aviation	OSU	23 aircraft	 
+ 		OK Aviation	NTF	17 aircraft	 
+ 		Okay Airways	BK / OKA	22 aircraft	 
+ 	
+Oklahoma State University Aviation	OST	35 aircraft	 
+ 		Olympic Air	OA / OAL	17 aircraft	 
+ 		Olympus Airways	OLY	1 aircraft	 
+ 		Oman - Royal Air Force	MJN	27 aircraft	 
+ 		Oman Air	WY / OMA	32 aircraft	 
+ 		Omni Air Transport	DRL	11 aircraft	 
+ 	
+OMNI Aviation Training Center	ONI	11 aircraft	 
+ 	
+OMNI Executive Aviation	OAV	2 aircraft	 
+ 		Omni Taxi Aereo	OMI	82 aircraft	 
+ 	
+One Air	HC / HGO	3 aircraft	 
+ 	
+One Air	OAR	15 aircraft	 
+ 	
+Oriental Air Bridge	OC / ORC	2 aircraft	 
+ 	
+Origin Air	OG / OGN	4 aircraft	 
+ 		Ornge Air	PUL	20 aircraft	 
+ 		Ortac	ORT	4 aircraft	 
+ 		OSM Aviation Academy	SCQ	14 aircraft	 
+ 	
+Overland Airways	OF / OLA	6 aircraft	 
+ 		Oyonnair	OYO	12 aircraft	 
+ 	P		 
+ 		PACC Air	WIS	15 aircraft	 
+ 		Pacific Coast Jet	PXT	16 aircraft	 
+ 		Pacific Coastal Airlines	8P / PCO	22 aircraft	 
+ 	
+PADAVIATION	PVD	4 aircraft	 
+ 		Pakistan International Airlines	PK / PIA	25 aircraft	 
+ 		PAL Aerospace	SPR	2 aircraft	 
+ 		PAL Airlines	PB / PVL	24 aircraft	 
+ 		Pan Europeenne	EUP	2 aircraft	 
+ 		Pan Europeenne Air Service	PEA	3 aircraft	 
+ 	
+Panaviatic	VPC	4 aircraft	 
+ 	
+Panellenic Airlines	RJB	3 aircraft	 
+ 		Panorama Aviation	PNO	9 aircraft	 
+ 	
+Paradox Jets	PJJ	4 aircraft	 
+ 		Paranair	ZP / AZP	4 aircraft	 
+ 	
+Parata Air	PTA	2 aircraft	 
+ 	
+Parkland College Institute of Aviation	ILU	21 aircraft	 
+ 	
+Pars Air	PRS	6 aircraft	 
+ 		Pascan Aviation	P6 / PSC	21 aircraft	 
+ 	
+PassionAir	OP / DIG	5 aircraft	 
+ 	
+Patria Pilot Training	PPT	12 aircraft	 
+ 	
+Pattaya Airways	VV / PTW	2 aircraft	 
+ 	
+PDG Aviation Services	PDG	20 aircraft	 
+ 		Peach	MM / APJ	36 aircraft	 
+ 		Pegasus	PC / PGT	127 aircraft	 
+ 		Pegasus Elite Aviation	PEG	8 aircraft	 
+ 		Pelita Air	IP / PAS	22 aircraft	 
+ 	
+Pen-Avia	PDY	2 aircraft	 
+ 		People's	PE / PEV	1 aircraft	 
+ 		Perimeter Aviation	YP / PAG	15 aircraft	 
+ 	
+Peru - Air Force	FPR	26 aircraft	 
+ 	
+Peru - Navy	INP	4 aircraft	 
+ 	
+Petro Air	PEO	6 aircraft	 
+ 	
+Petroleum Air Services	UF / PER	16 aircraft	 
+ 	
+Petropavlovsk-Kamchatsky Air	PTK	7 aircraft	 
+ 	
+PHI	PHM	151 aircraft	 
+ 		Philippine Airlines	PR / PAL	80 aircraft	 
+ 		Phoenix Air	PH / GRB	22 aircraft	 
+ 	
+Phoenix Aviation	PHN	4 aircraft	 
+ 	
+Phoenix East Aviation	BPX	62 aircraft	 
+ 	
+Phoenix East Aviation	JED	4 aircraft	 
+ 		Pilatus Flugzeugwerke	PCH	188 aircraft	 
+ 		Pilot Flight Academy	PIP	17 aircraft	 
+ 		Pineapple Air	PNP	3 aircraft	 
+ 		Pivot Airlines	ZX / GGN	3 aircraft	 
+ 	
+PixAir Survey	PXR	5 aircraft	 
+ 	
+Planemaster Services	PMS	11 aircraft	 
+ 		PlaneSense	CNS	69 aircraft	 
+ 		Platoon Aviation	PTN	8 aircraft	 
+ 		PLAY	OG / FPY	7 aircraft	 
+ 		Plus Ultra	PU / PUE	6 aircraft	 
+ 		PNG Air	CG / TOK	13 aircraft	 
+ 		Pobeda	DP / PBD	42 aircraft	 
+ 		Poland - Air Force	PLF	119 aircraft	 
+ 	
+Poland - Navy	PNY	4 aircraft	 
+ 	
+Polar Airlines	PI / RKA	2 aircraft	 
+ 		Polish Medical Air Rescue	LPR	34 aircraft	 
+ 		populAir	HP / APF	11 aircraft	 
+ 	
+Porsche Air Service	POS	1 aircraft	 
+ 		Porter	P3 / PTR	76 aircraft	 
+ 	
+Portugal - Air Force	AFP	2 aircraft	 
+ 		Poste Air Cargo	M4 / MSA	7 aircraft	 
+ 	
+Pouya Air	PYA	10 aircraft	 
+ 	
+Pradhaan Air Express	6P / PRX	1 aircraft	 
+ 		Precision Air	PW / PRF	7 aircraft	 
+ 	
+Precision Aircraft Management	PRE	13 aircraft	 
+ 	
+Premier Airlines	PRL	3 aircraft	 
+ 	
+Premier Flight Center	OZT	7 aircraft	 
+ 	
+Premium Jet	PJZ	2 aircraft	 
+ 		Presidential Aviation	PRD	6 aircraft	 
+ 	
+Prestige Air Group	PGR	4 aircraft	 
+ 		Priester Aviation	PWA	10 aircraft	 
+ 	
+Prime Aviation	PKZ	4 aircraft	 
+ 	
+Prince Aviation	PNC	4 aircraft	 
+ 	
+Princely Jets	PJP	1 aircraft	 
+ 	
+Priority Air Charter	PRY	4 aircraft	 
+ 	
+Privaira	PVO	6 aircraft	 
+ 	
+Private Air	FSY	5 aircraft	 
+ 		Private Jet Center	PJC	11 aircraft	 
+ 	
+Private Jets	OKC	15 aircraft	 
+ 		Private Wings	JW / PWF	10 aircraft	 
+ 		Privilege Style	P6 / PVG	5 aircraft	 
+ 	
+Priv’Air	PVR	2 aircraft	 
+ 		ProAir Aviation	PAV	7 aircraft	 
+ 	
+ProAirways	MMN	2 aircraft	 
+ 		Proflight Zambia	P0 / PFZ	11 aircraft	 
+ 	
+Propair	PP / PRO	13 aircraft	 
+ 	
+Purdue University School of Aviation	PDU	26 aircraft	 
+ 	Q		 
+ 		QA Aviation	QAV	2 aircraft	 
+ 		Qanot Sharq	HH / QNT	5 aircraft	 
+ 		Qantas	QF / QFA	134 aircraft	 
+ 		QantasLink	QLK	109 aircraft	 
+ 		Qatar Airways	QR / QTR	264 aircraft	 
+ 		Qatar Executive	QE / QQE	24 aircraft	 
+ 		Qazaq Air	IQ / QAZ	5 aircraft	 
+ 		Qeshm Airlines	QB / QSM	16 aircraft	 
+ 	
+QinetiQ / Empire Test Pilots School	ETP	16 aircraft	 
+ 		Qingdao Airlines	QW / QDA	38 aircraft	 
+ 	
+Qingdao Jiutian International Flight Academy	QJT	4 aircraft	 
+ 	
+Quality Fly	QFY	11 aircraft	 
+ 	
+Quanta Aviation Services	PWR	4 aircraft	 
+ 	
+Quanta Aviation Services	PWR	4 aircraft	 
+ 		Quest Diagnostics	LBQ	26 aircraft	 
+ 		Quick Air Jet Charter	QAJ	6 aircraft	 
+ 	
+Quikjet Cargo Airlines	QO / FQA	1 aircraft	 
+ 	R		 
+ 		RAF-Avia	MT / MTL	3 aircraft	 
+ 	
+Raimon Airways	RAI	2 aircraft	 
+ 	
+Rainier Flight Service	RFS	13 aircraft	 
+ 	
+Rano Air	R4 / RAN	5 aircraft	 
+ 	
+Ravenair	RVR	35 aircraft	 
+ 		Raya Airways	TH / RMY	7 aircraft	 
+ 	
+RCS Services	EVC	11 aircraft	 
+ 	
+REACH Air Medical Services	REH	36 aircraft	 
+ 	
+Real Tonga Airline	RLT	1 aircraft	 
+ 	
+Rectimo Air Transports	RTO	13 aircraft	 
+ 		RED Air	L5 / REA	2 aircraft	 
+ 	
+Red Rock Flight School	ROK	5 aircraft	 
+ 	
+Red Sea Airlines	4S / RSX	4 aircraft	 
+ 		Red Wing Aviation	LAK	5 aircraft	 
+ 		Red Wings	WZ / RWZ	32 aircraft	 
+ 	
+Redding Aero Enterprises	BXR	16 aircraft	 
+ 	
+Redstar Aviation	RHH	15 aircraft	 
+ 	
+Reeve Air Alaska	RVV	1 aircraft	 
+ 		REGA Swiss Air-Ambulance	SAZ	3 aircraft	 
+ 	
+REGA Swiss Air-Rescue	RGA	23 aircraft	 
+ 	
+Regency Air	RGY	6 aircraft	 
+ 		Reliant Air	RLI	7 aircraft	 
+ 	
+Renegade Air	RNG	9 aircraft	 
+ 	
+Rennia Aviation	RNI	7 aircraft	 
+ 		Republic Airways	YX / RPA	1 aircraft	 
+ 	
+REVA Air Ambulance	RVQ	1 aircraft	 
+ 	
+Revv Aviation	FRV	7 aircraft	 
+ 		rex. Regional Express	ZL / RXA	37 aircraft	 
+ 	
+Reynolds Jet	ETA	2 aircraft	 
+ 	
+RGA-Black Stone Airlines	RGM	2 aircraft	 
+ 	
+Richland Aviation	RCA	6 aircraft	 
+ 	
+Richmor Aviation	RJC	4 aircraft	 
+ 		Rimbun Air	RI / OEY	6 aircraft	 
+ 		RiseAir	4T / WEW	30 aircraft	 
+ 	
+Riyadh Air	RX / RXI	1 aircraft	 
+ 	
+Romania - Air Force	ROF	41 aircraft	 
+ 	
+Roraima Airways	ROR	3 aircraft	 
+ 		Rossiya	FV / SDM	129 aircraft	 
+ 		Rotana Jet	RG / RJD	2 aircraft	 
+ 		Royal Air Freight	RAX	37 aircraft	 
+ 		Royal Air Maroc	AT / RAM	58 aircraft	 
+ 		Royal Brunei Airlines	BI / RBA	12 aircraft	 
+ 	
+Royal Jet	ROJ	1 aircraft	 
+ 		Royal Jordanian	RJ / RJA	42 aircraft	 
+ 	
+Royal Star Aviation	RSM	3 aircraft	 
+ 	
+Royalair Philippines	RW / RYL	4 aircraft	 
+ 	
+RS Avia	URA	1 aircraft	 
+ 	
+Rubystar	RSB	3 aircraft	 
+ 		Ruili Airlines	DR / RLH	26 aircraft	 
+ 	
+RusJet	RSJ	16 aircraft	 
+ 		Rusline	7R / RLU	8 aircraft	 
+ 	
+Russia - 223rd Flight Unit State Airline	CHD	10 aircraft	 
+ 	
+Russia - 224th Flight Unit State Airline	TTF	6 aircraft	 
+ 	
+Russia - Air Force	RFF	84 aircraft	 
+ 		Russia - Ministry of Emergency Situations (MChS)	SUM	22 aircraft	 
+ 	
+Russia - National Guard	RIF	9 aircraft	 
+ 		Russia - Special Flight Squadron	RSD	60 aircraft	 
+ 		Rutaca Airlines	5R / RUC	7 aircraft	 
+ 		RVL Aviation	REV	10 aircraft	 
+ 		RwandAir	WB / RWD	13 aircraft	 
+ 	
+RWL German Flight Academy	RWL	20 aircraft	 
+ 		Ryan Air (USA)	7S / RYA	23 aircraft	 
+ 		Ryanair	FR / RYR	581 aircraft	 
+ 	S		 
+ 		S7 Airlines	S7 / SBI	105 aircraft	 
+ 	
+SA Red Cross Air Mercy Service	AMD	8 aircraft	 
+ 		SAAB Aircraft	SCT	19 aircraft	 
+ 	
+SAF Helicopteres	SHP	41 aircraft	 
+ 	
+Safarilink Aviation	F2 / XLK	13 aircraft	 
+ 	
+Saha Airlines	IRZ	4 aircraft	 
+ 	
+Sahel Aviation Service	SAO	3 aircraft	 
+ 	
+Saint Louis University Flight School	BKN	15 aircraft	 
+ 		SalamAir	OV / OMS	14 aircraft	 
+ 		Salzburg Jet Aviation	MOZ	7 aircraft	 
+ 	
+Samaritan's Purse	NSP	18 aircraft	 
+ 		Samoa Airways	OL / PAO	2 aircraft	 
+ 	
+San Carlos Flight School	BYF	21 aircraft	 
+ 	
+San Marino Executive Aviation	SMF	1 aircraft	 
+ 		SANSA	RZ / LRS	12 aircraft	 
+ 	
+Sapsan Airline	S2 / KGB	6 aircraft	 
+ 	
+Sardinian Sky Service	SSR	3 aircraft	 
+ 		SAS	SK / SAS	134 aircraft	 
+ 	
+SASCA Airlines	SSU	1 aircraft	 
+ 		SATA Air Acores	SP / SAT	7 aircraft	 
+ 		SATENA	9R / NSE	22 aircraft	 
+ 	
+Saturn Aviation	STV	2 aircraft	 
+ 		Saudi Arabia - Air Force	RSF	101 aircraft	 
+ 		Saudia	SV / SVA	165 aircraft	 
+ 	
+Saurya Airlines	SAU	2 aircraft	 
+ 	
+Sawyer Aviation	SJA	8 aircraft	 
+ 		SaxonAir	SXN	15 aircraft	 
+ 	
+SC Aviation	COL	4 aircraft	 
+ 		Scanwings	ABF	10 aircraft	 
+ 		SCAT	DV / VSV	29 aircraft	 
+ 		Scoot	TR / TGW	57 aircraft	 
+ 	
+SD Aviation	BEJ	8 aircraft	 
+ 		Seaborne	BB / SBS	1 aircraft	 
+ 	
+SEair International	XO / SGD	2 aircraft	 
+ 	
+Searca	SRC	24 aircraft	 
+ 	
+Secure Air Charter	JCM	12 aircraft	 
+ 	
+Security Aviation	SVX	3 aircraft	 
+ 	
+SelectJet	JSL	3 aircraft	 
+ 	
+Senor Air	SEN	3 aircraft	 
+ 		Sepehran Airlines	IS / SHI	13 aircraft	 
+ 	
+Serbia - Air Force	SRB	6 aircraft	 
+ 		Serene Air	ER / SEP	6 aircraft	 
+ 	
+Servicios Aéreos ILSA	ILS	1 aircraft	 
+ 	
+Servicios Aereos Milenio	MLO	4 aircraft	 
+ 		Sevenair	RVP	40 aircraft	 
+ 	
+SevenBar Aviation	SBF	1 aircraft	 
+ 		Severstal Aircompany	D2 / SSF	8 aircraft	 
+ 		SF Airlines	O3 / CSS	89 aircraft	 
+ 		Shandong Airlines	SC / CDG	139 aircraft	 
+ 	
+Shandong Dagao International Flight Academy	RXF	1 aircraft	 
+ 		Shanghai Airlines	FM / CSH	88 aircraft	 
+ 		Shenzhen Airlines	ZH / CSZ	204 aircraft	 
+ 	
+Shirak Avia	5G / SHS	3 aircraft	 
+ 	
+Shoreline Aviation	CST	4 aircraft	 
+ 		Shree Airlines	N9 / SHA	9 aircraft	 
+ 	
+Siam General Aviation	5E / SGN	1 aircraft	 
+ 		Sichuan Airlines	3U / CSC	206 aircraft	 
+ 	
+Sideral Linhas Aereas	SID	17 aircraft	 
+ 	
+Sierra Charlie Aviation	SCA	18 aircraft	 
+ 	
+Sierra Pacific Airlines	SI / SPA	2 aircraft	 
+ 		Sierra West Airlines	PKW	12 aircraft	 
+ 		Silesia Air	SUA	4 aircraft	 
+ 		Silk Way Airlines	ZP / AZQ	5 aircraft	 
+ 		Silk Way West Airlines	7L / AZG	12 aircraft	 
+ 		Silkavia	US / USA	5 aircraft	 
+ 		Silver Air	SIS	18 aircraft	 
+ 	
+Silver Air	SLD	1 aircraft	 
+ 		Silver Cloud Air	SCR	5 aircraft	 
+ 		Silverhawk Aviation	SLH	24 aircraft	 
+ 	
+Singapore - Air Force	SAF	38 aircraft	 
+ 		Singapore Airlines	SQ / SIA	154 aircraft	 
+ 	
+Sino Jet Beijing	JBE	1 aircraft	 
+ 		Sirio	SIO	3 aircraft	 
+ 		Sirius Aero	SA / CIG	1 aircraft	 
+ 		SKS Airways	KI / SJB	1 aircraft	 
+ 		SKY Airline	H2 / SKU	36 aircraft	 
+ 		Sky Angkor Airlines	ZA / SWM	3 aircraft	 
+ 	
+Sky Bus	HVY	4 aircraft	 
+ 		SKY express	GQ / SEH	29 aircraft	 
+ 	
+Sky Gates Airlines	SAY	3 aircraft	 
+ 	
+Sky Helicopteros	HSY	14 aircraft	 
+ 	
+Sky KG Airlines	KGK	2 aircraft	 
+ 	
+Sky Mali	ML / FML	1 aircraft	 
+ 	
+Sky Prime Aviation	SPD	5 aircraft	 
+ 		Sky Quest	ERY	19 aircraft	 
+ 	
+Sky Vision Airlines	SE / SVI	6 aircraft	 
+ 		SkyAlps	BQ / SWU	10 aircraft	 
+ 	
+Skyborne Airline Academy	SFY	66 aircraft	 
+ 		Skybus	IOS	8 aircraft	 
+ 		SkyCare	PHX	18 aircraft	 
+ 	
+SkyGuard	SF / SGA	1 aircraft	 
+ 		SKYhigh Dominicana	DO / SHH	8 aircraft	 
+ 	
+SkyJet	SJ / SJL	1 aircraft	 
+ 		SkyJet Airlines	M8 / MSJ	2 aircraft	 
+ 	
+SkyJet Aviation Services	LRK	2 aircraft	 
+ 		SkyLight	LSK	4 aircraft	 
+ 	
+Skyline Airlines	SLF	1 aircraft	 
+ 		SkyLine Express	QU / UTN	7 aircraft	 
+ 	
+Skyline Transportation	KCU	1 aircraft	 
+ 		SkyLink Express	SLQ	15 aircraft	 
+ 		Skymark Airlines	BC / SKY	29 aircraft	 
+ 	
+SkyMark Executive	SMB	2 aircraft	 
+ 		Skyservice Business Aviation	SYB	1 aircraft	 
+ 		Skyside	SKV	6 aircraft	 
+ 	
+Skytraders	SND	1 aircraft	 
+ 		SkyUp Airlines	PQ / SQP	14 aircraft	 
+ 	
+Skyward Airlines	OW / SEW	11 aircraft	 
+ 	
+Skyway Enterprises	SKZ	3 aircraft	 
+ 		SkyWest Airlines	OO / SKW	86 aircraft	 
+ 		SkyWest Charter	CW / SCW	8 aircraft	 
+ 	
+Slate Aviation	SGX	11 aircraft	 
+ 	
+Slate Falls Airways	SYJ	3 aircraft	 
+ 	
+Sloane Helicopters	SLN	12 aircraft	 
+ 	
+Slovakia - Air Force	SQF	18 aircraft	 
+ 	
+Slovakia - Government	SSG	1 aircraft	 
+ 	
+Small Fly	GDM	4 aircraft	 
+ 	
+Smart Aviation	SME	6 aircraft	 
+ 		Smart Jet	SAH	5 aircraft	 
+ 	
+Smart Jet International	SJI	1 aircraft	 
+ 		Smartavia	5N / AUL	13 aircraft	 
+ 	
+Smartline	SMG	2 aircraft	 
+ 		SmartLynx	6Y / ART	52 aircraft	 
+ 		Smartwings	QS / TVS	50 aircraft	 
+ 		Solairus Aviation	TWY	22 aircraft	 
+ 	
+Solar Cargo	OLC	1 aircraft	 
+ 	
+Solaris Aero	WSA	4 aircraft	 
+ 		Solaseed Air	6J / SNJ	14 aircraft	 
+ 	
+Solenta Aviation	SET	13 aircraft	 
+ 		Solinair	ZS / SOP	1 aircraft	 
+ 	
+SolitAir	SH / CGS	4 aircraft	 
+ 	
+Solomon Airlines	IE / SOL	6 aircraft	 
+ 		Somon Air	SZ / SMR	7 aircraft	 
+ 	
+Soulbird	OUL	10 aircraft	 
+ 		Sounds Air	SDA	9 aircraft	 
+ 	
+South Africa - Air Force	LMG	13 aircraft	 
+ 		South African Airways	SA / SAA	18 aircraft	 
+ 		Southern Air Charter	PL / SOA	1 aircraft	 
+ 		Southern Airways Express	9X / FDY	46 aircraft	 
+ 	
+Southern Illinois University School of Aviation	CBN	38 aircraft	 
+ 	
+Southwest Aircraft Charter	CAK	2 aircraft	 
+ 		Southwest Airlines	WN / SWA	817 aircraft	 
+ 		Southwind Airlines	2S / STW	13 aircraft	 
+ 	
+SpaceBee Airlines	Y3 / UZU	2 aircraft	 
+ 		Spain - Air Force	AME	102 aircraft	 
+ 	
+Spain - Army	ETF	26 aircraft	 
+ 	
+Spain - Coast Guard	SSM	18 aircraft	 
+ 	
+Spain - Guardia Civil	DGC	20 aircraft	 
+ 		SPARFELL	LDX	3 aircraft	 
+ 	
+Spartan College of Aeronautics and Technology	SCU	71 aircraft	 
+ 	
+Specialist Aviation Services	PLC	13 aircraft	 
+ 	
+Specsavers Aviation	SSZ	3 aircraft	 
+ 		SpiceJet	SG / SEJ	44 aircraft	 
+ 		Spirit Airlines	NK / NKS	196 aircraft	 
+ 		SpiritJets	SJJ	6 aircraft	 
+ 	
+Spot Jet Services	BYB	1 aircraft	 
+ 	
+Spree Flug	SFG	3 aircraft	 
+ 		Spring Airlines	9C / CQH	135 aircraft	 
+ 	
+Spring City Aviation	SCJ	6 aircraft	 
+ 		Spring Japan	IJ / SJO	6 aircraft	 
+ 		SprintAir	P8 / SRN	19 aircraft	 
+ 		SriLankan Airlines	UL / ALK	24 aircraft	 
+ 		Sriwijaya Air	SJ / SJY	4 aircraft	 
+ 		St Barth Commuter	PV / SBU	6 aircraft	 
+ 		St Barth Executive	LE / STB	7 aircraft	 
+ 	
+STAjets	KFB	9 aircraft	 
+ 		Star Air	S5 / SDG	10 aircraft	 
+ 	
+Star Air Cargo	BRH	9 aircraft	 
+ 	
+Star Aviation	DST	4 aircraft	 
+ 	
+Star East Airlines	4R / SEK	3 aircraft	 
+ 	
+Star Jet	CHJ	1 aircraft	 
+ 	
+Star Peru	2I / SRU	11 aircraft	 
+ 		Star Wings	STQ	4 aircraft	 
+ 	
+Star Work Sky	SWP	8 aircraft	 
+ 		Starflyer	7G / SFJ	12 aircraft	 
+ 		Starlink Aviation	TLK	4 aircraft	 
+ 	
+Starlite Aviation	TRL	11 aircraft	 
+ 		Starlux	JX / SJX	28 aircraft	 
+ 	
+Stellaer 212	EIX	2 aircraft	 
+ 		Sterling Aviation	NSH	2 aircraft	 
+ 	
+Su Airlines	SUE	1 aircraft	 
+ 	
+Suburban Air Freight	SUB	16 aircraft	 
+ 		Sudan Airways	SD / SUD	2 aircraft	 
+ 		Summit Air	SUT	21 aircraft	 
+ 		Summit Aviation	YEL	18 aircraft	 
+ 	
+Sun Air Bulgaria	BGS	1 aircraft	 
+ 		Sun Country Airlines	SY / SCX	46 aircraft	 
+ 	
+Sun PhuQuoc Airways	SPQ	1 aircraft	 
+ 		Sun-Air	EZ / SUS	9 aircraft	 
+ 		Sunclass Airlines	DK / VKG	13 aircraft	 
+ 		Sundair	SR / SDR	5 aircraft	 
+ 	
+Sundt Air	AKK	3 aircraft	 
+ 		Sundt Air	MDT	2 aircraft	 
+ 		SunExpress	XQ / SXS	88 aircraft	 
+ 	
+Sunkar Air	BBK	2 aircraft	 
+ 		Sunlight Air	2R / RLB	3 aircraft	 
+ 	
+Sunrise Airways	S6 / KSZ	6 aircraft	 
+ 		Sunwest Aviation	CNK	21 aircraft	 
+ 		Suparna Airlines	Y8 / YZR	12 aircraft	 
+ 		Super Air Jet	IU / SJV	61 aircraft	 
+ 		Superior Air Charter	RSP	3 aircraft	 
+ 	
+Supernova Airlines	P7 / NPG	2 aircraft	 
+ 		Surf Air	URF	7 aircraft	 
+ 		Surinam Airways	PY / SLM	2 aircraft	 
+ 	
+Susi Air	SQS	21 aircraft	 
+ 	
+Suzhou Aviation	CBW	2 aircraft	 
+ 	
+Svensk Luftambulans	SWV	6 aircraft	 
+ 		Svenskt Ambulansflyg	SWE	6 aircraft	 
+ 	
+SVG Air	SVD	5 aircraft	 
+ 		Sweden - Air Force	SVF	67 aircraft	 
+ 	
+Sweden - Police	POL	1 aircraft	 
+ 		Sweden - Swedish Maritime Administration	HMF	7 aircraft	 
+ 	
+Swift Copters	WFC	12 aircraft	 
+ 		Swiftair	WT / SWT	29 aircraft	 
+ 		Swiftair Hellas	MDF	3 aircraft	 
+ 		Swiss	LX / SWR	94 aircraft	 
+ 	
+Swiss Helicopter	HSI	31 aircraft	 
+ 		Swiss Private Jet	SWW	3 aircraft	 
+ 	
+Switzerland - Air Force	SUI	1 aircraft	 
+ 	
+SXM Airways	SXM	4 aircraft	 
+ 	
+Sybajet San Marino	BCP	2 aircraft	 
+ 		Sylt Air	7E / AWU	9 aircraft	 
+ 		Syrian Air	RB / SYR	16 aircraft	 
+ 	T		 
+ 		T'way Air	TW / TWB	43 aircraft	 
+ 		TAAG Angola Airlines	DT / DTA	22 aircraft	 
+ 		TAB Cargo	2L / BOL	1 aircraft	 
+ 		Taban Airlines	TBN	5 aircraft	 
+ 	
+TAE Avia	TXC	3 aircraft	 
+ 	
+Taespejo Portugal	TES	2 aircraft	 
+ 	
+TagAirlines	5U / TGU	4 aircraft	 
+ 	
+Taiga Air	TGA	6 aircraft	 
+ 		Tailwind Airlines	TI / TWI	5 aircraft	 
+ 	
+Talon Air	TFF	10 aircraft	 
+ 	
+Tanana Air Service	Z3 / TNR	1 aircraft	 
+ 		TAP Air Portugal	TP / TAP	100 aircraft	 
+ 		TAR Aerolineas	YQ / LCT	5 aircraft	 
+ 	
+TAR Mexico	LCT	5 aircraft	 
+ 		Tarco Air	3T / TQQ	11 aircraft	 
+ 		Tarom	RO / ROT	14 aircraft	 
+ 	
+Tarp Aviation	RLA	6 aircraft	 
+ 	
+Tashkent Air	TSK	1 aircraft	 
+ 		Tassili Airlines	SF / DTH	23 aircraft	 
+ 	
+TatraJet	TTJ	1 aircraft	 
+ 	
+Tbilisi Airways	TD / TBC	1 aircraft	 
+ 		Team Global Express	TFX	7 aircraft	 
+ 	
+Terra Avia	T8 / TVR	8 aircraft	 
+ 		Texel Air	XLR	4 aircraft	 
+ 		Tez Jet Airlines	K9 / TEZ	3 aircraft	 
+ 		Thai Airways	TG / THA	85 aircraft	 
+ 		Thai Lion Air	SL / TLM	29 aircraft	 
+ 	
+Thalair	TLJ	3 aircraft	 
+ 	
+The King's Helicopter Flight	TKF	2 aircraft	 
+ 		The Little Jet Company	LJC	5 aircraft	 
+ 		Thrive	TIV	17 aircraft	 
+ 		Thrust Flight	TRF	41 aircraft	 
+ 	
+Thunder Airlines	THU	13 aircraft	 
+ 	
+Tianjin Air Cargo	HT / CTJ	5 aircraft	 
+ 		Tianjin Airlines	GS / GCR	91 aircraft	 
+ 		Tibet Airlines	TV / TBA	47 aircraft	 
+ 		Tigerair Taiwan	IT / TTW	18 aircraft	 
+ 		Time Air	TIE	9 aircraft	 
+ 		Titan Airways	ZT / AWC	7 aircraft	 
+ 	
+Toki Air	BV / TOK	13 aircraft	 
+ 	
+Toos Airlines	IRT	5 aircraft	 
+ 	
+TopFlight Aero-Services	TAF	2 aircraft	 
+ 	
+Total Express	TOT	1 aircraft	 
+ 	
+Total Linhas Aereas	0T / TTL	8 aircraft	 
+ 		Toyo Aviation	TOY	4 aircraft	 
+ 		Trade Air	C3 / TDR	5 aircraft	 
+ 		Tradewind Aviation	TJ / GPD	36 aircraft	 
+ 		Trans Air Congo	TSG	4 aircraft	 
+ 		Trans Guyana Airways	TGY	13 aircraft	 
+ 		Trans Island Airways	GGT	2 aircraft	 
+ 		Trans Maldivian Airways	TMW	61 aircraft	 
+ 		Transair	R2 / GTS	4 aircraft	 
+ 	
+Transair	R9 / MUI	6 aircraft	 
+ 		Transavia	HV / TRA	144 aircraft	 
+ 		Transaviabaltika	KTB	2 aircraft	 
+ 	
+Transcarga International Airways	TIW	1 aircraft	 
+ 		TransNusa	8B / TNU	10 aircraft	 
+ 	
+Transporte Aereo de Colombia	TCB	1 aircraft	 
+ 	
+Transportes Aéreos Pegaso	TPG	19 aircraft	 
+ 	
+Transwing	TSW	1 aircraft	 
+ 	
+Travel Management Company	TMC	2 aircraft	 
+ 		Travira Air	TVV	14 aircraft	 
+ 		Trident Aircraft	WMN	8 aircraft	 
+ 		Trigana Air	IL / TGN	9 aircraft	 
+ 	
+Tropic Air	9N / TOS	17 aircraft	 
+ 	
+Tropic Ocean Airways	TI / FTO	1 aircraft	 
+ 		TUI fly	X3 / TUI	126 aircraft	 
+ 	
+Tulpar Air	TUL	8 aircraft	 
+ 	
+Tulpar Aircompany	RFE	10 aircraft	 
+ 		Tunisair	TU / TAR	21 aircraft	 
+ 	
+Tunisia - Air Force	TUN	8 aircraft	 
+ 	
+Turkey - Air Force	HVK	36 aircraft	 
+ 		Turkish Airlines	TK / THY	386 aircraft	 
+ 	
+Turkmenistan - Government	TUG	4 aircraft	 
+ 		Turkmenistan Airlines	T5 / TUA	19 aircraft	 
+ 		Turpial Airlines	T9 / VTU	3 aircraft	 
+ 		Tus Air	U8 / CYF	3 aircraft	 
+ 		Twin Jet	T7 / TJT	13 aircraft	 
+ 		Tyrol Air Ambulance	TYW	5 aircraft	 
+ 		Tyrolean Jet Services	TJS	4 aircraft	 
+ 	U		 
+ 		Uganda Airlines	UR / UGD	7 aircraft	 
+ 	
+Ukraine - State Air Traffic Service	UTS	2 aircraft	 
+ 		Ukraine Air Alliance	UKL	3 aircraft	 
+ 		Ukraine International Airlines	PS / AUI	6 aircraft	 
+ 		ULS Airlines Cargo	GO / KZU	4 aircraft	 
+ 		Ultimate Jet	UE / UJC	8 aircraft	 
+ 	
+UmzaXpress	UY / UMZ	2 aircraft	 
+ 	
+UND Aerospace	NDU	161 aircraft	 
+ 		UNI Air	B7 / UIA	14 aircraft	 
+ 	
+Uni-Fly	UNC	4 aircraft	 
+ 	
+Uni-Fly Heliworx	UFX	2 aircraft	 
+ 		Unicair	UNI	16 aircraft	 
+ 		Union Aviation	UAG	10 aircraft	 
+ 		United Airlines	UA / UAL	1493 aircraft	 
+ 	
+United Arab Emirates - Air Force	UAF	61 aircraft	 
+ 	
+United Aviate Academy	VAR	50 aircraft	 
+ 	
+United Eagle	UEE	2 aircraft	 
+ 	
+United Kingdom - Air Ambulance	HLE	50 aircraft	 
+ 	
+United Kingdom - Army Air Corps	AAC	151 aircraft	 
+ 	
+United Kingdom - Coast Guard	SRD	3 aircraft	 
+ 	
+United Kingdom - National Police Air Service	UKP	6 aircraft	 
+ 		United Kingdom - Royal Air Force	RFR	387 aircraft	 
+ 		United Kingdom - Royal Air Force Air Transport	RRR	58 aircraft	 
+ 	
+United Kingdom - Royal Navy	NVY	107 aircraft	 
+ 	
+United Kingdom - UK Royal/VIP Flights	KRF	3 aircraft	 
+ 		United Nations	UNO	40 aircraft	 
+ 	
+United Nigeria Airlines	UN / NUA	4 aircraft	 
+ 		United States - Air Force	RCH	3787 aircraft	 
+ 	
+United States - California Department of Forestry	CFR	75 aircraft	 
+ 	
+United States - Coast Guard	CGX	231 aircraft	 
+ 	
+United States - Department of Justice	DOJ	6 aircraft	 
+ 	
+United States - Department of State	DOS	16 aircraft	 
+ 	
+United States - Florida Forest Service	FFS	38 aircraft	 
+ 	
+United States - Maryland State Police	TRP	11 aircraft	 
+ 		United States - NASA	IGY	59 aircraft	 
+ 	
+United States - North Carolina Forest Service	FTK	23 aircraft	 
+ 	
+United States - South Carolina Aeronautics Comm.	PLT	3 aircraft	 
+ 	
+United States - Tennessee Valley Authority	VLY	2 aircraft	 
+ 	
+United States - US Department of Interior	DOI	39 aircraft	 
+ 	
+United States - US Forest Service	XCN	21 aircraft	 
+ 	
+United States - US Immigration and Customs Enforcement	RPN	229 aircraft	 
+ 		Universal Air	VO / UVL	4 aircraft	 
+ 	
+University of Central Missouri Aviation	UCM	19 aircraft	 
+ 	
+University of Oklahoma School of Aviation	OUA	33 aircraft	 
+ 	
+Uniworld Air Cargo	U7 / UCG	4 aircraft	 
+ 		UPS	5X / UPS	287 aircraft	 
+ 		UR Airlines	UD / UBD	5 aircraft	 
+ 		Ural Airlines	U6 / SVR	52 aircraft	 
+ 		Urumqi Air	UQ / CUH	16 aircraft	 
+ 		US-Bangla Airlines	BS / UBG	20 aircraft	 
+ 		USA Jet Airlines	UJ / JUS	18 aircraft	 
+ 	
+USC	XG / USY	2 aircraft	 
+ 		Utair	UT / UTA	64 aircraft	 
+ 		UVT Aero	RT / UVT	8 aircraft	 
+ 		Uzbekistan Airways	HY / UZB	48 aircraft	 
+ 	V		 
+ 	
+Valair	VVV	6 aircraft	 
+ 		VallJet	VLJ	20 aircraft	 
+ 		ValueJet	VK / FVJ	3 aircraft	 
+ 		Van Air Europe	V9 / VAA	1 aircraft	 
+ 		Varesh Airlines	VRH	8 aircraft	 
+ 		Vasco	0V / VFC	4 aircraft	 
+ 		Venezolana	WW / VNE	4 aircraft	 
+ 		Ventura	VNT	20 aircraft	 
+ 	
+Venture Aviation Group	VET	10 aircraft	 
+ 	
+Venture West Aviation	VWA	15 aircraft	 
+ 		VeriJet	WSP	10 aircraft	 
+ 	
+Veterans Airlift Command	HRF	1 aircraft	 
+ 	
+Via Air	VID	6 aircraft	 
+ 	
+Victory Air	FTN	10 aircraft	 
+ 		Vieques Air Link	V4 / VES	13 aircraft	 
+ 		VietJet Air	VJ / VJC	107 aircraft	 
+ 		Vietnam Airlines	VN / HVN	92 aircraft	 
+ 		Vietravel Airlines	VU / VAG	2 aircraft	 
+ 		Virgin Atlantic	VS / VIR	45 aircraft	 
+ 		Virgin Australia	VA / VOZ	107 aircraft	 
+ 		Vista America	VJA	75 aircraft	 
+ 		VistaJet	VJT	141 aircraft	 
+ 		Viva	VB / VIV	88 aircraft	 
+ 		VoePass	2Z / PTB	10 aircraft	 
+ 	
+Volare Aviation	VLZ	10 aircraft	 
+ 		Volaris	Y4 / VOI	149 aircraft	 
+ 		Volato	TMB	11 aircraft	 
+ 		Volga-Dnepr Airlines	VI / VDA	15 aircraft	 
+ 		Volotea	V7 / VOE	42 aircraft	 
+ 		Voluxis	VXS	3 aircraft	 
+ 		Voyageur Airways	VC / VAL	30 aircraft	 
+ 		Vueling	VY / VLG	143 aircraft	 
+ 		VW Air Service	BTX	2 aircraft	 
+ 	W		 
+ 		Wamos Air	EB / PLM	9 aircraft	 
+ 		Warbelows Air Ventures	4W / WAV	6 aircraft	 
+ 		Wasaya Airways	WP / WSG	17 aircraft	 
+ 	
+WEJET	WEJ	1 aircraft	 
+ 	
+Weltall Avia	WLL	6 aircraft	 
+ 	
+Wermlandsflyg	BLW	4 aircraft	 
+ 		West Air	PN / CHB	45 aircraft	 
+ 		West Atlantic	NPT	11 aircraft	 
+ 		West Coast Charters	WCC	17 aircraft	 
+ 	
+West Link Airlines	WLN	1 aircraft	 
+ 		Westair Aviation	WAA	8 aircraft	 
+ 		Western Air	WU / WST	8 aircraft	 
+ 	
+Western Air Express	WAE	6 aircraft	 
+ 		Western Aircraft	ST / STT	10 aircraft	 
+ 		Western Global Airlines	KD / WGN	20 aircraft	 
+ 	
+Western Michigan University College of Aviation	WMU	72 aircraft	 
+ 		WestJet	WS / WJA	192 aircraft	 
+ 		Wheels Up	WUP	143 aircraft	 
+ 		White	WI / WHT	3 aircraft	 
+ 		Wideroe	WF / WIF	50 aircraft	 
+ 		Wiggins Airways	WIG	11 aircraft	 
+ 		Wiking Helikopter Service	WHS	1 aircraft	 
+ 		Winair	WM / WIA	8 aircraft	 
+ 		Windrose Air Jetcharter	QGA	2 aircraft	 
+ 		Windrose Airlines	7W / WRC	16 aircraft	 
+ 		Wing Aviation	CWG	10 aircraft	 
+ 		Wingo	P5 / RPB	9 aircraft	 
+ 		Wings Air	IW / WON	52 aircraft	 
+ 		Wizz Air	W6 / WZZ	242 aircraft	 
+ 	
+Woodgate Aviation	CWY	4 aircraft	 
+ 		World Atlantic Airlines	WL / WAL	8 aircraft	 
+ 	
+World Cargo Airlines	3G / WCM	3 aircraft	 
+ 		World2Fly	2W / WFL	7 aircraft	 
+ 	
+Worldwide Jet Charter	WWI	6 aircraft	 
+ 	
+Wright Air Service	8V / WRF	18 aircraft	 
+ 	X		 
+ 	
+XCEL JET	XLJ	5 aircraft	 
+ 	
+XE Jet	4U / XEJ	2 aircraft	 
+ 	
+Xead Aviation	XED	1 aircraft	 
+ 	
+XENA	MRV	2 aircraft	 
+ 		Xiamen Air	MF / CXA	177 aircraft	 
+ 	
+Xinjiang General Aviation	XTH	3 aircraft	 
+ 	
+Xinjiang Skylink General Aviation	KGA	1 aircraft	 
+ 		XO	XOJ	19 aircraft	 
+ 	Y		 
+ 		Yakutia Airlines	R3 / SYL	11 aircraft	 
+ 		Yamal Airlines	YC / LLM	25 aircraft	 
+ 		YanAir	YE / ANR	3 aircraft	 
+ 	
+Yazd Airways	DZD	5 aircraft	 
+ 	
+Yellow Wings Air Services	ELW	4 aircraft	 
+ 		Yemenia	IY / IYE	4 aircraft	 
+ 		Yeti Airlines	YT / NYT	7 aircraft	 
+ 		YTO Cargo Airlines	YG / HYT	13 aircraft	 
+ 	Z		 
+ 		Z Air	7Z / EZR	5 aircraft	 
+ 	
+Zafer Air	HMZ	1 aircraft	 
+ 		Zagros Airlines	ZO / IZG	14 aircraft	 
+ 		Zambia Airways	ZN / AZB	1 aircraft	 
+ 		Zenflight	XEN	6 aircraft	 
+ 		Zenith Aviation	BZE	4 aircraft	 
+ 	
+Zetavia	ZK / ZAV	2 aircraft	 
+ 	
+Zeusch Aviation	SUZ	7 aircraft	 
+ 	
+Zil Air	SYZ	1 aircraft	 
+ 		Zimex Aviation	XM / IMX	20 aircraft	 
+ 		Zipair	ZG / TZP	8 aircraft	 
+ 	
+ZondaJet	HEY	2 aircraft	 
+ 	
+Zooom	ZOM	4 aircraft	 
+ 	
+Zorte Air	MZI	1 aircraft	 
+ 	
+ZYB Lily Jet	MZT	12 aircraft	 
