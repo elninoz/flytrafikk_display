@@ -226,7 +226,117 @@ async function getFlightRoute(callsign) {
     }
 }
 
-// HTTP request helper with retry logic
+// Aviation Stack API fallback for live flights
+async function getAviationStackFlights(lamin, lamax, lomin, lomax) {
+    const accessKey = process.env.AVIATIONSTACK_API_KEY;
+    
+    if (!accessKey) {
+        console.log('🚫 Aviation Stack API key not found');
+        return null;
+    }
+
+    try {
+        const url = `https://api.aviationstack.com/v1/flights?access_key=${accessKey}&flight_status=active&limit=50`;
+        console.log('🛩️ Fetching Aviation Stack live flights...');
+        
+        const response = await makeRequest(url, {}, 1); // Single retry, fast timeout
+        
+        if (!response || !response.data) {
+            return null;
+        }
+
+        console.log(`✅ Aviation Stack returned ${response.data.length} flights`);
+
+        // Convert Aviation Stack format to OpenSky-compatible format
+        const convertedStates = response.data
+            .filter(flight => {
+                // Only include flights with live position data
+                return flight.live && 
+                       flight.live.latitude && 
+                       flight.live.longitude &&
+                       !flight.live.is_ground; // Only airborne flights
+            })
+            .filter(flight => {
+                // Basic geographic filtering (rough approximation)
+                const lat = parseFloat(flight.live.latitude);
+                const lon = parseFloat(flight.live.longitude);
+                
+                // Norway + surrounding area (rough bounds)
+                return lat >= 55 && lat <= 75 && lon >= -5 && lon <= 35;
+            })
+            .map(flight => {
+                try {
+                    // Convert to OpenSky states format
+                    // OpenSky format: [icao24, callsign, origin_country, time_position, last_contact, 
+                    //                  longitude, latitude, baro_altitude, on_ground, velocity, 
+                    //                  true_track, vertical_rate, sensors, geo_altitude, squawk, spi, position_source]
+                    
+                    const icao24 = flight.aircraft?.icao24 || null;
+                    const callsign = flight.flight?.iata || flight.flight?.icao || null;
+                    const originCountry = 'Unknown';
+                    const timePosition = Math.floor(Date.now() / 1000);
+                    const lastContact = timePosition;
+                    const longitude = parseFloat(flight.live.longitude);
+                    const latitude = parseFloat(flight.live.latitude);
+                    const baroAltitude = flight.live.altitude ? parseFloat(flight.live.altitude) : null;
+                    const onGround = flight.live.is_ground || false;
+                    const velocity = flight.live.speed_horizontal ? parseFloat(flight.live.speed_horizontal) / 3.6 : null; // Convert km/h to m/s
+                    const trueTrack = flight.live.direction ? parseFloat(flight.live.direction) : null;
+                    const verticalRate = flight.live.speed_vertical ? parseFloat(flight.live.speed_vertical) / 3.6 : null;
+                    
+                    // Build route information
+                    let routeInfo = null;
+                    if (flight.departure?.airport && flight.arrival?.airport) {
+                        const depCode = flight.departure.iata || flight.departure.icao || '';
+                        const arrCode = flight.arrival.iata || flight.arrival.icao || '';
+                        routeInfo = `${flight.departure.airport} (${depCode}) → ${flight.arrival.airport} (${arrCode})`;
+                    } else if (flight.airline?.name) {
+                        routeInfo = `${flight.airline.name} Route`;
+                    }
+
+                    const state = [
+                        icao24,                    // 0: icao24
+                        callsign,                  // 1: callsign 
+                        originCountry,             // 2: origin_country
+                        timePosition,              // 3: time_position
+                        lastContact,               // 4: last_contact
+                        longitude,                 // 5: longitude
+                        latitude,                  // 6: latitude  
+                        baroAltitude,              // 7: baro_altitude
+                        onGround,                  // 8: on_ground
+                        velocity,                  // 9: velocity
+                        trueTrack,                 // 10: true_track
+                        verticalRate,              // 11: vertical_rate
+                        null,                      // 12: sensors
+                        null,                      // 13: geo_altitude
+                        null,                      // 14: squawk
+                        false,                     // 15: spi
+                        0,                         // 16: position_source
+                        routeInfo,                 // 17: route (our extension)
+                        flight.aircraft?.iata,    // 18: aircraft_type (our extension)
+                        null,                      // 19: total_duration (our extension)
+                        null,                      // 20: remaining_time (our extension)
+                        null                       // 21: elapsed_time (our extension)
+                    ];
+
+                    return state;
+                } catch (error) {
+                    console.log(`Error converting Aviation Stack flight: ${error.message}`);
+                    return null;
+                }
+            })
+            .filter(state => state !== null);
+
+        return {
+            time: Math.floor(Date.now() / 1000),
+            states: convertedStates
+        };
+
+    } catch (error) {
+        console.log(`🚫 Aviation Stack fallback failed: ${error.message}`);
+        return null;
+    }
+}
 async function makeRequest(url, headers = {}, retries = 1) { // Further reduced retries for speed
     for (let attempt = 0; attempt <= retries; attempt++) {
         try {
@@ -461,9 +571,11 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
                 totalFlights: aeroDataBoxTotal,
                 successfulLookups: aeroDataBoxSuccess,
                 hasRapidApiKey: !!process.env.RAPIDAPI_KEY,
+                hasAviationStackKey: !!process.env.AVIATIONSTACK_API_KEY,
                 openSkyResponseTime: openSkyTime,
                 processedFlights: flightsToProcess.length,
-                totalFlightsFound: data.states.length
+                totalFlightsFound: data.states.length,
+                dataSource: 'OpenSky'
             };
         } else {
             // No AeroDataBox processing - just add basic fallback route info
@@ -511,9 +623,11 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
                     totalFlights: 0,
                     successfulLookups: 0,
                     hasRapidApiKey: !!process.env.RAPIDAPI_KEY,
+                    hasAviationStackKey: !!process.env.AVIATIONSTACK_API_KEY,
                     openSkyResponseTime: openSkyTime,
                     skippedAeroDataBox: skipAeroDataBox,
-                    totalFlightsFound: data.states.length
+                    totalFlightsFound: data.states.length,
+                    dataSource: 'OpenSky'
                 };
             }
         }
@@ -528,6 +642,38 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
         };
     } catch (error) {
         console.error('❌ OpenSky request failed:', error.message);
+
+        // 🛩️ FALLBACK: Try Aviation Stack API
+        console.log('🔄 Trying Aviation Stack fallback...');
+        try {
+            const fallbackData = await getAviationStackFlights(lamin, lamax, lomin, lomax);
+            
+            if (fallbackData && fallbackData.states && fallbackData.states.length > 0) {
+                console.log(`✅ Aviation Stack fallback successful: ${fallbackData.states.length} flights`);
+                
+                // Add status information for fallback
+                fallbackData.apiStatus = {
+                    aeroDataBoxWorking: 0,
+                    totalFlights: 0,
+                    successfulLookups: 0,
+                    hasRapidApiKey: !!process.env.RAPIDAPI_KEY,
+                    hasAviationStackKey: !!process.env.AVIATIONSTACK_API_KEY,
+                    openSkyError: error.message,
+                    dataSource: 'AviationStack (fallback)',
+                    totalFlightsFound: fallbackData.states.length
+                };
+
+                return {
+                    statusCode: 200,
+                    headers,
+                    body: JSON.stringify(fallbackData)
+                };
+            } else {
+                console.log('🚫 Aviation Stack fallback also failed or returned no data');
+            }
+        } catch (fallbackError) {
+            console.error('❌ Aviation Stack fallback failed:', fallbackError.message);
+        }
 
         // Provide helpful error message for different failure types
         let errorMessage = 'OpenSky API problem';
@@ -552,7 +698,9 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
                     totalFlights: 0,
                     successfulLookups: 0,
                     hasRapidApiKey: !!process.env.RAPIDAPI_KEY,
-                    openSkyError: error.message
+                    hasAviationStackKey: !!process.env.AVIATIONSTACK_API_KEY,
+                    openSkyError: error.message,
+                    dataSource: 'Error (no fallback available)'
                 }
             })
         };
