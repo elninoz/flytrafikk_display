@@ -52,11 +52,181 @@ async function getOAuth2Token(clientId, clientSecret) {
     });
 }
 
+// Get authentication token (OAuth2 or Basic Auth)
+async function getAuthToken() {
+    const clientId = process.env.OPENSKY_CLIENT_ID;
+    const clientSecret = process.env.OPENSKY_CLIENT_SECRET;
+    const username = process.env.OPENSKY_USERNAME;
+    const password = process.env.OPENSKY_PASSWORD;
+
+    // Prøv OAuth2 først
+    if (clientId && clientSecret) {
+        try {
+            const token = await getOAuth2Token(clientId, clientSecret);
+            return { token: `Bearer ${token}`, method: 'oauth2' };
+        } catch (error) {
+            console.log('OAuth2 failed, trying Basic Auth:', error.message);
+        }
+    }
+
+    // Fallback til Basic Auth
+    if (username && password) {
+        const auth = Buffer.from(`${username}:${password}`).toString('base64');
+        return { token: `Basic ${auth}`, method: 'basic' };
+    }
+
+    return null;
+}
+
+// Make authenticated request to OpenSky API
+async function makeAuthenticatedRequest(url, authInfo) {
+    return new Promise((resolve, reject) => {
+        const urlObj = new URL(url);
+
+        const options = {
+            hostname: urlObj.hostname,
+            port: 443,
+            path: urlObj.pathname + urlObj.search,
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'User-Agent': 'flytrafikk-display/1.0'
+            },
+            timeout: 15000
+        };
+
+        if (authInfo && authInfo.token) {
+            options.headers['Authorization'] = authInfo.token;
+        }
+
+        const req = https.request(options, (res) => {
+            let data = '';
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+
+            res.on('end', () => {
+                try {
+                    const jsonData = JSON.parse(data);
+                    resolve(jsonData);
+                } catch (parseError) {
+                    reject(new Error(`JSON parse error: ${parseError.message}`));
+                }
+            });
+        });
+
+        req.on('error', (error) => {
+            reject(error);
+        });
+
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error('Request timeout'));
+        });
+
+        req.end();
+    });
+}
+
+// Handle track requests (live trajectory)
+async function handleTrackRequest(icao24, headers) {
+    console.log(`🛩️ Track request for aircraft: ${icao24}`);
+    
+    const authInfo = await getAuthToken();
+    if (!authInfo) {
+        return {
+            statusCode: 401,
+            headers,
+            body: JSON.stringify({ error: 'Authentication required for track data' })
+        };
+    }
+
+    const url = `https://opensky-network.org/api/tracks?icao24=${icao24.toLowerCase()}&time=0`;
+    
+    try {
+        const data = await makeAuthenticatedRequest(url, authInfo);
+        console.log(`✅ Track data received for ${icao24}`);
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(data)
+        };
+    } catch (error) {
+        console.error('Track request failed:', error.message);
+        return {
+            statusCode: 404,
+            headers,
+            body: JSON.stringify({ error: 'No track data available', message: error.message })
+        };
+    }
+}
+
+// Handle flights requests (flight history with routes)
+async function handleFlightsRequest(icao24, headers) {
+    console.log(`✈️ Flights request for aircraft: ${icao24}`);
+    
+    const authInfo = await getAuthToken();
+    if (!authInfo) {
+        return {
+            statusCode: 401,
+            headers,
+            body: JSON.stringify({ error: 'Authentication required for flight data' })
+        };
+    }
+
+    // Søk etter flighter dei siste 7 dagane
+    const endTime = Math.floor(Date.now() / 1000);
+    const beginTime = endTime - (7 * 24 * 60 * 60); // 7 dagar tilbake
+
+    const url = `https://opensky-network.org/api/flights/aircraft?icao24=${icao24.toLowerCase()}&begin=${beginTime}&end=${endTime}`;
+    
+    try {
+        const data = await makeAuthenticatedRequest(url, authInfo);
+        console.log(`✅ Flight history received for ${icao24}:`, Array.isArray(data) ? data.length : 0, 'flights');
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(data)
+        };
+    } catch (error) {
+        console.error('Flights request failed:', error.message);
+        return {
+            statusCode: 404,
+            headers,
+            body: JSON.stringify({ error: 'No flight history available', message: error.message })
+        };
+    }
+}
+
+// Handle standard states requests
+async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
+    const authInfo = await getAuthToken();
+    const url = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
+    
+    console.log('States request URL:', url);
+    console.log('Auth method:', authInfo ? authInfo.method : 'anonymous');
+    
+    try {
+        const data = await makeAuthenticatedRequest(url, authInfo);
+        console.log('States data received, aircraft count:', data.states ? data.states.length : 0);
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(data)
+        };
+    } catch (error) {
+        console.error('States request failed:', error.message);
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ error: 'Failed to fetch states', message: error.message })
+        };
+    }
+}
+
 exports.handler = async (event, context) => {
-    // Set function timeout
     context.callbackWaitsForEmptyEventLoop = false;
 
-    // CORS headers
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -64,150 +234,35 @@ exports.handler = async (event, context) => {
         'Content-Type': 'application/json'
     };
 
-    // Handle preflight
     if (event.httpMethod === 'OPTIONS') {
         return { statusCode: 200, headers, body: '' };
     }
 
     try {
-        const { lamin, lamax, lomin, lomax } = event.queryStringParameters || {};
+        const { 
+            lamin, lamax, lomin, lomax, 
+            icao24, track, flights 
+        } = event.queryStringParameters || {};
 
-        if (!lamin || !lamax || !lomin || !lomax) {
+        // Sjekk kva type forespørsel dette er
+        if (track === 'true' && icao24) {
+            return await handleTrackRequest(icao24, headers);
+        } else if (flights === 'true' && icao24) {
+            return await handleFlightsRequest(icao24, headers);
+        } else if (lamin && lamax && lomin && lomax) {
+            return await handleStatesRequest(lamin, lamax, lomin, lomax, headers);
+        } else {
             return {
                 statusCode: 400,
                 headers,
-                body: JSON.stringify({ error: 'Missing required parameters' })
+                body: JSON.stringify({ 
+                    error: 'Missing required parameters',
+                    usage: 'Use ?lamin=&lamax=&lomin=&lomax= for states, ?icao24=xxx&track=true for tracks, ?icao24=xxx&flights=true for flight history'
+                })
             };
         }
-
-        // Hent OAuth2 credentials frå Netlify (nye variablar)
-        const clientId = process.env.OPENSKY_CLIENT_ID;
-        const clientSecret = process.env.OPENSKY_CLIENT_SECRET;
-
-        // Fallback til gamle Basic Auth credentials
-        const username = process.env.OPENSKY_USERNAME;
-        const password = process.env.OPENSKY_PASSWORD;
-
-        console.log('OAuth2 Client ID:', clientId ? 'Found' : 'Missing');
-        console.log('OAuth2 Client Secret:', clientSecret ? 'Found' : 'Missing');
-        console.log('Legacy Username:', username ? 'Found' : 'Missing');
-        console.log('Legacy Password:', password ? 'Found' : 'Missing');
-
-        // Debug: Log første del av credentials hvis dei finnes
-        if (clientId) console.log('Client ID preview:', clientId.substring(0, 10) + '...');
-        if (clientSecret) console.log('Client Secret preview:', clientSecret.substring(0, 10) + '...');
-
-        // Bygg OpenSky API URL
-        const url = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
-        console.log('Calling URL:', url);
-
-        let authToken = null;
-        let authMethod = 'unauthenticated';
-
-        // Prøv først OAuth2 (for nye kontoar)
-        if (clientId && clientSecret) {
-            try {
-                authToken = await getOAuth2Token(clientId, clientSecret);
-                authMethod = 'oauth2';
-                console.log('Using OAuth2 authentication (4000/day)');
-            } catch (oauthError) {
-                console.log('OAuth2 failed, falling back to Basic Auth:', oauthError.message);
-
-                // Fallback til Basic Auth (for eldre kontoar)
-                if (username && password) {
-                    const auth = Buffer.from(`${username}:${password}`).toString('base64');
-                    authToken = `Basic ${auth}`;
-                    authMethod = 'basic';
-                    console.log('Using Basic Auth authentication (4000/day)');
-                }
-            }
-        } else if (username && password) {
-            // Direkte Basic Auth hvis OAuth2 credentials ikkje finnes
-            const auth = Buffer.from(`${username}:${password}`).toString('base64');
-            authToken = `Basic ${auth}`;
-            authMethod = 'basic';
-            console.log('Using Basic Auth authentication (4000/day)');
-        }
-
-        if (!authToken) {
-            console.log('No authentication available, using anonymous API (100/day)');
-        }
-
-        // Bruk Node.js https modul i staden for fetch
-        const makeRequest = () => {
-            return new Promise((resolve, reject) => {
-                const urlObj = new URL(url);
-
-                const options = {
-                    hostname: urlObj.hostname,
-                    port: 443,
-                    path: urlObj.pathname + urlObj.search,
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'User-Agent': 'flytrafikk-display/1.0'
-                    },
-                    timeout: 10000
-                };
-
-                // Legg til autentisering basert på metode
-                if (authToken) {
-                    if (authMethod === 'oauth2') {
-                        options.headers['Authorization'] = `Bearer ${authToken}`;
-                    } else if (authMethod === 'basic') {
-                        options.headers['Authorization'] = authToken;
-                    }
-                }
-
-                const req = https.request(options, (res) => {
-                    console.log('Response status:', res.statusCode);
-
-                    let data = '';
-                    res.on('data', (chunk) => {
-                        data += chunk;
-                    });
-
-                    res.on('end', () => {
-                        try {
-                            const jsonData = JSON.parse(data);
-                            console.log('Data received, states count:', jsonData.states ? jsonData.states.length : 0);
-                            resolve(jsonData);
-                        } catch (parseError) {
-                            reject(new Error(`JSON parse error: ${parseError.message}`));
-                        }
-                    });
-                });
-
-                req.on('error', (error) => {
-                    console.error('Request error:', error);
-                    reject(error);
-                });
-
-                req.on('timeout', () => {
-                    req.destroy();
-                    reject(new Error('Request timeout'));
-                });
-
-                req.end();
-            });
-        };
-
-        try {
-            const data = await makeRequest();
-
-            return {
-                statusCode: 200,
-                headers,
-                body: JSON.stringify(data)
-            };
-        } catch (requestError) {
-            console.error('Request failed:', requestError.message);
-            throw new Error(`Network request failed: ${requestError.message}`);
-        }
-
     } catch (error) {
         console.error('Function error:', error.message);
-        console.error('Error stack:', error.stack);
         return {
             statusCode: 500,
             headers,

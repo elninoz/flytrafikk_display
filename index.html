@@ -86,6 +86,53 @@
             min-height: 100vh;
             max-width: none;
             width: 100vw;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.fullscreen .flight-info {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        body.fullscreen .airline-name {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        body.fullscreen .flight-number {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+        }
+
+        body.fullscreen .route-display {
+            font-size: 3rem;
+        }
+
+        body.fullscreen .time-info {
+            font-size: 4rem;
+        }
+
+        body.fullscreen .status-indicator {
+            font-size: 2.2rem;
+            padding: 15px 30px;
+        }
+
+        body.fullscreen .flight-details {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        body.fullscreen .detail-box {
+            padding: 20px;
+        }
+
+        body.fullscreen .detail-value {
+            font-size: 1.4rem;
         }
 
         /* Flash-effekt for nye fly */
@@ -247,6 +294,36 @@
                 0 0 16px #00ffff;
             letter-spacing: 0.05em;
             filter: blur(0.3px);
+        }
+
+        /* Loading spinner for route info */
+        .route-loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            color: #ffa500;
+            text-shadow: 0 0 5px #ffa500;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #333;
+            border-top: 2px solid #ffa500;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 5px #ffa500;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .time-section {
@@ -423,20 +500,20 @@
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
 
-                // Opprett ein behageleg tone-sekvens
-                oscillator.frequency.value = 600;
+                // Opprett ein behageleg tone-sekvens (mykare tone)
+                oscillator.frequency.value = 550; // Litt lågare tone
                 oscillator.type = 'sine';
 
                 gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.05);
-                gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.2);
-                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.35);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.8);
+                gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.05); // Lågare volum
+                gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.2);
+                gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.35);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.7); // Kortare
 
                 oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.8);
+                oscillator.stop(audioContext.currentTime + 0.7);
 
-                console.log('🔊 Spelar lyd for nytt fly');
+                console.log('🔊 Spelar behageleg lyd for nytt fly');
             } catch (error) {
                 console.log('🔇 Kunne ikkje spele lyd:', error);
             }
@@ -777,35 +854,61 @@
             const distance = calculateDistance(lat, lon, latitude, longitude);
             const compassDirection = getCompassDirection(trueTrack);
 
-            const status = verticalRate > 10 ? 'Stiger' : verticalRate < -10 ? 'Synker' : 'I rute';
             const currentTime = new Date().toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' });
 
-            // Få flyselskap fra callsign
+            // Få flyselskap fra callsign og data
             const airline = getAirlineFromCallsign(callsign);
+
+            // Prøv å hente flytype og rute-informasjon asynkront
+            getFlightInfo(icao24, callsign).then(flightInfo => {
+                if (flightInfo) {
+                    // Oppdater displayet med flytype/rute hvis me får det
+                    const routeDisplay = document.querySelector('.route-display');
+                    const routeLabel = document.querySelector('.route-label');
+                    if (routeDisplay && routeLabel) {
+                        if (flightInfo.route) {
+                            routeDisplay.innerHTML = flightInfo.route;
+                            routeLabel.innerHTML = 'Rute';
+                        } else if (flightInfo.type) {
+                            routeDisplay.innerHTML = flightInfo.type;
+                            routeLabel.innerHTML = 'Type';
+                        }
+                    }
+                }
+            }).catch(error => {
+                // Ved feil, gå tilbake til ICAO24
+                const routeDisplay = document.querySelector('.route-display');
+                const routeLabel = document.querySelector('.route-label');
+                if (routeDisplay && routeLabel) {
+                    routeDisplay.innerHTML = icao24;
+                    routeLabel.innerHTML = 'ICAO24';
+                }
+            });
 
             document.getElementById('flightDisplay').innerHTML = `
                 <div class="flight-info">
                     <div class="airline-name glow-animation">${airline}</div>
-                    <div class="flight-number">Flight: ${callsign}</div>
+                    <div class="flight-number">${callsign}</div>
                     
                     <div class="route-section">
-                        <div class="route-label">Fra: Tromsø</div>
-                        <div class="route-display">Bergen</div>
+                        <div class="route-label">Rute</div>
+                        <div class="route-display">
+                            <div class="route-loading">
+                                <div class="loading-spinner"></div>
+                                Hentar rute...
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="time-section">
                         <div class="time-info">${currentTime}</div>
-                        <div class="status-indicator">${onGround ? 'På bakken' : status}</div>
+                        <div class="status-indicator">Live</div>
                     </div>
                     
                     <div class="flight-details">
                         <div class="detail-box">
-                            <div class="detail-label">Total flytid</div>
-                            <div class="detail-value">1t 37m</div>
-                        </div>
-                        <div class="detail-box">
-                            <div class="detail-label">Tid igjen</div>
-                            <div class="detail-value">1t 14m</div>
+                            <div class="detail-label">Squawk</div>
+                            <div class="detail-value">${squawk}</div>
                         </div>
                         <div class="detail-box">
                             <div class="detail-label">Retning</div>
@@ -854,7 +957,202 @@
                 }
             }
 
-            return callsign; // Returner callsign hvis ingen match
+            return 'Ukjent flyselskap'; // Returner standard tekst hvis ingen match
+        }
+
+        // Funksjon for å hente flyinformasjon (rute og type)
+        async function getFlightInfo(icao24, callsign) {
+            const routeDisplay = document.querySelector('.route-display');
+            const routeLabel = document.querySelector('.route-label');
+
+            try {
+                console.log(`🔍 Søker etter rute-info for ${callsign} (${icao24})`);
+
+                // Prøv først å hente flight history (avgang/ankomst flyplass)
+                const flightHistory = await getFlightHistory(icao24);
+                if (flightHistory && flightHistory.route) {
+                    console.log(`✅ Rute funnet: ${flightHistory.route}`);
+                    return flightHistory;
+                }
+
+                // Fallback til live track analysis
+                const trackInfo = await getTrackInfo(icao24);
+                if (trackInfo && trackInfo.route) {
+                    console.log(`✅ Track-retning funnet: ${trackInfo.route}`);
+                    return trackInfo;
+                }
+
+                // Siste fallback til registreringsinfo
+                const aircraftInfo = getAircraftTypeFromICAO24(icao24);
+                if (aircraftInfo) {
+                    console.log(`ℹ️ Registreringsinfo: ${aircraftInfo.type}`);
+                    return aircraftInfo;
+                }
+
+                // Ingen info funne, gå tilbake til ICAO24
+                console.log(`ℹ️ Ingen rute-info funne for ${icao24}, viser ICAO24`);
+                if (routeDisplay && routeLabel) {
+                    routeDisplay.innerHTML = icao24;
+                    routeLabel.innerHTML = 'ICAO24';
+                }
+                return null;
+
+            } catch (error) {
+                console.log('Kunne ikkje hente flyinformasjon:', error);
+                // Ved feil, gå tilbake til ICAO24
+                if (routeDisplay && routeLabel) {
+                    routeDisplay.innerHTML = icao24;
+                    routeLabel.innerHTML = 'ICAO24';
+                }
+                return null;
+            }
+        }
+
+        // Hent flight history for å finne faktisk rute (avgang/ankomst flyplass)
+        async function getFlightHistory(icao24) {
+            try {
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const baseUrl = isLocalhost ? 'http://localhost:8888' : window.location.origin;
+
+                const flightUrl = `${baseUrl}/.netlify/functions/flights?icao24=${icao24}&flights=true`;
+                console.log(`📡 Henter flight history: ${flightUrl}`);
+
+                const response = await fetch(flightUrl);
+                if (response.ok) {
+                    const flightData = await response.json();
+
+                    if (Array.isArray(flightData) && flightData.length > 0) {
+                        // Finn den nyeste flight record
+                        const latestFlight = flightData[flightData.length - 1];
+
+                        if (latestFlight.estDepartureAirport && latestFlight.estArrivalAirport) {
+                            const route = `${latestFlight.estDepartureAirport} → ${latestFlight.estArrivalAirport}`;
+                            return {
+                                route: route,
+                                departure: latestFlight.estDepartureAirport,
+                                arrival: latestFlight.estArrivalAirport,
+                                firstSeen: latestFlight.firstSeen,
+                                lastSeen: latestFlight.lastSeen
+                            };
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log('Flight history API ikkje tilgjengelig:', error);
+            }
+
+            return null;
+        }
+
+        // Hent live track for å analysere retning og rute
+        async function getTrackInfo(icao24) {
+            try {
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const baseUrl = isLocalhost ? 'http://localhost:8888' : window.location.origin;
+
+                const trackUrl = `${baseUrl}/.netlify/functions/flights?icao24=${icao24}&track=true`;
+                console.log(`🛩️ Henter live track: ${trackUrl}`);
+
+                const response = await fetch(trackUrl);
+                if (response.ok) {
+                    const trackData = await response.json();
+
+                    if (trackData && trackData.path && trackData.path.length > 0) {
+                        console.log(`📍 Track funnet med ${trackData.path.length} waypoints`);
+
+                        // Analyser første og siste waypoint for retning
+                        const firstPoint = trackData.path[0];
+                        const lastPoint = trackData.path[trackData.path.length - 1];
+
+                        if (firstPoint && lastPoint && firstPoint[1] && firstPoint[2] && lastPoint[1] && lastPoint[2]) {
+                            const direction = calculateDirection(firstPoint[1], firstPoint[2], lastPoint[1], lastPoint[2]);
+                            return {
+                                route: `Retning ${direction}`,
+                                trackPoints: trackData.path.length,
+                                callsign: trackData.callsign || 'Ukjent'
+                            };
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log('Track API ikkje tilgjengelig:', error);
+            }
+
+            return null;
+        }
+
+        function calculateDirection(lat1, lon1, lat2, lon2) {
+            const bearing = Math.atan2(
+                Math.sin(lon2 - lon1) * Math.cos(lat2),
+                Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1)
+            );
+
+            const degrees = (bearing * 180 / Math.PI + 360) % 360;
+
+            if (degrees < 22.5 || degrees >= 337.5) return 'Nord';
+            if (degrees < 67.5) return 'Nordøst';
+            if (degrees < 112.5) return 'Øst';
+            if (degrees < 157.5) return 'Sørøst';
+            if (degrees < 202.5) return 'Sør';
+            if (degrees < 247.5) return 'Sørvest';
+            if (degrees < 292.5) return 'Vest';
+            return 'Nordvest';
+        }
+
+        // Funksjon for å hente flytype basert på ICAO24 - forenkla versjon
+        async function getAircraftInfo(icao24) {
+            try {
+                // Prøv først OpenSky aircraft database (krever autentisering)
+                // Dette er ein enklare tilnærming med offentleg database
+
+                // For nå, bruk ein enkel mapping basert på første to bokstavar i ICAO24
+                const aircraftInfo = getAircraftTypeFromICAO24(icao24);
+
+                return aircraftInfo;
+            } catch (error) {
+                console.log('Kunne ikkje hente flytype:', error);
+                return null;
+            }
+        }
+
+        // Enkel flytype-gjenkjenning basert på ICAO24 prefix
+        function getAircraftTypeFromICAO24(icao24) {
+            if (!icao24) return null;
+
+            // ICAO24 prefix gir info om registreringsland og til dels flytype
+            const prefix = icao24.substring(0, 2).toLowerCase();
+
+            // Norske fly
+            if (prefix === 'ln') {
+                return { type: 'Norsk registrering', country: 'Norge' };
+            }
+
+            // Danske fly  
+            if (prefix === 'oy') {
+                return { type: 'Dansk registrering', country: 'Danmark' };
+            }
+
+            // Svenske fly
+            if (prefix === 'se') {
+                return { type: 'Svensk registrering', country: 'Sverige' };
+            }
+
+            // EU registreringar
+            const euCountries = {
+                'd-': 'Tysk registrering',
+                'g-': 'Britisk registrering',
+                'f-': 'Fransk registrering',
+                'ph-': 'Nederlandsk registrering',
+                'ei-': 'Irsk registrering'
+            };
+
+            for (const [code, name] of Object.entries(euCountries)) {
+                if (icao24.toLowerCase().startsWith(code)) {
+                    return { type: name };
+                }
+            }
+
+            return null;
         }
 
         function getCompassDirection(heading) {
