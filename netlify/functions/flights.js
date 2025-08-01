@@ -13,6 +13,52 @@ function getOpenSkyAuth() {
     return null;
 }
 
+// AeroDataBox API helper
+async function getFlightRoute(callsign) {
+    const rapidApiKey = process.env.RAPIDAPI_KEY;
+    if (!rapidApiKey || !callsign) {
+        console.log(`Skipping AeroDataBox lookup - Key: ${!!rapidApiKey}, Callsign: ${callsign}`);
+        return null;
+    }
+
+    try {
+        // Clean callsign (remove spaces and make uppercase)
+        const cleanCallsign = callsign.trim().toUpperCase();
+        console.log(`Looking up route for: ${cleanCallsign}`);
+        
+        // Try to get flight data from AeroDataBox
+        const url = `https://aerodatabox.p.rapidapi.com/flights/number/${cleanCallsign}`;
+        
+        const headers = {
+            'X-RapidAPI-Key': rapidApiKey,
+            'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com'
+        };
+
+        const data = await makeRequest(url, headers);
+        console.log(`AeroDataBox response for ${cleanCallsign}:`, JSON.stringify(data, null, 2));
+        
+        // Extract route information from the response
+        if (data && data.length > 0) {
+            const flight = data[0]; // Get the most recent flight
+            
+            if (flight.departure && flight.arrival) {
+                const from = flight.departure.airport?.name || flight.departure.airport?.iata || 'Ukjent';
+                const to = flight.arrival.airport?.name || flight.arrival.airport?.iata || 'Ukjent';
+                
+                const route = `${from} → ${to}`;
+                console.log(`Found route for ${cleanCallsign}: ${route}`);
+                return route;
+            }
+        }
+        
+        console.log(`No route found for ${cleanCallsign}`);
+        return null;
+    } catch (error) {
+        console.log(`AeroDataBox lookup failed for ${callsign}:`, error.message);
+        return null;
+    }
+}
+
 // HTTP request helper
 async function makeRequest(url, headers = {}) {
     return new Promise((resolve, reject) => {
@@ -59,7 +105,7 @@ async function makeRequest(url, headers = {}) {
     });
 }
 
-// Enhanced OpenSky states with basic route guessing
+// Enhanced OpenSky states with AeroDataBox route lookup
 async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
     const auth = getOpenSkyAuth();
     const authHeaders = auth ? { 'Authorization': auth } : {};
@@ -69,30 +115,40 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
     try {
         const data = await makeRequest(url, authHeaders);
 
-        // Add basic route guessing for Norwegian flights
+        // Enhanced route lookup with AeroDataBox
         if (data.states) {
-            data.states = data.states.map(state => {
+            const enhancedStates = [];
+            
+            for (const state of data.states) {
                 const icao24 = state[0];
                 const callsign = state[1]?.trim();
 
-                // Add route guess for Norwegian flights
-                let routeGuess = null;
+                let routeInfo = null;
+                
                 if (callsign) {
-                    if (callsign.startsWith('SAS') || callsign.startsWith('SK')) {
-                        routeGuess = 'SAS Domestic/European';
-                    } else if (callsign.startsWith('DY') || callsign.startsWith('NAX')) {
-                        routeGuess = 'Norwegian Route';
-                    } else if (callsign.startsWith('WF')) {
-                        routeGuess = 'Widerøe Regional';
+                    // Try to get detailed route from AeroDataBox first
+                    routeInfo = await getFlightRoute(callsign);
+                    
+                    // Fallback to basic airline detection if AeroDataBox fails
+                    if (!routeInfo) {
+                        if (callsign.startsWith('SAS') || callsign.startsWith('SK')) {
+                            routeInfo = 'SAS Domestic/European';
+                        } else if (callsign.startsWith('DY') || callsign.startsWith('NAX')) {
+                            routeInfo = 'Norwegian Route';
+                        } else if (callsign.startsWith('WF')) {
+                            routeInfo = 'Widerøe Regional';
+                        }
                     }
                 }
 
-                // Add to state array (custom field)
+                // Add enhanced route info to state array
                 const enhancedState = [...state];
-                enhancedState[17] = routeGuess; // Route guess
+                enhancedState[17] = routeInfo; // Route information
 
-                return enhancedState;
-            });
+                enhancedStates.push(enhancedState);
+            }
+            
+            data.states = enhancedStates;
         }
 
         return {
