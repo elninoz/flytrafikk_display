@@ -183,9 +183,13 @@ async function handleFlightsRequest(icao24, headers) {
 
     console.log(`🔑 Using ${authInfo.method} authentication for flights`);
 
-    // Søk etter flighter dei siste 2 dagane (OpenSky limit: max 2 partisjonar)
-    const endTime = Math.floor(Date.now() / 1000);
-    const beginTime = endTime - (2 * 24 * 60 * 60); // 2 dagar tilbake
+    // Søk etter flighter siste dag (OpenSky safe: same partition)
+    const now = new Date();
+    const endTime = Math.floor(now.getTime() / 1000);
+    
+    // Start frå same dag kl 00:00 for å unngå partition-spill
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const beginTime = Math.floor(startOfToday.getTime() / 1000);
 
     const url = `https://opensky-network.org/api/flights/aircraft?icao24=${icao24.toLowerCase()}&begin=${beginTime}&end=${endTime}`;
     console.log(`📡 Flights URL: ${url}`);
