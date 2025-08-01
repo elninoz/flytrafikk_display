@@ -47,16 +47,46 @@ function loadAirlineDatabase() {
             try {
                 const files = fs.readdirSync(process.cwd());
                 console.log(files.filter(f => f.includes('airline') || f.endsWith('.txt')));
+                
+                // Also check /var/task contents if it exists
+                console.log('📂 Available files in /var/task:');
+                const taskFiles = fs.readdirSync('/var/task');
+                console.log(taskFiles.filter(f => f.includes('airline') || f.endsWith('.txt')));
             } catch (e) {
+                console.log('Could not list directory contents:', e.message);
+            }
+            console.log('Using fallback airline database instead');
+            airlineDatabase = getFallbackAirlineDatabase();
+            return airlineDatabase;
+        }
                 console.log('Could not list directory contents');
             }
 
             // Return empty database but don't crash
             airlineDatabase = {};
-            return airlineDatabase;
-        }
+    return airlineDatabase;
+}
 
-        airlineDatabase = {};
+function getFallbackAirlineDatabase() {
+    return {
+        // Skandinaviske flyselskap
+        'SAS': 'SAS', 'SK': 'SAS',
+        'DY': 'Norwegian', 'NOZ': 'Norwegian',
+        'WF': 'Widerøe', 'WIF': 'Widerøe',
+
+        // Islandske flyselskap
+        'ICE': 'Icelandair', 'FI': 'Icelandair',
+        'WOW': 'WOW air', 'WW': 'WOW air',
+
+        // Europeiske flyselskap
+        'KLM': 'KLM', 'KL': 'KLM',
+        'LH': 'Lufthansa', 'DLH': 'Lufthansa',
+        'BA': 'British Airways', 'BAW': 'British Airways',
+        'AF': 'Air France', 'AFR': 'Air France',
+        'RYR': 'Ryanair', 'FR': 'Ryanair',
+        'EZY': 'easyJet', 'U2': 'easyJet'
+    };
+}        airlineDatabase = {};
         const lines = content.split('\n');
 
         for (const line of lines) {
@@ -229,7 +259,7 @@ async function getFlightRoute(callsign) {
 // Aviation Stack API fallback for live flights
 async function getAviationStackFlights(lamin, lamax, lomin, lomax) {
     const accessKey = process.env.AVIATIONSTACK_API_KEY;
-    
+
     if (!accessKey) {
         console.log('🚫 Aviation Stack API key not found');
         return null;
@@ -238,31 +268,32 @@ async function getAviationStackFlights(lamin, lamax, lomin, lomax) {
     try {
         const url = `https://api.aviationstack.com/v1/flights?access_key=${accessKey}&flight_status=active&limit=50`;
         console.log('🛩️ Fetching Aviation Stack live flights...');
-        
+
         const response = await makeRequest(url, {}, 1); // Single retry, fast timeout
-        
+
         if (!response || !response.data) {
             return null;
         }
 
         console.log(`✅ Aviation Stack returned ${response.data.length} flights`);
+        console.log(`📍 Filtering to area: lat ${lamin}-${lamax}, lon ${lomin}-${lomax}`);
 
         // Convert Aviation Stack format to OpenSky-compatible format
         const convertedStates = response.data
             .filter(flight => {
                 // Only include flights with live position data
-                return flight.live && 
-                       flight.live.latitude && 
-                       flight.live.longitude &&
-                       !flight.live.is_ground; // Only airborne flights
+                return flight.live &&
+                    flight.live.latitude &&
+                    flight.live.longitude &&
+                    !flight.live.is_ground; // Only airborne flights
             })
             .filter(flight => {
-                // Basic geographic filtering (rough approximation)
+                // Precise geographic filtering based on request bounds
                 const lat = parseFloat(flight.live.latitude);
                 const lon = parseFloat(flight.live.longitude);
-                
-                // Norway + surrounding area (rough bounds)
-                return lat >= 55 && lat <= 75 && lon >= -5 && lon <= 35;
+
+                // Filter to exact requested area bounds
+                return lat >= lamin && lat <= lamax && lon >= lomin && lon <= lomax;
             })
             .map(flight => {
                 try {
@@ -270,7 +301,7 @@ async function getAviationStackFlights(lamin, lamax, lomin, lomax) {
                     // OpenSky format: [icao24, callsign, origin_country, time_position, last_contact, 
                     //                  longitude, latitude, baro_altitude, on_ground, velocity, 
                     //                  true_track, vertical_rate, sensors, geo_altitude, squawk, spi, position_source]
-                    
+
                     const icao24 = flight.aircraft?.icao24 || null;
                     const callsign = flight.flight?.iata || flight.flight?.icao || null;
                     const originCountry = 'Unknown';
@@ -283,7 +314,7 @@ async function getAviationStackFlights(lamin, lamax, lomin, lomax) {
                     const velocity = flight.live.speed_horizontal ? parseFloat(flight.live.speed_horizontal) / 3.6 : null; // Convert km/h to m/s
                     const trueTrack = flight.live.direction ? parseFloat(flight.live.direction) : null;
                     const verticalRate = flight.live.speed_vertical ? parseFloat(flight.live.speed_vertical) / 3.6 : null;
-                    
+
                     // Build route information
                     let routeInfo = null;
                     if (flight.departure?.airport && flight.arrival?.airport) {
@@ -327,6 +358,8 @@ async function getAviationStackFlights(lamin, lamax, lomin, lomax) {
             })
             .filter(state => state !== null);
 
+        console.log(`🎯 Aviation Stack: ${response.data.length} total flights, ${convertedStates.length} after filtering to bounds [${lamin}, ${lamax}, ${lomin}, ${lomax}]`);
+
         return {
             time: Math.floor(Date.now() / 1000),
             states: convertedStates
@@ -347,8 +380,8 @@ async function makeRequest(url, headers = {}, retries = 1) { // Further reduced 
 
                 // Adjust timeout based on the API - OpenSky can be slow
                 const isOpenSky = urlObj.hostname.includes('opensky');
-                const baseTimeout = isOpenSky ? 4000 : 3000; // Very aggressive for Netlify
-                const maxTimeout = isOpenSky ? 7000 : 6000; // Lower max timeout for Netlify limits
+                const baseTimeout = isOpenSky ? 8000 : 5000; // Auka frå 4000/3000
+                const maxTimeout = isOpenSky ? 12000 : 10000; // Auka frå 7000/6000
 
                 const options = {
                     hostname: urlObj.hostname,
@@ -544,12 +577,12 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
                 const batchResults = await Promise.all(batchPromises);
                 enhancedStates.push(...batchResults);
 
-        // Check if we're running out of time (stop early if needed)
-        const currentTime = Date.now() - startTime;
-        if (currentTime > 6000) { // Stop if we've used 6s already (leaving buffer for response)
-            console.log(`⏰ Stopping AeroDataBox processing due to time limit (${currentTime}ms elapsed)`);
-            break;
-        }                // Small delay between batches to be nice to APIs
+                // Check if we're running out of time (stop early if needed)
+                const currentTime = Date.now() - startTime;
+                if (currentTime > 6000) { // Stop if we've used 6s already (leaving buffer for response)
+                    console.log(`⏰ Stopping AeroDataBox processing due to time limit (${currentTime}ms elapsed)`);
+                    break;
+                }                // Small delay between batches to be nice to APIs
                 if (i + batchSize < flightsToProcess.length) {
                     await new Promise(resolve => setTimeout(resolve, 50)); // Shorter delay
                 }
@@ -647,10 +680,10 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
         console.log('🔄 Trying Aviation Stack fallback...');
         try {
             const fallbackData = await getAviationStackFlights(lamin, lamax, lomin, lomax);
-            
+
             if (fallbackData && fallbackData.states && fallbackData.states.length > 0) {
                 console.log(`✅ Aviation Stack fallback successful: ${fallbackData.states.length} flights`);
-                
+
                 // Add status information for fallback
                 fallbackData.apiStatus = {
                     aeroDataBoxWorking: 0,
@@ -669,7 +702,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
                     body: JSON.stringify(fallbackData)
                 };
             } else {
-                console.log('🚫 Aviation Stack fallback also failed or returned no data');
+                console.log(`🚫 Aviation Stack fallback: ${fallbackData ? 'No flights in requested area' : 'Failed to get data'}`);
             }
         } catch (fallbackError) {
             console.error('❌ Aviation Stack fallback failed:', fallbackError.message);
