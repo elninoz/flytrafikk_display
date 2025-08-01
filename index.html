@@ -381,36 +381,38 @@
             height: 100% !important;
             max-width: 95vw !important;
             max-height: 95vh !important;
-            overflow: hidden !important;
+            overflow-y: auto !important;
             text-align: center !important;
             display: flex !important;
             flex-direction: column !important;
             justify-content: center !important;
             align-items: center !important;
+            padding: 20px !important;
         }
 
         body.fullscreen .airline-name {
-            font-size: 3.5rem !important;
-            margin-bottom: 15px !important;
+            font-size: 2.8rem !important;
+            margin-bottom: 10px !important;
             line-height: 1.1 !important;
         }
 
         body.fullscreen .flight-number {
-            font-size: 2.8rem !important;
-            margin-bottom: 20px !important;
+            font-size: 2.2rem !important;
+            margin-bottom: 15px !important;
             line-height: 1.1 !important;
         }
 
         body.fullscreen .route-display {
-            font-size: 2.2rem !important;
-            margin-bottom: 25px !important;
+            font-size: 1.8rem !important;
+            margin-bottom: 20px !important;
             line-height: 1.2 !important;
             word-wrap: break-word !important;
         }
 
         body.fullscreen .time-info {
-            font-size: 3rem !important;
+            font-size: 2.4rem !important;
             line-height: 1.1 !important;
+            margin-bottom: 15px !important;
         }
 
         body.fullscreen .time-section {
@@ -421,12 +423,42 @@
         }
 
         body.fullscreen .live-indicator {
-            font-size: 1.8rem !important;
-            padding: 10px 20px !important;
+            font-size: 1.5rem !important;
+            padding: 8px 16px !important;
+            margin-bottom: 20px !important;
         }
 
+        /* Vis ALLE detaljar i fullskjerm - berre større */
         body.fullscreen .flight-details {
-            display: none !important;
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 20px !important;
+            margin-top: 25px !important;
+            width: 100% !important;
+            max-width: 90vw !important;
+        }
+
+        body.fullscreen .detail-item {
+            background: rgba(0, 255, 255, 0.1) !important;
+            border: 1px solid rgba(0, 255, 255, 0.3) !important;
+            border-radius: 10px !important;
+            padding: 15px !important;
+            text-align: center !important;
+        }
+
+        body.fullscreen .detail-label {
+            font-size: 1.4rem !important;
+            color: #888 !important;
+            margin-bottom: 8px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+        }
+
+        body.fullscreen .detail-value {
+            font-size: 2rem !important;
+            color: #00ffff !important;
+            font-weight: bold !important;
+            line-height: 1.1 !important;
         }
     </style>
 </head>
