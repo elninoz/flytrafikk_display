@@ -494,6 +494,12 @@
             const remainingTime = flight[20]; // Remaining time in minutes
             const elapsedTime = flight[21]; // Elapsed time in minutes
 
+            // Debug log for flight timing data
+            console.log(`Flight ${callsign} timing data:`, {
+                totalDuration, remainingTime, elapsedTime,
+                flight18: flight[18], flight19: flight[19], flight20: flight[20], flight21: flight[21]
+            });
+
             const distance = calculateDistance(lat, lon, latitude, longitude);
             const compassDirection = getCompassDirection(trueTrack);
             const airline = getAirlineFromCallsign(callsign);
@@ -549,7 +555,7 @@
                             <div class="detail-value">${aircraftType}</div>
                         </div>
                         <div class="detail-box">
-                            <div class="detail-label">Flygjetid</div>
+                            <div class="detail-label">Flygetid</div>
                             <div class="detail-value">${flightTimeInfo}</div>
                         </div>
                         <div class="detail-box">
