@@ -1019,11 +1019,15 @@
                     const flightData = await response.json();
 
                     if (Array.isArray(flightData) && flightData.length > 0) {
+                        console.log(`📋 Flight data mottatt:`, flightData);
+                        
                         // Finn den nyeste flight record
                         const latestFlight = flightData[flightData.length - 1];
+                        console.log(`🔍 Siste flight record:`, latestFlight);
 
                         if (latestFlight.estDepartureAirport && latestFlight.estArrivalAirport) {
                             const route = `${latestFlight.estDepartureAirport} → ${latestFlight.estArrivalAirport}`;
+                            console.log(`✈️ Route funnet: ${route}`);
                             return {
                                 route: route,
                                 departure: latestFlight.estDepartureAirport,
@@ -1031,7 +1035,15 @@
                                 firstSeen: latestFlight.firstSeen,
                                 lastSeen: latestFlight.lastSeen
                             };
+                        } else {
+                            console.log(`⚠️ Manglar airport-info:`, {
+                                departure: latestFlight.estDepartureAirport,
+                                arrival: latestFlight.estArrivalAirport,
+                                allFields: Object.keys(latestFlight)
+                            });
                         }
+                    } else {
+                        console.log(`⚠️ Tomt eller ugyldig flight data:`, flightData);
                     }
                 }
             } catch (error) {
