@@ -499,23 +499,33 @@
             const airline = getAirlineFromCallsign(callsign);
             const currentTime = new Date().toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' });
 
-            // Format flight time information - with validation
-            let flightTimeInfo = squawk; // Fallback to squawk if no time data
-            if (totalDuration && remainingTime !== null && totalDuration < 1440) { // Max 24 hours seems reasonable
-                const totalHours = Math.floor(totalDuration / 60);
-                const totalMinutes = totalDuration % 60;
-                const remainingHours = Math.floor(remainingTime / 60);
-                const remainingMin = remainingTime % 60;
-
-                if (remainingTime > 0) {
-                    flightTimeInfo = `${remainingHours}t ${remainingMin}m igjen av ${totalHours}t ${totalMinutes}m`;
+            // Helper function to format duration as "1H55M" or "25M"
+            function formatDuration(minutes) {
+                if (!minutes || minutes <= 0) return 'Ukjent';
+                const hours = Math.floor(minutes / 60);
+                const mins = minutes % 60;
+                
+                if (hours > 0) {
+                    return mins > 0 ? `${hours}H${mins}M` : `${hours}H`;
                 } else {
-                    flightTimeInfo = `Landa (${totalHours}t ${totalMinutes}m total)`;
+                    return `${mins}M`;
+                }
+            }
+
+            // Format flight time information - with validation
+            let flightTimeInfo = 'Ukjent tid'; // Better fallback than squawk
+            if (totalDuration && totalDuration > 0 && totalDuration < 1440) { // Max 24 hours seems reasonable
+                if (remainingTime !== null && remainingTime > 0) {
+                    const formatTotal = formatDuration(totalDuration);
+                    const formatRemaining = formatDuration(remainingTime);
+                    flightTimeInfo = `${formatRemaining} igjen av ${formatTotal}`;
+                } else {
+                    const formatTotal = formatDuration(totalDuration);
+                    flightTimeInfo = `Total: ${formatTotal}`;
                 }
             } else if (elapsedTime !== null && elapsedTime > 0 && elapsedTime < 1440) { // Max 24 hours
-                const elapsedHours = Math.floor(elapsedTime / 60);
-                const elapsedMin = elapsedTime % 60;
-                flightTimeInfo = `${elapsedHours}t ${elapsedMin}m i lufta`;
+                const formatElapsed = formatDuration(elapsedTime);
+                flightTimeInfo = `${formatElapsed} i lufta`;
             }
 
             document.getElementById('flightDisplay').innerHTML = `
