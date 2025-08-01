@@ -94,50 +94,81 @@ async function getFlightRoute(callsign) {
     }
 }
 
-// HTTP request helper
-async function makeRequest(url, headers = {}) {
-    return new Promise((resolve, reject) => {
-        const urlObj = new URL(url);
+// HTTP request helper with retry logic
+async function makeRequest(url, headers = {}, retries = 2) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+            console.log(`Making request to ${url} (attempt ${attempt + 1}/${retries + 1})`);
+            
+            const result = await new Promise((resolve, reject) => {
+                const urlObj = new URL(url);
 
-        const options = {
-            hostname: urlObj.hostname,
-            port: 443,
-            path: urlObj.pathname + urlObj.search,
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'User-Agent': 'flytrafikk-display/1.0',
-                ...headers
-            },
-            timeout: 10000
-        };
+                const options = {
+                    hostname: urlObj.hostname,
+                    port: 443,
+                    path: urlObj.pathname + urlObj.search,
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'User-Agent': 'flytrafikk-display/1.0',
+                        ...headers
+                    },
+                    timeout: attempt === 0 ? 15000 : 20000 // Longer timeout on retries
+                };
 
-        const req = https.request(options, (res) => {
-            let data = '';
-            res.on('data', (chunk) => data += chunk);
+                const req = https.request(options, (res) => {
+                    let data = '';
+                    res.on('data', (chunk) => data += chunk);
 
-            res.on('end', () => {
-                if (data.trim().startsWith('<')) {
-                    reject(new Error('HTML error page received'));
-                    return;
-                }
+                    res.on('end', () => {
+                        if (res.statusCode === 429) {
+                            reject(new Error('Rate limited - too many requests'));
+                            return;
+                        }
+                        
+                        if (res.statusCode >= 400) {
+                            reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+                            return;
+                        }
 
-                try {
-                    resolve(JSON.parse(data));
-                } catch (error) {
-                    reject(new Error(`JSON parse error: ${error.message}`));
-                }
+                        if (data.trim().startsWith('<')) {
+                            reject(new Error('HTML error page received'));
+                            return;
+                        }
+
+                        try {
+                            resolve(JSON.parse(data));
+                        } catch (error) {
+                            reject(new Error(`JSON parse error: ${error.message}`));
+                        }
+                    });
+                });
+
+                req.on('error', reject);
+                req.on('timeout', () => {
+                    req.destroy();
+                    reject(new Error('Request timeout'));
+                });
+
+                req.end();
             });
-        });
-
-        req.on('error', reject);
-        req.on('timeout', () => {
-            req.destroy();
-            reject(new Error('Request timeout'));
-        });
-
-        req.end();
-    });
+            
+            console.log(`Request successful on attempt ${attempt + 1}`);
+            return result;
+            
+        } catch (error) {
+            console.log(`Request failed on attempt ${attempt + 1}: ${error.message}`);
+            
+            if (attempt === retries) {
+                throw error; // Final attempt failed
+            }
+            
+            // Wait before retrying (exponential backoff)
+            const waitTime = Math.pow(2, attempt) * 1000; // 1s, 2s, 4s...
+            console.log(`Waiting ${waitTime}ms before retry...`);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+        }
+    }
 }
 
 // Enhanced OpenSky states with AeroDataBox route lookup
@@ -148,70 +179,99 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
     const url = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
 
     try {
+        console.log(`Fetching OpenSky data from: ${url}`);
+        const startTime = Date.now();
+        
         const data = await makeRequest(url, authHeaders);
+        
+        const openSkyTime = Date.now() - startTime;
+        console.log(`OpenSky request completed in ${openSkyTime}ms`);
 
-        // Enhanced route lookup with AeroDataBox
+        // Enhanced route lookup with AeroDataBox (limit concurrent requests)
         if (data.states) {
             const enhancedStates = [];
             let aeroDataBoxSuccess = 0;
             let aeroDataBoxTotal = 0;
 
-            for (const state of data.states) {
-                const icao24 = state[0];
-                const callsign = state[1]?.trim();
+            // Process flights in batches to avoid overwhelming APIs
+            const batchSize = 3; // Max 3 concurrent AeroDataBox requests
+            for (let i = 0; i < data.states.length; i += batchSize) {
+                const batch = data.states.slice(i, i + batchSize);
+                
+                const batchPromises = batch.map(async (state) => {
+                    const icao24 = state[0];
+                    const callsign = state[1]?.trim();
 
-                // Add enhanced route info to state array
-                const enhancedState = [...state];
-                let routeInfo = null;
+                    // Add enhanced route info to state array
+                    const enhancedState = [...state];
+                    let routeInfo = null;
 
-                if (callsign) {
-                    aeroDataBoxTotal++;
+                    if (callsign) {
+                        aeroDataBoxTotal++;
 
-                    // Try to get detailed flight info from AeroDataBox first
-                    const flightInfo = await getFlightRoute(callsign);
+                        // Try to get detailed flight info from AeroDataBox first
+                        try {
+                            const flightInfo = await getFlightRoute(callsign);
 
-                    if (flightInfo && typeof flightInfo === 'object') {
-                        aeroDataBoxSuccess++;
-                        // Use detailed flight information
-                        routeInfo = flightInfo.route || null;
+                            if (flightInfo && typeof flightInfo === 'object') {
+                                aeroDataBoxSuccess++;
+                                // Use detailed flight information
+                                routeInfo = flightInfo.route || null;
 
-                        // Add additional flight details to state array
-                        enhancedState[18] = flightInfo.aircraftType || null; // Aircraft type
-                        enhancedState[19] = flightInfo.totalDuration || null; // Total duration in minutes
-                        enhancedState[20] = flightInfo.remainingTime || null; // Remaining time in minutes
-                        enhancedState[21] = flightInfo.elapsedTime || null; // Elapsed time in minutes
-                    } else if (typeof flightInfo === 'string') {
-                        aeroDataBoxSuccess++;
-                        // Backward compatibility - just route string
-                        routeInfo = flightInfo;
-                    }
+                                // Add additional flight details to state array
+                                enhancedState[18] = flightInfo.aircraftType || null; // Aircraft type
+                                enhancedState[19] = flightInfo.totalDuration || null; // Total duration in minutes
+                                enhancedState[20] = flightInfo.remainingTime || null; // Remaining time in minutes
+                                enhancedState[21] = flightInfo.elapsedTime || null; // Elapsed time in minutes
+                            } else if (typeof flightInfo === 'string') {
+                                aeroDataBoxSuccess++;
+                                // Backward compatibility - just route string
+                                routeInfo = flightInfo;
+                            }
+                        } catch (error) {
+                            console.log(`AeroDataBox lookup failed for ${callsign}: ${error.message}`);
+                        }
 
-                    // Fallback to basic airline detection if AeroDataBox fails
-                    if (!routeInfo) {
-                        if (callsign.startsWith('SAS') || callsign.startsWith('SK')) {
-                            routeInfo = 'SAS Domestic/European';
-                        } else if (callsign.startsWith('DY') || callsign.startsWith('NAX')) {
-                            routeInfo = 'Norwegian Route';
-                        } else if (callsign.startsWith('WF')) {
-                            routeInfo = 'Widerøe Regional';
+                        // Fallback to basic airline detection if AeroDataBox fails
+                        if (!routeInfo) {
+                            if (callsign.startsWith('SAS') || callsign.startsWith('SK')) {
+                                routeInfo = 'SAS Domestic/European';
+                            } else if (callsign.startsWith('DY') || callsign.startsWith('NAX')) {
+                                routeInfo = 'Norwegian Route';
+                            } else if (callsign.startsWith('WF')) {
+                                routeInfo = 'Widerøe Regional';
+                            }
                         }
                     }
-                }
 
-                enhancedState[17] = routeInfo; // Route information
-                enhancedStates.push(enhancedState);
+                    enhancedState[17] = routeInfo; // Route information
+                    return enhancedState;
+                });
+
+                // Wait for this batch to complete before starting next batch
+                const batchResults = await Promise.all(batchPromises);
+                enhancedStates.push(...batchResults);
+                
+                // Small delay between batches to be nice to APIs
+                if (i + batchSize < data.states.length) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
             }
 
             data.states = enhancedStates;
-
+            
             // Add status information
             data.apiStatus = {
                 aeroDataBoxWorking: aeroDataBoxTotal > 0 ? (aeroDataBoxSuccess / aeroDataBoxTotal) : 0,
                 totalFlights: aeroDataBoxTotal,
                 successfulLookups: aeroDataBoxSuccess,
-                hasRapidApiKey: !!process.env.RAPIDAPI_KEY
+                hasRapidApiKey: !!process.env.RAPIDAPI_KEY,
+                openSkyResponseTime: openSkyTime
             };
         }
+
+        const totalTime = Date.now() - startTime;
+        console.log(`Total request completed in ${totalTime}ms`);
 
         return {
             statusCode: 200,
@@ -220,15 +280,26 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
         };
     } catch (error) {
         console.error('OpenSky request failed:', error.message);
+        
+        // Return basic error response with fallback data
         return {
-            statusCode: 500,
+            statusCode: 200, // Don't fail completely
             headers,
-            body: JSON.stringify({ error: error.message })
+            body: JSON.stringify({ 
+                states: [], 
+                time: Math.floor(Date.now() / 1000),
+                error: `OpenSky API problem: ${error.message}`,
+                apiStatus: {
+                    aeroDataBoxWorking: 0,
+                    totalFlights: 0,
+                    successfulLookups: 0,
+                    hasRapidApiKey: !!process.env.RAPIDAPI_KEY,
+                    openSkyError: error.message
+                }
+            })
         };
     }
-}
-
-exports.handler = async (event, context) => {
+}exports.handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
     const headers = {
