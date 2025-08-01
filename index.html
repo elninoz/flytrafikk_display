@@ -428,11 +428,36 @@
             const trueTrack = flight[10] ? Math.round(flight[10]) : 'Ukjent';
             const squawk = flight[14] || 'Ukjent';
             const routeGuess = flight[17] || icao24; // From enhanced data
+            
+            // New enhanced data from AeroDataBox
+            const aircraftType = flight[18] || originCountry; // Fallback to country if no aircraft type
+            const totalDuration = flight[19]; // Total flight duration in minutes
+            const remainingTime = flight[20]; // Remaining time in minutes
+            const elapsedTime = flight[21]; // Elapsed time in minutes
 
             const distance = calculateDistance(lat, lon, latitude, longitude);
             const compassDirection = getCompassDirection(trueTrack);
             const airline = getAirlineFromCallsign(callsign);
             const currentTime = new Date().toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' });
+
+            // Format flight time information
+            let flightTimeInfo = squawk; // Fallback to squawk if no time data
+            if (totalDuration && remainingTime !== null) {
+                const totalHours = Math.floor(totalDuration / 60);
+                const totalMinutes = totalDuration % 60;
+                const remainingHours = Math.floor(remainingTime / 60);
+                const remainingMin = remainingTime % 60;
+                
+                if (remainingTime > 0) {
+                    flightTimeInfo = `${remainingHours}t ${remainingMin}m igjen av ${totalHours}t ${totalMinutes}m`;
+                } else {
+                    flightTimeInfo = `Landa (${totalHours}t ${totalMinutes}m total)`;
+                }
+            } else if (elapsedTime !== null && elapsedTime > 0) {
+                const elapsedHours = Math.floor(elapsedTime / 60);
+                const elapsedMin = elapsedTime % 60;
+                flightTimeInfo = `${elapsedHours}t ${elapsedMin}m i lufta`;
+            }
 
             document.getElementById('flightDisplay').innerHTML = `
                 <div class="flight-info">
@@ -451,12 +476,12 @@
                     
                     <div class="flight-details">
                         <div class="detail-box">
-                            <div class="detail-label">Land</div>
-                            <div class="detail-value">${originCountry}</div>
+                            <div class="detail-label">Flytype</div>
+                            <div class="detail-value">${aircraftType}</div>
                         </div>
                         <div class="detail-box">
-                            <div class="detail-label">Squawk</div>
-                            <div class="detail-value">${squawk}</div>
+                            <div class="detail-label">Flygjetid</div>
+                            <div class="detail-value">${flightTimeInfo}</div>
                         </div>
                         <div class="detail-box">
                             <div class="detail-label">Retning</div>

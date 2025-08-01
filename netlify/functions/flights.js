@@ -25,10 +25,10 @@ async function getFlightRoute(callsign) {
         // Clean callsign (remove spaces and make uppercase)
         const cleanCallsign = callsign.trim().toUpperCase();
         console.log(`Looking up route for: ${cleanCallsign}`);
-        
+
         // Try to get flight data from AeroDataBox
         const url = `https://aerodatabox.p.rapidapi.com/flights/number/${cleanCallsign}`;
-        
+
         const headers = {
             'X-RapidAPI-Key': rapidApiKey,
             'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com'
@@ -36,22 +36,57 @@ async function getFlightRoute(callsign) {
 
         const data = await makeRequest(url, headers);
         console.log(`AeroDataBox response for ${cleanCallsign}:`, JSON.stringify(data, null, 2));
-        
-        // Extract route information from the response
+
+        // Extract enhanced flight information from the response
         if (data && data.length > 0) {
             const flight = data[0]; // Get the most recent flight
-            
+
+            let flightInfo = {};
+
+            // Route information
             if (flight.departure && flight.arrival) {
                 const from = flight.departure.airport?.name || flight.departure.airport?.iata || 'Ukjent';
                 const to = flight.arrival.airport?.name || flight.arrival.airport?.iata || 'Ukjent';
-                
-                const route = `${from} → ${to}`;
-                console.log(`Found route for ${cleanCallsign}: ${route}`);
-                return route;
+                flightInfo.route = `${from} → ${to}`;
             }
+
+            // Aircraft type
+            if (flight.aircraft?.model) {
+                flightInfo.aircraftType = flight.aircraft.model;
+            }
+
+            // Flight duration and remaining time
+            if (flight.departure?.scheduledTimeLocal && flight.arrival?.scheduledTimeLocal) {
+                const depTime = new Date(flight.departure.scheduledTimeLocal);
+                const arrTime = new Date(flight.arrival.scheduledTimeLocal);
+                const currentTime = new Date();
+
+                // Total flight duration in minutes
+                const totalDuration = Math.round((arrTime - depTime) / (1000 * 60));
+                flightInfo.totalDuration = totalDuration;
+
+                // Remaining time
+                if (currentTime < arrTime) {
+                    const remainingTime = Math.round((arrTime - currentTime) / (1000 * 60));
+                    flightInfo.remainingTime = remainingTime;
+                } else {
+                    flightInfo.remainingTime = 0; // Flight has arrived
+                }
+
+                // Elapsed time
+                if (currentTime > depTime) {
+                    const elapsedTime = Math.round((currentTime - depTime) / (1000 * 60));
+                    flightInfo.elapsedTime = elapsedTime;
+                } else {
+                    flightInfo.elapsedTime = 0; // Flight hasn't departed yet
+                }
+            }
+
+            console.log(`Found flight info for ${cleanCallsign}:`, flightInfo);
+            return flightInfo;
         }
-        
-        console.log(`No route found for ${cleanCallsign}`);
+
+        console.log(`No flight data found for ${cleanCallsign}`);
         return null;
     } catch (error) {
         console.log(`AeroDataBox lookup failed for ${callsign}:`, error.message);
@@ -118,17 +153,31 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
         // Enhanced route lookup with AeroDataBox
         if (data.states) {
             const enhancedStates = [];
-            
+
             for (const state of data.states) {
                 const icao24 = state[0];
                 const callsign = state[1]?.trim();
 
                 let routeInfo = null;
-                
+
                 if (callsign) {
-                    // Try to get detailed route from AeroDataBox first
-                    routeInfo = await getFlightRoute(callsign);
-                    
+                    // Try to get detailed flight info from AeroDataBox first
+                    const flightInfo = await getFlightRoute(callsign);
+
+                    if (flightInfo && typeof flightInfo === 'object') {
+                        // Use detailed flight information
+                        routeInfo = flightInfo.route || null;
+                        
+                        // Add additional flight details to state array
+                        enhancedState[18] = flightInfo.aircraftType || null; // Aircraft type
+                        enhancedState[19] = flightInfo.totalDuration || null; // Total duration in minutes
+                        enhancedState[20] = flightInfo.remainingTime || null; // Remaining time in minutes
+                        enhancedState[21] = flightInfo.elapsedTime || null; // Elapsed time in minutes
+                    } else if (typeof flightInfo === 'string') {
+                        // Backward compatibility - just route string
+                        routeInfo = flightInfo;
+                    }
+
                     // Fallback to basic airline detection if AeroDataBox fails
                     if (!routeInfo) {
                         if (callsign.startsWith('SAS') || callsign.startsWith('SK')) {
@@ -147,7 +196,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
 
                 enhancedStates.push(enhancedState);
             }
-            
+
             data.states = enhancedStates;
         }
 
