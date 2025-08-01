@@ -475,6 +475,7 @@
         <input type="number" id="longitude" value="6.9741" step="0.0001" placeholder="Lengdegrad" style="width: 120px;">
         <input type="number" id="radius" value="10" min="1" max="100" placeholder="Radius (km)">
         <button onclick="getFlights()">🔍 Søk etter fly</button>
+        <button onclick="stopSmartSearch()" id="stopButton" style="display: none; background: #ff4444;">⏹️ Stopp søk</button>
         <button onclick="getLocationAndSearch()">📍 Min posisjon</button>
         <button onclick="toggleAutoRefresh()">🔄 Auto-oppdater</button>
         <button onclick="toggleSound()" id="soundButton">🔊 Lyd på</button>
@@ -492,11 +493,14 @@
 
     <script>
         let autoRefreshInterval;
+        let smartSearchInterval; // Ny variabel for smart søking
+        let flightCycleInterval; // Variabel for fly-syklus interval
         let currentFlightIndex = 0;
         let flights = [];
         let knownFlights = new Set(); // Track known flight IDs to detect new ones
         let playedSounds = new Set(); // Track flights we've already played sound for
         let soundEnabled = true; // Allow users to disable sound
+        let smartSearchActive = false; // Status for smart søking
 
         // Simple beep sound function
         function playNewFlightSound() {
@@ -656,7 +660,70 @@
                 return;
             }
 
-            console.log(`Søker etter fly ved koordinatar: ${lat}, ${lon} med radius ${radius}km`);
+            // Start smart søking når bruker trykker søk
+            startSmartSearch();
+            
+            // Gjer første søk med ein gong
+            performFlightSearch();
+        }
+
+        function startSmartSearch() {
+            if (smartSearchActive) return;
+            
+            smartSearchActive = true;
+            console.log('🎯 Startar smart søk - vil søke kontinuerleg til fly blir funnet...');
+            
+            // Show stop button, hide search button
+            document.getElementById('stopButton').style.display = 'inline-block';
+            document.querySelector('button[onclick="getFlights()"]').style.display = 'none';
+            
+            // Show searching status
+            document.querySelector('.flight-info h2').textContent = 'Søker etter fly...';
+            document.querySelector('.flight-callsign').textContent = '';
+            document.querySelector('.flight-details').innerHTML = '<div style="text-align: center; color: #00ff00; font-size: 1.2em;">📡 Søker i luftrommet...</div>';
+
+            // Start immediate search, then continue with intervals
+            performFlightSearch();
+            smartSearchInterval = setInterval(performFlightSearch, 30000); // Endra frå 15s til 30s
+        }
+
+        function stopSmartSearch() {
+            if (smartSearchInterval) {
+                clearInterval(smartSearchInterval);
+                smartSearchInterval = null;
+            }
+            if (flightCycleInterval) {
+                clearInterval(flightCycleInterval);
+                flightCycleInterval = null;
+            }
+            smartSearchActive = false;
+            
+            // Hide stop button, show search button
+            document.getElementById('stopButton').style.display = 'none';
+            document.querySelector('button[onclick="getFlights()"]').style.display = 'inline-block';
+            
+            console.log('⏹️ Smart søk stoppa');
+            
+            // Clear display
+            document.querySelector('.flight-info h2').textContent = 'Norsk LED Flytracker';
+            document.querySelector('.flight-callsign').textContent = '';
+            document.querySelector('.flight-details').innerHTML = '';
+        }
+
+        async function performFlightSearch() {
+            if (!smartSearchActive) return;
+
+            const lat = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+            const lon = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
+            const radius = parseFloat(document.getElementById('radius').value.replace(',', '.'));
+
+            if (isNaN(lat) || isNaN(lon) || isNaN(radius)) {
+                console.log('❌ Ugyldig GPS-koordinatar eller radius');
+                stopSmartSearch();
+                return;
+            }
+
+            console.log(`🔍 Smart søk ved koordinatar: ${lat}, ${lon} med radius ${radius}km`);
 
             try {
                 const kmPerDegree = 111.32;
@@ -683,37 +750,115 @@
 
                     if (data.states && data.states.length > 0) {
                         // Filter out grounded aircraft
-                        flights = data.states.filter(flight => {
+                        const foundFlights = data.states.filter(flight => {
                             const altitude = flight[7];
                             const onGround = flight[8];
                             return !onGround && altitude && altitude > 100;
                         });
 
-                        console.log(`${flights.length} fly funnet i lufta`);
+                        console.log(`✈️ ${foundFlights.length} fly funnet i lufta`);
 
-                        // Check for new flights and play notification sound
-                        checkForNewFlights(flights);
-
-                        if (flights.length > 0) {
+                        if (foundFlights.length > 0) {
+                            // Stop searching and start monitoring
+                            flights = foundFlights;
                             currentFlightIndex = 0;
+                            
+                            // Check for new flights and play notification sound
+                            checkForNewFlights(flights);
+                            
                             displayCurrentFlight();
 
                             if (flights.length > 1) {
                                 // Cycle through flights every 8 seconds
-                                setInterval(switchFlight, 8000);
+                                clearInterval(flightCycleInterval);
+                                flightCycleInterval = setInterval(switchFlight, 8000);
                             }
+
+                            // Start monitoring mode instead of continuous searching
+                            clearInterval(smartSearchInterval);
+                            smartSearchInterval = setInterval(monitorFlights, 30000); // Endra frå 15s til 30s
+                            console.log('👁️ Byttar til overvaking av fly...');
                             return;
                         }
                     }
                 }
 
-                console.log('Ingen fly funnet');
-                displayNoFlights();
+                // No flights found, continue searching
+                console.log('🚫 Ingen fly funnet - held fram søking...');
+                displaySearchingStatus();
 
             } catch (error) {
-                console.error('Feil ved henting av flydata:', error);
-                displayNoFlights();
+                console.error('❌ Feil ved smart søk:', error);
+                displaySearchingStatus();
             }
+        }
+
+        async function monitorFlights() {
+            if (!smartSearchActive) return;
+
+            const lat = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+            const lon = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
+            const radius = parseFloat(document.getElementById('radius').value.replace(',', '.'));
+
+            try {
+                const kmPerDegree = 111.32;
+                const deltaLat = radius / kmPerDegree;
+                const deltaLon = radius / (kmPerDegree * Math.cos(lat * Math.PI / 180));
+
+                const lamin = lat - deltaLat;
+                const lamax = lat + deltaLat;
+                const lomin = lon - deltaLon;
+                const lomax = lon + deltaLon;
+
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const baseUrl = isLocalhost ? 'http://localhost:8888' : window.location.origin;
+
+                const url = `${baseUrl}/.netlify/functions/flights?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
+
+                const response = await fetch(url);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    updateStatusIndicator(data.apiStatus);
+
+                    if (data.states && data.states.length > 0) {
+                        const foundFlights = data.states.filter(flight => {
+                            const altitude = flight[7];
+                            const onGround = flight[8];
+                            return !onGround && altitude && altitude > 100;
+                        });
+
+                        if (foundFlights.length > 0) {
+                            // Update flights and continue monitoring
+                            flights = foundFlights;
+                            checkForNewFlights(flights);
+                            
+                            if (currentFlightIndex >= flights.length) {
+                                currentFlightIndex = 0;
+                            }
+                            displayCurrentFlight();
+                            console.log(`👁️ Overvakar ${flights.length} fly`);
+                            return;
+                        }
+                    }
+                }
+
+                // No flights found during monitoring, resume searching
+                console.log('🔄 Ingen fly lenger - byrjar søke igjen...');
+                clearInterval(flightCycleInterval);
+                clearInterval(smartSearchInterval);
+                smartSearchInterval = setInterval(performFlightSearch, 30000); // Endra frå 15s til 30s
+                displaySearchingStatus();
+
+            } catch (error) {
+                console.error('❌ Feil ved overvaking:', error);
+            }
+        }
+
+        function displaySearchingStatus() {
+            document.querySelector('.flight-info h2').textContent = 'Ingen fly i luftrommet over';
+            document.querySelector('.flight-callsign').textContent = '';
+            document.querySelector('.flight-details').innerHTML = '<div style="text-align: center; color: #00ff00; font-size: 1.2em;">📡 Søker kontinuerleg...</div>';
         }
 
         function switchFlight() {
