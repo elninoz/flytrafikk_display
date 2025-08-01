@@ -300,6 +300,67 @@
                 gap: 20px;
             }
         }
+
+        /* Fullscreen mode styles */
+        body.fullscreen {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body.fullscreen .controls {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 10px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        body.fullscreen .controls:hover {
+            opacity: 1;
+        }
+
+        body.fullscreen .led-display {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        body.fullscreen .flight-info {
+            transform: scale(1.5);
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: hidden;
+        }
+
+        body.fullscreen .airline-name {
+            font-size: 4rem;
+        }
+
+        body.fullscreen .flight-number {
+            font-size: 3rem;
+        }
+
+        body.fullscreen .route-display {
+            font-size: 3rem;
+        }
+
+        body.fullscreen .time-info {
+            font-size: 3.5rem;
+        }
     </style>
 </head>
 
@@ -317,6 +378,8 @@
         <button onclick="getFlights()">🔍 Søk etter fly</button>
         <button onclick="getLocationAndSearch()">📍 Min posisjon</button>
         <button onclick="toggleAutoRefresh()">🔄 Auto-oppdater</button>
+        <button onclick="toggleSound()" id="soundButton">🔊 Lyd på</button>
+        <button onclick="toggleFullscreen()" id="fullscreenButton">🔳 Fullskjerm</button>
     </div>
 
     <div class="led-display">
@@ -332,6 +395,68 @@
         let autoRefreshInterval;
         let currentFlightIndex = 0;
         let flights = [];
+        let knownFlights = new Set(); // Track known flight IDs to detect new ones
+        let playedSounds = new Set(); // Track flights we've already played sound for
+        let soundEnabled = true; // Allow users to disable sound
+
+        // Simple beep sound function
+        function playNewFlightSound() {
+            if (!soundEnabled) return;
+            
+            try {
+                // Create a simple beep using Web Audio API
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Pleasant notification sound: 800Hz for 200ms
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.2);
+                
+                console.log('🔊 Nytt fly oppdaga - spelar notifikasjonslyd');
+            } catch (error) {
+                console.log('Kunne ikkje spele lyd:', error.message);
+            }
+        }
+
+        // Check for new flights and play sound
+        function checkForNewFlights(currentFlights) {
+            const currentFlightIds = new Set(currentFlights.map(f => f[0]).filter(id => id));
+            let newFlightDetected = false;
+
+            // Check for flights we haven't seen before AND haven't played sound for
+            currentFlightIds.forEach(flightId => {
+                if (!knownFlights.has(flightId)) {
+                    knownFlights.add(flightId);
+                    newFlightDetected = true;
+                    console.log(`🆕 Nytt fly oppdaga: ${flightId}`);
+                    
+                    // Only play sound if we haven't played it for this flight before
+                    if (!playedSounds.has(flightId) && soundEnabled) {
+                        playedSounds.add(flightId);
+                        playNewFlightSound();
+                        console.log(`🔊 Spelar lyd for nytt fly: ${flightId}`);
+                    }
+                }
+            });
+
+            // Clean up old flights that are no longer in the area
+            const removedFlights = new Set([...knownFlights].filter(id => !currentFlightIds.has(id)));
+            removedFlights.forEach(flightId => {
+                knownFlights.delete(flightId);
+                // Keep playedSounds for the session - don't clean up unless manual reset
+                console.log(`✈️ Fly forlét området: ${flightId}`);
+            });
+        }
 
         // Parse GPS coordinates from input
         function parseGPSCoords() {
@@ -372,6 +497,32 @@
 
             // Load airline database
             loadAirlineDatabase();
+
+            // Load sound preference from localStorage
+            const savedSoundEnabled = localStorage.getItem('flightSoundEnabled');
+            if (savedSoundEnabled !== null) {
+                soundEnabled = savedSoundEnabled === 'true';
+                // Update button to reflect saved preference
+                const button = document.getElementById('soundButton');
+                if (soundEnabled) {
+                    button.textContent = '🔊 Lyd på';
+                    button.style.background = '#0a84ff';
+                } else {
+                    button.textContent = '🔇 Lyd av';
+                    button.style.background = '#666';
+                }
+            }
+
+            // Listen for fullscreen changes (when user presses ESC)
+            document.addEventListener('fullscreenchange', function() {
+                const button = document.getElementById('fullscreenButton');
+                if (!document.fullscreenElement) {
+                    button.textContent = '🔳 Fullskjerm';
+                    button.style.background = '';
+                    document.body.classList.remove('fullscreen');
+                    console.log('📺 Fullskjerm deaktivert (ESC eller anna)');
+                }
+            });
         });
 
         function getLocationAndSearch() {
@@ -440,6 +591,9 @@
                         });
 
                         console.log(`${flights.length} fly funnet i lufta`);
+
+                        // Check for new flights and play notification sound
+                        checkForNewFlights(flights);
 
                         if (flights.length > 0) {
                             currentFlightIndex = 0;
@@ -696,6 +850,49 @@
             } else {
                 autoRefreshInterval = setInterval(getFlights, 30000);
                 alert('Auto-oppdatering aktivert (30s)');
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const button = document.getElementById('soundButton');
+            
+            if (soundEnabled) {
+                button.textContent = '🔊 Lyd på';
+                button.style.background = '#0a84ff';
+                console.log('🔊 Fly-notifikasjoner aktivert');
+            } else {
+                button.textContent = '🔇 Lyd av';
+                button.style.background = '#666';
+                console.log('🔇 Fly-notifikasjoner deaktivert');
+            }
+            
+            // Save preference to localStorage
+            localStorage.setItem('flightSoundEnabled', soundEnabled);
+        }
+
+        function toggleFullscreen() {
+            const button = document.getElementById('fullscreenButton');
+            
+            if (!document.fullscreenElement) {
+                // Enter fullscreen
+                document.documentElement.requestFullscreen().then(() => {
+                    button.textContent = '🔲 Avslutt fullskjerm';
+                    button.style.background = '#ff6b35';
+                    document.body.classList.add('fullscreen');
+                    console.log('📺 Fullskjerm aktivert');
+                }).catch(err => {
+                    console.error('Kunne ikkje aktivere fullskjerm:', err);
+                    alert('Fullskjerm støttast ikkje eller blei blokkert');
+                });
+            } else {
+                // Exit fullscreen
+                document.exitFullscreen().then(() => {
+                    button.textContent = '🔳 Fullskjerm';
+                    button.style.background = '';
+                    document.body.classList.remove('fullscreen');
+                    console.log('📺 Fullskjerm deaktivert');
+                });
             }
         }
 
