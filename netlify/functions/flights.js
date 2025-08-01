@@ -106,11 +106,17 @@ async function makeAuthenticatedRequest(url, authInfo) {
             });
 
             res.on('end', () => {
+                // Sjekk om responsen er HTML (feilside) i stad for JSON
+                if (data.trim().startsWith('<') || data.includes('You can on')) {
+                    reject(new Error(`API returned HTML error page: ${data.substring(0, 100)}...`));
+                    return;
+                }
+                
                 try {
                     const jsonData = JSON.parse(data);
                     resolve(jsonData);
                 } catch (parseError) {
-                    reject(new Error(`JSON parse error: ${parseError.message}`));
+                    reject(new Error(`JSON parse error: ${parseError.message}. Response: ${data.substring(0, 100)}`));
                 }
             });
         });
@@ -167,6 +173,7 @@ async function handleFlightsRequest(icao24, headers) {
     
     const authInfo = await getAuthToken();
     if (!authInfo) {
+        console.log('❌ No authentication available for flights request');
         return {
             statusCode: 401,
             headers,
@@ -174,11 +181,14 @@ async function handleFlightsRequest(icao24, headers) {
         };
     }
 
+    console.log(`🔑 Using ${authInfo.method} authentication for flights`);
+
     // Søk etter flighter dei siste 7 dagane
     const endTime = Math.floor(Date.now() / 1000);
     const beginTime = endTime - (7 * 24 * 60 * 60); // 7 dagar tilbake
 
     const url = `https://opensky-network.org/api/flights/aircraft?icao24=${icao24.toLowerCase()}&begin=${beginTime}&end=${endTime}`;
+    console.log(`📡 Flights URL: ${url}`);
     
     try {
         const data = await makeAuthenticatedRequest(url, authInfo);
@@ -189,7 +199,7 @@ async function handleFlightsRequest(icao24, headers) {
             body: JSON.stringify(data)
         };
     } catch (error) {
-        console.error('Flights request failed:', error.message);
+        console.error('❌ Flights request failed:', error.message);
         return {
             statusCode: 404,
             headers,
