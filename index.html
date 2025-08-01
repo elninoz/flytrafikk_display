@@ -475,7 +475,8 @@
         <input type="number" id="longitude" value="6.9741" step="0.0001" placeholder="Lengdegrad" style="width: 120px;">
         <input type="number" id="radius" value="10" min="1" max="100" placeholder="Radius (km)">
         <button onclick="getFlights()">🔍 Søk etter fly</button>
-        <button onclick="stopSmartSearch()" id="stopButton" style="display: none; background: #ff4444;">⏹️ Stopp søk</button>
+        <button onclick="stopSmartSearch()" id="stopButton" style="display: none; background: #ff4444;">⏹️ Stopp
+            søk</button>
         <button onclick="getLocationAndSearch()">📍 Min posisjon</button>
         <button onclick="toggleAutoRefresh()">🔄 Auto-oppdater</button>
         <button onclick="toggleSound()" id="soundButton">🔊 Lyd på</button>
@@ -662,21 +663,21 @@
 
             // Start smart søking når bruker trykker søk
             startSmartSearch();
-            
+
             // Gjer første søk med ein gong
             performFlightSearch();
         }
 
         function startSmartSearch() {
             if (smartSearchActive) return;
-            
+
             smartSearchActive = true;
             console.log('🎯 Startar smart søk - vil søke kontinuerleg til fly blir funnet...');
-            
+
             // Show stop button, hide search button
             document.getElementById('stopButton').style.display = 'inline-block';
             document.querySelector('button[onclick="getFlights()"]').style.display = 'none';
-            
+
             // Show searching status
             document.querySelector('.flight-info h2').textContent = 'Søker etter fly...';
             document.querySelector('.flight-callsign').textContent = '';
@@ -697,13 +698,13 @@
                 flightCycleInterval = null;
             }
             smartSearchActive = false;
-            
+
             // Hide stop button, show search button
             document.getElementById('stopButton').style.display = 'none';
             document.querySelector('button[onclick="getFlights()"]').style.display = 'inline-block';
-            
+
             console.log('⏹️ Smart søk stoppa');
-            
+
             // Clear display
             document.querySelector('.flight-info h2').textContent = 'Norsk LED Flytracker';
             document.querySelector('.flight-callsign').textContent = '';
@@ -762,10 +763,10 @@
                             // Stop searching and start monitoring
                             flights = foundFlights;
                             currentFlightIndex = 0;
-                            
+
                             // Check for new flights and play notification sound
                             checkForNewFlights(flights);
-                            
+
                             displayCurrentFlight();
 
                             if (flights.length > 1) {
@@ -832,7 +833,7 @@
                             // Update flights and continue monitoring
                             flights = foundFlights;
                             checkForNewFlights(flights);
-                            
+
                             if (currentFlightIndex >= flights.length) {
                                 currentFlightIndex = 0;
                             }
@@ -1137,10 +1138,10 @@
                     button.style.background = '#ff6b35';
                     document.body.classList.add('fullscreen');
                     console.log('📺 Fullskjerm aktivert');
-                    
+
                     // Add click listener to exit fullscreen when clicking anywhere
                     document.addEventListener('click', exitFullscreenOnClick, { once: true });
-                    
+
                     // Show instructions for exiting fullscreen
                     setTimeout(() => {
                         if (document.body.classList.contains('fullscreen')) {
@@ -1170,16 +1171,16 @@
 
         function exitFullscreen() {
             const button = document.getElementById('fullscreenButton');
-            
+
             button.textContent = '🔳 Fullskjerm';
             button.style.background = '';
             document.body.classList.remove('fullscreen');
             console.log('📺 Fullskjerm deaktivert');
-            
+
             // Remove any exit hint
             const hint = document.getElementById('fullscreenExitHint');
             if (hint) hint.remove();
-            
+
             // Exit browser fullscreen if active
             if (document.fullscreenElement && document.exitFullscreen) {
                 document.exitFullscreen();
@@ -1215,7 +1216,7 @@
             `;
             hint.textContent = 'Klikk kvar som helst eller trykk ESC for å gå ut av fullskjerm';
             document.body.appendChild(hint);
-            
+
             // Remove hint after 5 seconds
             setTimeout(() => {
                 if (hint && hint.parentNode) {
@@ -1233,7 +1234,7 @@
                 button.style.background = '';
                 document.body.classList.remove('fullscreen');
                 console.log('📺 Browser fullscreen avslutta, ryddar CSS');
-                
+
                 // Remove any exit hint
                 const hint = document.getElementById('fullscreenExitHint');
                 if (hint) hint.remove();
