@@ -111,7 +111,7 @@ async function makeAuthenticatedRequest(url, authInfo) {
                     reject(new Error(`API returned HTML error page: ${data.substring(0, 100)}...`));
                     return;
                 }
-                
+
                 try {
                     const jsonData = JSON.parse(data);
                     resolve(jsonData);
@@ -137,7 +137,7 @@ async function makeAuthenticatedRequest(url, authInfo) {
 // Handle track requests (live trajectory)
 async function handleTrackRequest(icao24, headers) {
     console.log(`🛩️ Track request for aircraft: ${icao24}`);
-    
+
     const authInfo = await getAuthToken();
     if (!authInfo) {
         return {
@@ -148,7 +148,7 @@ async function handleTrackRequest(icao24, headers) {
     }
 
     const url = `https://opensky-network.org/api/tracks?icao24=${icao24.toLowerCase()}&time=0`;
-    
+
     try {
         const data = await makeAuthenticatedRequest(url, authInfo);
         console.log(`✅ Track data received for ${icao24}`);
@@ -170,7 +170,7 @@ async function handleTrackRequest(icao24, headers) {
 // Handle flights requests (flight history with routes)
 async function handleFlightsRequest(icao24, headers) {
     console.log(`✈️ Flights request for aircraft: ${icao24}`);
-    
+
     const authInfo = await getAuthToken();
     if (!authInfo) {
         console.log('❌ No authentication available for flights request');
@@ -183,13 +183,13 @@ async function handleFlightsRequest(icao24, headers) {
 
     console.log(`🔑 Using ${authInfo.method} authentication for flights`);
 
-    // Søk etter flighter dei siste 7 dagane
+    // Søk etter flighter dei siste 2 dagane (OpenSky limit: max 2 partisjonar)
     const endTime = Math.floor(Date.now() / 1000);
-    const beginTime = endTime - (7 * 24 * 60 * 60); // 7 dagar tilbake
+    const beginTime = endTime - (2 * 24 * 60 * 60); // 2 dagar tilbake
 
     const url = `https://opensky-network.org/api/flights/aircraft?icao24=${icao24.toLowerCase()}&begin=${beginTime}&end=${endTime}`;
     console.log(`📡 Flights URL: ${url}`);
-    
+
     try {
         const data = await makeAuthenticatedRequest(url, authInfo);
         console.log(`✅ Flight history received for ${icao24}:`, Array.isArray(data) ? data.length : 0, 'flights');
@@ -212,10 +212,10 @@ async function handleFlightsRequest(icao24, headers) {
 async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
     const authInfo = await getAuthToken();
     const url = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
-    
+
     console.log('States request URL:', url);
     console.log('Auth method:', authInfo ? authInfo.method : 'anonymous');
-    
+
     try {
         const data = await makeAuthenticatedRequest(url, authInfo);
         console.log('States data received, aircraft count:', data.states ? data.states.length : 0);
@@ -249,9 +249,9 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        const { 
-            lamin, lamax, lomin, lomax, 
-            icao24, track, flights 
+        const {
+            lamin, lamax, lomin, lomax,
+            icao24, track, flights
         } = event.queryStringParameters || {};
 
         // Sjekk kva type forespørsel dette er
@@ -265,7 +265,7 @@ exports.handler = async (event, context) => {
             return {
                 statusCode: 400,
                 headers,
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     error: 'Missing required parameters',
                     usage: 'Use ?lamin=&lamax=&lomin=&lomax= for states, ?icao24=xxx&track=true for tracks, ?icao24=xxx&flights=true for flight history'
                 })
