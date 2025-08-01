@@ -453,16 +453,40 @@
 
                 console.log(`Søker etter fly i området: ${lamin.toFixed(4)}, ${lamax.toFixed(4)}, ${lomin.toFixed(4)}, ${lomax.toFixed(4)}`);
 
-                // Bruk Netlify Functions proxy for sikker API-tilgang med 4000 spørsmålar/dag
                 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 const baseUrl = isLocalhost ? 'http://localhost:8888' : window.location.origin;
-                const proxyUrl = `${baseUrl}/.netlify/functions/flights?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
 
-                console.log('� Bruker Netlify proxy med autentiserte API-kall (4000/dag)');
-                console.log('Proxy URL:', proxyUrl);
-
+                // 🚀 METODE 1: OAuth2 Netlify Functions (PRIMÆR - 4000 spørsmålar/dag)
                 try {
-                    console.log('Prøver Netlify Functions proxy...');
+                    console.log('🔐 Prøver OAuth2 Netlify Functions (høgast rate limit)...');
+                    const oauthUrl = `${baseUrl}/.netlify/functions/oauth-flights?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
+                    console.log('OAuth2 URL:', oauthUrl);
+
+                    const oauthResponse = await fetch(oauthUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        }
+                    });
+
+                    if (oauthResponse.ok) {
+                        const oauthData = await oauthResponse.json();
+                        console.log('✅ OAuth2 fungerte! (4000/dag rate limit)', oauthData);
+                        return processFlightData(oauthData);
+                    } else {
+                        const errorText = await oauthResponse.text();
+                        throw new Error(`OAuth2 feil: ${oauthResponse.status} - ${errorText}`);
+                    }
+                } catch (oauthError) {
+                    console.log('❌ OAuth2 feilet, prøver Basic Auth fallback...', oauthError.message);
+                }
+
+                // 🔄 METODE 2: Basic Auth Netlify Functions (FALLBACK - 4000 spørsmålar/dag)
+                try {
+                    console.log('🔑 Prøver Basic Auth Netlify proxy...');
+                    const proxyUrl = `${baseUrl}/.netlify/functions/flights?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
+                    console.log('Basic Auth Proxy URL:', proxyUrl);
+
                     const response = await fetch(proxyUrl, {
                         method: 'GET',
                         headers: {
@@ -472,41 +496,46 @@
 
                     if (response.ok) {
                         const data = await response.json();
-                        console.log('✅ Netlify proxy fungerte!', data);
+                        console.log('✅ Basic Auth proxy fungerte!', data);
                         return processFlightData(data);
                     } else {
-                        throw new Error(`Proxy feil: ${response.status}`);
+                        const errorText = await response.text();
+                        throw new Error(`Basic Auth proxy feil: ${response.status} - ${errorText}`);
                     }
                 } catch (proxyError) {
-                    console.log('Netlify proxy feilet, prøver fallback...', proxyError.message);
+                    console.log('❌ Basic Auth proxy feilet, prøver direkte API...', proxyError.message);
                 }
 
-                // Prøv fallback - direkte API-kall utan auth (100 kall/dag)
-                console.log('Prøver direkte API-kall...');
-                const directApiUrl = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
-
+                // 🌐 METODE 3: Direkte API-kall (SISTE UTVEG - 100 kall/dag)
                 try {
+                    console.log('⚠️ Prøver direkte API-kall (låg rate limit)...');
+                    const directApiUrl = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
+
                     const directResponse = await fetch(directApiUrl, {
                         method: 'GET',
                         headers: {
                             'Accept': 'application/json',
+                            'User-Agent': 'flytrafikk-display/1.0'
                         }
                     });
 
                     if (directResponse.ok) {
                         const directData = await directResponse.json();
-                        console.log('✅ Direkte API-kall fungerte!', directData);
+                        console.log('✅ Direkte API-kall fungerte (men låg rate limit)!', directData);
                         return processFlightData(directData);
                     } else {
-                        throw new Error(`Direct API error: ${directResponse.status}`);
+                        throw new Error(`Direkte API feil: ${directResponse.status}`);
                     }
                 } catch (directError) {
-                    console.log('Direkte API feilet også:', directError.message);
-                    return null;
+                    console.log('❌ Direkte API feilet også:', directError.message);
                 }
 
+                // 🚨 ALLE METODAR FEILA
+                console.log('💥 Alle API-metodar feilet');
+                return null;
+
             } catch (error) {
-                console.error('Alle API-forsøk feilet:', error);
+                console.error('🔥 Kritisk feil i fetchRealFlights:', error);
                 return null;
             }
         }
