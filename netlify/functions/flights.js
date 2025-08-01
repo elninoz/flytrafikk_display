@@ -227,7 +227,7 @@ async function getFlightRoute(callsign) {
 }
 
 // HTTP request helper with retry logic
-async function makeRequest(url, headers = {}, retries = 2) {
+async function makeRequest(url, headers = {}, retries = 1) { // Further reduced retries for speed
     for (let attempt = 0; attempt <= retries; attempt++) {
         try {
             console.log(`Making request to ${url} (attempt ${attempt + 1}/${retries + 1})`);
@@ -237,8 +237,8 @@ async function makeRequest(url, headers = {}, retries = 2) {
 
                 // Adjust timeout based on the API - OpenSky can be slow
                 const isOpenSky = urlObj.hostname.includes('opensky');
-                const baseTimeout = isOpenSky ? 8000 : 6000; // Even shorter for OpenSky
-                const maxTimeout = isOpenSky ? 12000 : 10000; // Max timeout cap
+                const baseTimeout = isOpenSky ? 4000 : 3000; // Very aggressive for Netlify
+                const maxTimeout = isOpenSky ? 7000 : 6000; // Lower max timeout for Netlify limits
 
                 const options = {
                     hostname: urlObj.hostname,
@@ -325,24 +325,37 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
     const url = `https://opensky-network.org/api/states/all?lamin=${lamin}&lamax=${lamax}&lomin=${lomin}&lomax=${lomax}`;
 
     try {
-        console.log(`Fetching OpenSky data from: ${url}`);
+        console.log(`🚀 Fetching OpenSky data from: ${url}`);
         const startTime = Date.now();
 
-        const data = await makeRequest(url, authHeaders);
+        // Set shorter timeout for Netlify environment
+        const data = await makeRequest(url, authHeaders, 1); // Only 1 retry for faster response
 
         const openSkyTime = Date.now() - startTime;
-        console.log(`OpenSky request completed in ${openSkyTime}ms`);
+        console.log(`✅ OpenSky request completed in ${openSkyTime}ms`);
+
+        // Skip AeroDataBox if we're running out of time (Netlify has ~10s limit)
+        const remainingTime = 8000 - openSkyTime; // Assume 8s Netlify limit (conservative)
+        const skipAeroDataBox = remainingTime < 2000; // Need at least 2s for response
+
+        if (skipAeroDataBox) {
+            console.log(`⏰ Skipping AeroDataBox due to time constraints (${remainingTime}ms remaining)`);
+        }
 
         // Enhanced route lookup with AeroDataBox (limit concurrent requests)
-        if (data.states) {
+        if (data.states && !skipAeroDataBox) {
             const enhancedStates = [];
             let aeroDataBoxSuccess = 0;
             let aeroDataBoxTotal = 0;
 
+            // Process only first few flights to save time
+            const maxFlightsToProcess = Math.min(data.states.length, 5); // Max 5 flights
+            const flightsToProcess = data.states.slice(0, maxFlightsToProcess);
+
             // Process flights in batches to avoid overwhelming APIs
-            const batchSize = 3; // Max 3 concurrent AeroDataBox requests
-            for (let i = 0; i < data.states.length; i += batchSize) {
-                const batch = data.states.slice(i, i + batchSize);
+            const batchSize = 2; // Smaller batches for faster processing
+            for (let i = 0; i < flightsToProcess.length; i += batchSize) {
+                const batch = flightsToProcess.slice(i, i + batchSize);
 
                 const batchPromises = batch.map(async (state) => {
                     const icao24 = state[0];
@@ -421,11 +434,24 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
                 const batchResults = await Promise.all(batchPromises);
                 enhancedStates.push(...batchResults);
 
-                // Small delay between batches to be nice to APIs
-                if (i + batchSize < data.states.length) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
+        // Check if we're running out of time (stop early if needed)
+        const currentTime = Date.now() - startTime;
+        if (currentTime > 6000) { // Stop if we've used 6s already (leaving buffer for response)
+            console.log(`⏰ Stopping AeroDataBox processing due to time limit (${currentTime}ms elapsed)`);
+            break;
+        }                // Small delay between batches to be nice to APIs
+                if (i + batchSize < flightsToProcess.length) {
+                    await new Promise(resolve => setTimeout(resolve, 50)); // Shorter delay
                 }
             }
+
+            // Add processed flights to enhanced states, and remaining flights as-is
+            const remainingFlights = data.states.slice(flightsToProcess.length);
+            remainingFlights.forEach(state => {
+                const enhancedState = [...state];
+                enhancedState[17] = null; // No route info for unprocessed flights
+                enhancedStates.push(enhancedState);
+            });
 
             data.states = enhancedStates;
 
@@ -435,12 +461,65 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
                 totalFlights: aeroDataBoxTotal,
                 successfulLookups: aeroDataBoxSuccess,
                 hasRapidApiKey: !!process.env.RAPIDAPI_KEY,
-                openSkyResponseTime: openSkyTime
+                openSkyResponseTime: openSkyTime,
+                processedFlights: flightsToProcess.length,
+                totalFlightsFound: data.states.length
             };
+        } else {
+            // No AeroDataBox processing - just add basic fallback route info
+            if (data.states) {
+                data.states.forEach(state => {
+                    const callsign = state[1]?.trim();
+                    let routeInfo = null;
+
+                    if (callsign) {
+                        const airlineName = getAirlineFromCallsign(callsign);
+                        if (airlineName !== 'Ukjent flyselskap') {
+                            if (callsign.startsWith('SAS') || callsign.startsWith('SK')) {
+                                routeInfo = 'SAS Domestic/European';
+                            } else if (callsign.startsWith('DY') || callsign.startsWith('NOZ')) {
+                                routeInfo = 'Norwegian Route';
+                            } else if (callsign.startsWith('WF')) {
+                                routeInfo = 'Widerøe Regional';
+                            } else if (callsign.startsWith('ICE') || callsign.startsWith('FI')) {
+                                routeInfo = 'Icelandair Route';
+                            } else if (callsign.startsWith('AFR')) {
+                                routeInfo = 'Air France Route';
+                            } else if (callsign.startsWith('KLM')) {
+                                routeInfo = 'KLM Route';
+                            } else if (callsign.startsWith('LH')) {
+                                routeInfo = 'Lufthansa Route';
+                            } else if (callsign.startsWith('WIF')) {
+                                routeInfo = 'Widerøe Route';
+                            } else {
+                                routeInfo = `${airlineName} Route`;
+                            }
+                        } else {
+                            if (callsign.match(/^[A-Z]{2,3}\d/)) {
+                                routeInfo = `${callsign.substring(0, 3)} Flight`;
+                            } else {
+                                routeInfo = 'Commercial Flight';
+                            }
+                        }
+                    }
+
+                    state[17] = routeInfo; // Route information
+                });
+
+                data.apiStatus = {
+                    aeroDataBoxWorking: 0,
+                    totalFlights: 0,
+                    successfulLookups: 0,
+                    hasRapidApiKey: !!process.env.RAPIDAPI_KEY,
+                    openSkyResponseTime: openSkyTime,
+                    skippedAeroDataBox: skipAeroDataBox,
+                    totalFlightsFound: data.states.length
+                };
+            }
         }
 
         const totalTime = Date.now() - startTime;
-        console.log(`Total request completed in ${totalTime}ms`);
+        console.log(`🎯 Total request completed in ${totalTime}ms`);
 
         return {
             statusCode: 200,
@@ -448,7 +527,7 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
             body: JSON.stringify(data)
         };
     } catch (error) {
-        console.error('OpenSky request failed:', error.message);
+        console.error('❌ OpenSky request failed:', error.message);
 
         // Provide helpful error message for different failure types
         let errorMessage = 'OpenSky API problem';
@@ -456,6 +535,8 @@ async function handleStatesRequest(lamin, lamax, lomin, lomax, headers) {
             errorMessage = 'OpenSky API timeout - prøv igjen';
         } else if (error.message.includes('ENOTFOUND')) {
             errorMessage = 'Nettverksproblem - sjekk tilkopling';
+        } else if (error.message.includes('504')) {
+            errorMessage = 'Gateway timeout - OpenSky overbelasta';
         }
 
         // Return basic error response with fallback data
